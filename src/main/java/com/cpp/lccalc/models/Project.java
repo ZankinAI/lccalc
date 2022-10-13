@@ -38,7 +38,7 @@ public class Project {
     @JoinColumn(name="pm_id", nullable=true)
     private ProjectManager projectManager;
 
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true )
     private Set<Task> tasks;
 
 

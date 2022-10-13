@@ -1,0 +1,247 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Задача</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+            crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="/styles/style.css">
+
+</head>
+<body>
+<header th:insert = "blocks/header::header"></header>
+
+<div class="container-fluid">
+    <div class="row">
+        <nav th:insert = "blocks/sideBar::side-bar"></nav>
+    </div>
+</div>
+
+<main class="px-md-4 bg-light">
+    <div id="chart-container">FusionCharts will render here</div>
+</main>
+
+<script type="text/javascript" src="https://cdn.fusioncharts.com/fusioncharts/latest/fusioncharts.js"></script>
+<script type="text/javascript" src="https://cdn.fusioncharts.com/fusioncharts/latest/themes/fusioncharts.theme.fusion.js"></script>
+
+<script type="text/javascript">
+        FusionCharts.ready(function() {
+        var smoPlan = new FusionCharts({
+        type: 'gantt',
+renderAt: 'chart-container',
+width: '750',
+height: '500',
+dataFormat: 'json',
+dataSource: {
+"chart": {
+"theme": "fusion",
+"dateformat": "mm/dd/yyyy",
+"caption": "План-график выполнения проекта",
+"subcaption": "Project Plan"
+},
+"categories": [{
+"category": [{
+"start": "08/01/2014",
+"end": "08/31/2014",
+"label": "Aug '14"
+},
+{
+"start": "09/01/2014",
+"end": "09/30/2014",
+"label": "Sep '14"
+},
+{
+"start": "10/01/2014",
+"end": "10/31/2014",
+"label": "Oct '14"
+},
+{
+"start": "11/01/2014",
+"end": "11/30/2014",
+"label": "Nov '14"
+},
+{
+"start": "12/01/2014",
+"end": "12/31/2014",
+"label": "Dec '14"
+},
+{
+"start": "01/01/2015",
+"end": "01/31/2015",
+"label": "Jan '15"
+},
+{
+"start": "02/01/2015",
+"end": "02/28/2015",
+"label": "Feb '15"
+},
+{
+"start": "03/01/2015",
+"end": "03/31/2015",
+"label": "Mar '15"
+}
+]
+}],
+"processes": {
+"fontsize": "12",
+"isbold": "1",
+"align": "left",
+"process": [{
+"id": "CUSTID_1",
+"label": "Identify Customers"
+},
+{
+"label": "Survey 500 Customers"
+},
+{
+"label": "Interpret Requirements"
+},
+{
+"label": "Market Analysis"
+},
+{
+"label": "Brainstorm concepts"
+},
+{
+"label": "Define Ad Requirements"
+},
+{
+"label": "Design & Develop"
+},
+{
+"label": "Mock test"
+},
+{
+"label": "Documentation"
+},
+{
+"label": "Start Campaign"
+}
+]
+},
+"tasks": {
+"task": [{
+"id": "1",
+"start": "08/04/2014",
+"end": "08/10/2014"
+},
+{
+"id": "2",
+"start": "08/08/2014",
+"end": "08/19/2014"
+},
+{
+"id": "3",
+"start": "08/19/2014",
+"end": "09/02/2014"
+},
+{
+"id": "4",
+"start": "08/24/2014",
+"end": "09/02/2014"
+},
+{
+"id": "5",
+"start": "09/02/2014",
+"end": "09/21/2014"
+},
+{
+"id": "6",
+"start": "09/21/2014",
+"end": "10/06/2014"
+},
+{
+"id": "7",
+"start": "10/06/2014",
+"end": "01/21/2015"
+},
+{
+"id": "8",
+"start": "01/21/2015",
+"end": "02/19/2015"
+},
+{
+"id": "9",
+"start": "01/28/2015",
+"end": "02/24/2015"
+},
+{
+"id": "10",
+"start": "02/24/2015",
+"end": "03/27/2015"
+}
+]
+},
+//Adding connectors to tasks using id's
+"connectors": [{
+"connector": [
+
+{
+"fromtaskid": "2",
+"totaskid": "3",
+"color": "#008ee4",
+"thickness": "2"
+},
+{
+"fromtaskid": "4",
+"totaskid": "5",
+"color": "#008ee4",
+"thickness": "2"
+},
+{
+"fromtaskid": "5",
+"totaskid": "6",
+"color": "#008ee4",
+"thickness": "2"
+},
+{
+"fromtaskid": "6",
+"totaskid": "7",
+"color": "#008ee4",
+"thickness": "2"
+},
+{
+"fromtaskid": "7",
+"totaskid": "8",
+"color": "#008ee4",
+"thickness": "2"
+},
+{
+"fromtaskid": "8",
+"totaskid": "9",
+"fromTaskConnectStart": "1",
+"color": "#008ee4",
+"thickness": "2"
+},
+{
+"fromtaskid": "9",
+"totaskid": "10",
+"color": "#008ee4",
+"thickness": "2"
+}
+]
+}]
+}
+}).render();
+});
+
+</script>
+
+
+
+<script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"
+></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>

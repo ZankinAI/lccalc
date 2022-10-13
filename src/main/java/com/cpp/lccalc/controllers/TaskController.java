@@ -1,20 +1,15 @@
 package com.cpp.lccalc.controllers;
 
-import com.cpp.lccalc.models.Customer;
-import com.cpp.lccalc.models.Project;
-import com.cpp.lccalc.models.ProjectManager;
-import com.cpp.lccalc.models.Task;
+import com.cpp.lccalc.models.*;
 import com.cpp.lccalc.repo.CustomerRepository;
 import com.cpp.lccalc.repo.ProjectManagerRepository;
 import com.cpp.lccalc.repo.ProjectRopository;
 import com.cpp.lccalc.repo.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -70,6 +65,17 @@ public class TaskController {
 
 
         return "project-edit";
+    }
+
+    @GetMapping(value = "/performer", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Performer getPerformer(){
+        return new Performer("balda", "json");
+    }
+
+    @GetMapping(value = "/gantt")
+        public String getGantt(Model model){
+        return "/gantt";
     }
 
 }

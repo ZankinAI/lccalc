@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 public class Task {
@@ -36,6 +37,9 @@ public class Task {
     @ManyToOne
     @JoinColumn(name="project_id", nullable=true)
     private Project project;
+
+    @OneToMany(mappedBy = "task")
+    private Set<CommercialOffer> commercialOffers;
 
     public Task() {
     }
@@ -107,5 +111,13 @@ public class Task {
 
     public void setProject(Project project) {
         this.project = project;
+    }
+
+    public Set<CommercialOffer> getCommercialOffers() {
+        return commercialOffers;
+    }
+
+    public void setCommercialOffers(Set<CommercialOffer> commercialOffers) {
+        this.commercialOffers = commercialOffers;
     }
 }
