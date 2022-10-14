@@ -29,7 +29,7 @@
     <section class="bg-light text-dark p-3">
 
 
-        <!--Форма-окно для создания проекта-->
+        <!--Форма-окно для редактирования проекта-->
         <form form id="project-edit" name="projectEdit" method="post">
             <div class="container">
                 <h2 class="text-left">Редактирование проекта</h2>
@@ -116,6 +116,7 @@
                                     <th scope="col">Дата начала</th>
                                     <th scope="col">Срок исполнения</th>
                                     <th scope="col">Статус</th>
+                                    <th scope="col">Действие</th>
                                 </tr>
                                 </thead>
                                 <div th:each="el:${project.tasks}">
@@ -127,6 +128,17 @@
                                         <td th:value="${el.startDate}"></td>
                                         <td th:value="${el.duration}"></td>
                                         <td th:value="${el.state}"></td>
+                                        <td>
+
+                                            <a th:href="'/task/'+ ${el.taskId}+ '/edit'" class="btn btn-round">
+                                                <i class="material-icons">edit</i>
+                                            </a>
+                                            <form th:action="'/task/'+ ${el.taskId}+'/remove'" method="post" class="col">
+                                                <button onclick="return confirm('Вы действительно хотите удалить задачу?')" class="btn btn-round">
+                                                    <i class="material-icons">delete</i>
+                                                </button>
+                                            </form>
+                                        </td>
                                     </tr>
                                 </div>
 
@@ -134,8 +146,6 @@
                         </div>
 
                     </div>
-
-
                     <button type="submit" class="btn btn-success">Обновить проект</button>
                 </div>
             </div>

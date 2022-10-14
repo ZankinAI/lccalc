@@ -13,9 +13,55 @@ public class Performer {
 
     private String description;
 
-    @OneToMany(mappedBy = "performer")
+    private String industry;
+    private String telephone;
+    private String site;
+    private String address;
+    private String director;
+
+        @OneToMany(mappedBy = "performer")
     private Set<CommercialOffer> CommercialOffers;
 
+
+    public String getIndustry() {
+        return industry;
+    }
+
+    public void setIndustry(String industry) {
+        this.industry = industry;
+    }
+
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
+
+    public String getSite() {
+        return site;
+    }
+
+    public void setSite(String site) {
+        this.site = site;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getDirector() {
+        return director;
+    }
+
+    public void setDirector(String director) {
+        this.director = director;
+    }
 
     public Long getPerformerId() {
         return performerId;
@@ -50,6 +96,16 @@ public class Performer {
     }
 
     public Performer() {
+    }
+
+    public Performer(String name, String description, String industry, String telephone, String site, String address, String director) {
+        this.name = name;
+        this.description = description;
+        this.industry = industry;
+        this.telephone = telephone;
+        this.site = site;
+        this.address = address;
+        this.director = director;
     }
 
     public Performer(String name, String description) {

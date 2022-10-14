@@ -71,4 +71,13 @@ public class CommercialOffer {
     public void setPerformer(Performer performer) {
         this.performer = performer;
     }
+
+    public CommercialOffer() {
+    }
+
+    public CommercialOffer(Long duration, Long budget, String status) {
+        this.duration = duration;
+        this.budget = budget;
+        this.status = status;
+    }
 }

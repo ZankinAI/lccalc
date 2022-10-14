@@ -41,6 +41,7 @@ public class Task {
     @OneToMany(mappedBy = "task")
     private Set<CommercialOffer> commercialOffers;
 
+
     public Task() {
     }
 
