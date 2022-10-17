@@ -33,7 +33,7 @@ public class TaskController {
 
 
 
-    //Открытие страницы с проектом
+    //Открытие страницы с задачей
     @GetMapping("/task/{id}")
     public String project(@PathVariable(value = "id") long id,  Model model) {
 
@@ -47,28 +47,7 @@ public class TaskController {
         return "task";
     }
 
-    @PostMapping("/task/{id}/add")
-    public String taskAdd(@PathVariable(value = "id") long id, @RequestParam String name,
-                          @RequestParam String description, Model model) {
 
-
-
-        Project project = projectRopository.findById(id).orElseThrow();
-        Task task = new Task(name, description);
-        task.setProject(project);
-        task.setState("Не начата");
-        taskRepository.save(task);
-        project = projectRopository.findById(id).orElseThrow();
-
-        model.addAttribute("project", project);
-        Iterable<Customer> customers = customerRepository.findAll();
-        Iterable<ProjectManager> projectManagers = projectManagerRepository.findAll();
-        model.addAttribute("customers", customers);
-        model.addAttribute("projectManagers", projectManagers);
-
-
-        return "project-edit";
-    }
 
     //Страница редактирования задачи
     @GetMapping("/task/{id}/edit")

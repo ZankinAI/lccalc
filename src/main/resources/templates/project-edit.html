@@ -30,7 +30,7 @@
 
 
         <!--Форма-окно для редактирования проекта-->
-        <form form id="project-edit" name="projectEdit" method="post">
+        <form form id="project-edit" th:action="'/project/'+ ${project.projectId} +'/edit'" name="projectEdit" method="post">
             <div class="container">
                 <h2 class="text-left">Редактирование проекта</h2>
 
@@ -124,10 +124,10 @@
                                         <td scope="row"></td>
                                         <td th:text="${el.name}"/>
                                         <td>Otto</td>
-                                        <td th:value="${el.budget}"></td>
-                                        <td th:value="${el.startDate}"></td>
-                                        <td th:value="${el.duration}"></td>
-                                        <td th:value="${el.state}"></td>
+                                        <td th:text="${el.budget}"></td>
+                                        <td th:text="${el.startDate}"></td>
+                                        <td th:text="${el.duration}"></td>
+                                        <td th:text="${el.state}"></td>
                                         <td>
 
                                             <a th:href="'/task/'+ ${el.taskId}+ '/edit'" class="btn btn-round">
@@ -266,7 +266,7 @@
     </form>
 
 
-    <form class="modal fade" th:action="'/task/'+ ${project.projectId} +'/add'" id="task-add-modal" tabindex="-1" style="display:none;" aria-hidden="true" method="post">
+    <form class="modal fade" th:action="'/project/'+ ${project.projectId} +'/edit/taskAdd'" id="task-add-modal" tabindex="-1" style="display:none;" aria-hidden="true" method="post">
         <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content p-2">
                 <div class="modal-header">

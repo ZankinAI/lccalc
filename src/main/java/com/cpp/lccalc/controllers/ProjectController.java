@@ -212,6 +212,28 @@ public class ProjectController {
         return "project-edit";
     }
 
+    //Добавление ответственного по проекту во вкладке редактирования проекта
+    @PostMapping("/project/{id}/edit/taskAdd")
+    public String taskAdd(@PathVariable(value = "id") long id, @RequestParam String name,
+                          @RequestParam String description, Model model) {
+
+
+        Project project = projectRopository.findById(id).orElseThrow();
+        Task task = new Task(name, description);
+        task.setProject(project);
+        task.setState("Не начата");
+        taskRepository.save(task);
+        project = projectRopository.findById(id).orElseThrow();
+
+        model.addAttribute("project", project);
+        Iterable<Customer> customers = customerRepository.findAll();
+        Iterable<ProjectManager> projectManagers = projectManagerRepository.findAll();
+        model.addAttribute("customers", customers);
+        model.addAttribute("projectManagers", projectManagers);
+
+        return "project-edit";
+    }
+
     //Обновление проекта
     @PostMapping(path = "/project/{id}/edit", params = "projectName")
     public String projectEdit(@PathVariable(value = "id") long id, @RequestParam String projectName,  @RequestParam String description,
