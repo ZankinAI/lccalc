@@ -11,15 +11,15 @@ public class Category {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
     private LocalDate end;
 
-    private String lable;
+    private String label;
 
     public Category() {
     }
 
-    public Category(LocalDate start, LocalDate end, String lable) {
+    public Category(LocalDate start, LocalDate end, String label) {
         this.start = start;
         this.end = end;
-        this.lable = lable;
+        this.label = label;
     }
 
     public LocalDate getStart() {
@@ -38,11 +38,11 @@ public class Category {
         this.end = end;
     }
 
-    public String getLable() {
-        return lable;
+    public String getLabel() {
+        return label;
     }
 
-    public void setLable(String lable) {
-        this.lable = lable;
+    public void setLabel(String label) {
+        this.label = label;
     }
 }

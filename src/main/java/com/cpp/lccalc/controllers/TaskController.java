@@ -1,5 +1,6 @@
 package com.cpp.lccalc.controllers;
 
+import com.cpp.lccalc.classes.Category;
 import com.cpp.lccalc.models.*;
 import com.cpp.lccalc.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -96,14 +99,45 @@ public class TaskController {
         return "task-edit";
     }
 
-    @GetMapping(value = "/performer", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/categories/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Performer getPerformer(){
-        return new Performer("balda", "json");
+    public List<Category> getCategories(@PathVariable(value = "id") long id){
+        List<Category> categories = new ArrayList<>();
+
+
+        Category category = new Category(LocalDate.of(2014, 8, 1), LocalDate.of(2014, 8, 31), "Август 2014");
+        categories.add(category);
+
+        if (id == 1)
+            category = new Category(LocalDate.of(2014, 9, 1), LocalDate.of(2014, 9, 30), "сработало 2014");
+        else category = new Category(LocalDate.of(2014, 9, 1), LocalDate.of(2014, 9, 30), "Сентябрь 2014");
+        categories.add(category);
+
+        category = new Category(LocalDate.of(2014, 10, 1), LocalDate.of(2014, 10, 31), "Октябрь 2014");
+        categories.add(category);
+
+        category = new Category(LocalDate.of(2014, 11, 1), LocalDate.of(2014, 11, 30), "Ноябрь 2014");
+        categories.add(category);
+
+        category = new Category(LocalDate.of(2014, 12, 1), LocalDate.of(2014, 12, 31), "Декабрь 2014");
+        categories.add(category);
+        category = new Category(LocalDate.of(2015, 1, 1), LocalDate.of(2015, 1, 31), "янаврь 2015");
+        categories.add(category);
+
+        category = new Category(LocalDate.of(2015, 2, 1), LocalDate.of(2015, 2, 28), "февраль 2015");
+        categories.add(category);
+
+        category = new Category(LocalDate.of(2015, 3, 1), LocalDate.of(2015, 3, 31), "март 2015");
+        categories.add(category);
+
+
+
+        return categories;
     }
 
-    @GetMapping(value = "/gantt")
-        public String getGantt(Model model){
+    @GetMapping(value = "/gantt/{id}")
+        public String getGantt(@PathVariable(value = "id") long id,Model model){
+        model.addAttribute("id", id);
         return "/gantt";
     }
 
