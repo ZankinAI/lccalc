@@ -119,8 +119,10 @@
                                     <th scope="col">Действие</th>
                                 </tr>
                                 </thead>
+
+                                <tbody>
                                 <div th:each="el:${project.tasks}">
-                                    <tr>
+                                    <tr data-toggle="collapse" th:data-target="'#'+${el.taskId}" class="accordion-toggle">
                                         <td scope="row"></td>
                                         <td th:text="${el.name}"/>
                                         <td>Otto</td>
@@ -140,7 +142,30 @@
                                             </form>
                                         </td>
                                     </tr>
+
+                                    <tr>
+                                        <td colspan="12" class="hiddenRow">
+                                            <div class="accordian-body collapse" th:id="${el.taskId}">
+                                                <table class="table">
+                                                    <thead>
+                                                    <tr>
+                                                        <th scope="col">#</th>
+                                                        <th scope="col">Наименование</th>
+                                                        <th scope="col">Исполнитель</th>
+                                                        <th scope="col">Стоимость</th>
+                                                        <th scope="col">Дата начала</th>
+                                                        <th scope="col">Срок исполнения</th>
+                                                        <th scope="col">Статус</th>
+                                                        <th scope="col">Действие</th>
+                                                    </tr>
+                                                    </thead>
+
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
                                 </div>
+                                </tbody>
 
                             </table>
                         </div>
@@ -286,6 +311,11 @@
                     <div class="form-group row mb-2 align-items-center">
                         <label class="col-3">Описание</label>
                         <input class="form-control col" type="text" placeholder="Описание" name="description">
+                    </div>
+
+                    <div class="form-group row mb-2 align-items-center">
+                        <label class="col-3">Индекс</label>
+                        <input class="form-control col" type="text" placeholder="Индекс" name="index">
                     </div>
                 </div>
                 <div class="modal-footer">

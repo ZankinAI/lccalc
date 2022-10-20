@@ -34,7 +34,9 @@
       <div class="container">
         <h2 class="text-left">Редактирование задачи</h2>
 
-        <div class="card mt-2">
+
+
+          <div class="card g-0 p-2 mt-2">
 
           <h6>Основная информация</h6>
           <div class="form-group row mb-2 align-items-center">
@@ -45,6 +47,67 @@
           <div class="form-group row mb-2 align-items-center">
             <label class="col-3">Описание</label>
             <input class="form-control col" type="text" placeholder="Описание"  th:value="${task.description}" name="description">
+          </div>
+
+          <div class="form-group row mb-2 align-items-center">
+            <label class="col-3">Индекс</label>
+            <input class="form-control col" type="text" placeholder="Индекс"  name="index">
+          </div>
+          </div>
+
+          <!--Добавление подзадачи-->
+          <div class="card g-0 p-2 mt-2">
+            <div class="row g-0">
+              <div class="col-md-4">
+                <h6 class="card-title mb-1">Подзадачи</h6>
+              </div>
+              <div class="col-md-3">
+                <button type="button" class="btn btn-success btn-sm ms-3" data-toggle="modal" data-target="#co-add-subtask">Добавить подзадачу</button>
+              </div>
+              <!--Список подзадач -->
+                <div class="mt-5 table-responsive">
+                  <table class="table table-striped table-hover">
+                    <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Наименование</th>
+                      <th scope="col">Дата начала</th>
+                      <th scope="col">Срок исполнения</th>
+                      <th scope="col">Прогресс</th>
+                      <th scope="col">Предшественники</th>
+                      <th scope="col">Ресурсы</th>
+                    </tr>
+                    </thead>
+
+                    <!--<tbody>
+                    <div th:each="el:${project.tasks}">
+                      <tr>
+                        <td scope="row"></td>
+                        <td th:text="${el.name}"/>
+                        <td>Otto</td>
+                        <td th:value="${el.budget}"></td>
+                        <td th:value="${el.startDate}"></td>
+                        <td th:value="${el.duration}"></td>
+                        <td th:value="${el.state}"></td>
+                        <td>
+
+                          <a th:href="'/task/'+ ${el.taskId}+ '/edit'" class="btn btn-round">
+                            <i class="material-icons">edit</i>
+                          </a>
+                          <form th:action="'/task/'+ ${el.taskId}+'/remove'" method="post" class="col">
+                            <button onclick="return confirm('Вы действительно хотите удалить задачу?')" class="btn btn-round">
+                              <i class="material-icons">delete</i>
+                            </button>
+                          </form>
+                        </td>
+                      </tr>
+                    </div>
+                    </tbody>
+                    -->
+                  </table>
+                </div>
+            </div>
+
           </div>
 
           <!--Добавление КП-->
@@ -80,12 +143,8 @@
 
               </table>
             </div>
-
-          </div>
-
-
           <button type="submit" class="btn btn-success">Обновить задачу</button>
-        </div>
+
       </div>
 
     </form>
@@ -191,6 +250,57 @@
       </div>
     </div>
   </form>
+
+  <!--Форма-окно для добавления подзадачи-->
+  <form class="modal fade" id="co-add-subtask"  tabindex="-1" style="display:none;" aria-hidden="true" method="post">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content p-2">
+        <div class="modal-header">
+          <h5 class="modal-title">Новая подзадача</h5>
+          <button type="button" class="close btn btn-round" data-dismiss="modal" aria-label="Close">
+            <i class="material-icons">close</i>
+          </button>
+        </div>
+        <!--end of modal head-->
+        <div class="modal-body">
+
+          <div class="form-group row mb-2 align-items-center">
+            <label class="col-3">Наименование подзадачи</label>
+            <input class="form-control col" type="text" placeholder="Наименование подзадачи" name="name">
+          </div>
+
+          <div class="form-group row mb-2 align-items-center">
+            <label class="col-3">Индекс подзадачи</label>
+            <input class="form-control col" type="text" placeholder="Индекс подзадачи" name="taskIndex">
+          </div>
+
+          <div class="form-group row mb-2 align-items-center">
+            <label class="col-3">Дата начала</label>
+            <input class="form-control col flatpickr" type="date" placeholder="Выберите дату начала" name="startDate">
+          </div>
+
+          <div class="form-group row mb-2 align-items-center">
+            <label class="col-3">Длительность работы</label>
+            <input class="form-control col" type="text" placeholder="Длительность работы (кол-во рабочих дней)" name="duration">
+          </div>
+          <div class="form-group row mb-2 align-items-center">
+            <label class="col-3">Стоимость</label>
+            <input class="form-control col" type="text" placeholder="Стоимость" name="budget">
+          </div>
+
+
+
+        </div>
+        <div class="modal-footer">
+          <button role="button" class="btn btn-primary" type="submit">
+            Добавить подзадачу
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+
+
 
 
   <script

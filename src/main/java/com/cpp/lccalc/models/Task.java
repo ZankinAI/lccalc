@@ -12,6 +12,8 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long taskId;
 
+    private String taskIndex;
+
     private String name, description;
 
     public int getBudget() {
