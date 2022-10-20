@@ -3,6 +3,7 @@ package com.cpp.lccalc.classes;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GanttData {
@@ -14,6 +15,8 @@ public class GanttData {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate actualEnd;
+
+    private String progressValue;
 
     private List<GanttData> children;
 
@@ -57,12 +60,29 @@ public class GanttData {
         this.children = children;
     }
 
-    public GanttData(String id, String name, LocalDate actualStart, LocalDate actualEnd) {
+    public String getProgressValue() {
+        return progressValue;
+    }
+
+    public void setProgressValue(String progressValue) {
+        this.progressValue = progressValue;
+    }
+
+    public GanttData(String id, String name, LocalDate actualStart, LocalDate actualEnd, String progress) {
         this.id = id;
         this.name = name;
         this.actualStart = actualStart;
         this.actualEnd = actualEnd;
+        this.children = new ArrayList<>();
+        this.progressValue = progress;
     }
 
+    public void addChild(GanttData ganttData){
+        if (this.children.isEmpty()) {
+            this.children = new ArrayList<>();
+            this.children.add(ganttData);
+        }
+        else this.children.add(ganttData);
+    }
 
 }

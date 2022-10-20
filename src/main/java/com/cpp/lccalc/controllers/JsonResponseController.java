@@ -17,22 +17,18 @@ import java.util.List;
 public class JsonResponseController {
 
 
-    private List<GanttData> createChildren(){
-        List<GanttData> childrens = new ArrayList<>();
-        GanttData ganttData = new GanttData("1", "Подзадача 1", LocalDate.of(2014, 8, 12), LocalDate.of(2014, 8, 18));
-        childrens.add(ganttData);
-        return childrens;
-    }
+
 
     @GetMapping(value = "/gantt_data/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<GanttData> getGanttData(@PathVariable(value = "id") long id){
         List<GanttData> ganttDatas = new ArrayList<>();
-        GanttData ganttData = new GanttData("1", "Задача 1", LocalDate.of(2014, 8, 1), LocalDate.of(2014, 8, 31));
-        ganttData.setChildren(createChildren());
+        GanttData ganttData = new GanttData("1", "Задача 1", LocalDate.of(2014, 8, 1), LocalDate.of(2014, 8, 31), "0.28");
+
+        ganttData.addChild(new GanttData("1_2", "Подзадача 2", LocalDate.of(2014, 8, 14), LocalDate.of(2014, 8, 28), "0.54"));
         ganttDatas.add(ganttData);
 
-        ganttData = new GanttData("2", "Задача 2", LocalDate.of(2014, 8, 1), LocalDate.of(2014, 8, 31));
+        ganttData = new GanttData("2", "Задача 2", LocalDate.of(2014, 8, 1), LocalDate.of(2014, 8, 31),"1");
         ganttDatas.add(ganttData);
 
 
