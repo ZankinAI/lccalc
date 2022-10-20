@@ -141,4 +141,10 @@ public class TaskController {
         return "/gantt";
     }
 
+    @GetMapping(value = "/gantt_project/{id}")
+    public String getGanttProject(@PathVariable(value = "id") long id,Model model){
+        model.addAttribute("id", id);
+        return "gantt-project";
+    }
+
 }

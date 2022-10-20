@@ -3,6 +3,7 @@ package com.cpp.lccalc.classes;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class Category {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
@@ -12,6 +13,8 @@ public class Category {
     private LocalDate end;
 
     private String label;
+
+    private List<Category> categories;
 
     public Category() {
     }
