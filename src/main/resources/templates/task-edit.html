@@ -283,12 +283,22 @@
             <label class="col-3">Длительность работы</label>
             <input class="form-control col" type="text" placeholder="Длительность работы (кол-во рабочих дней)" name="duration">
           </div>
+
           <div class="form-group row mb-2 align-items-center">
-            <label class="col-3">Стоимость</label>
-            <input class="form-control col" type="text" placeholder="Стоимость" name="budget">
+            <label class="col-3">Прогресс:
+              <output id="num">0</output></label>
+            <input class="form-control col" type="range" value="0" max="100" oninput="num.value = this.value" name="progress">
           </div>
 
-
+          <div class="form-group row mb-2 align-items-center">
+            <label class="col-3 mb-2">Предшественник:</label>
+            <select class="form-select form-select-lg" aria-label=".form-select-lg" name="performerId">
+              <option disabled>Выберите предшествующую задачу</option>
+              <div th:each="el:${performers}">
+                <option th:value="${el.performerId}" th:text="${el.name}"></option>
+              </div>
+            </select>
+          </div>
 
         </div>
         <div class="modal-footer">

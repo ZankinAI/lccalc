@@ -26,6 +26,8 @@ public class Task {
 
     private int budget;
 
+    private int progress;
+
     private Long duration;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
