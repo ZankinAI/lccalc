@@ -149,6 +149,7 @@ public class ProjectController {
         ArrayList<Project> projectRes = new ArrayList<>();
         projectOptional.ifPresent(projectRes::add);
         Project project = projectRes.get(0);
+        project.sortTasks();
 
         model.addAttribute("project", project);
 
