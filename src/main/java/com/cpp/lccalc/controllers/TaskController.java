@@ -34,6 +34,8 @@ public class TaskController {
     @Autowired
     private CommercialOfferRepository commercialOfferRepository;
 
+    @Autowired SubTaskRepository subTaskRepository;
+
 
 
     //Открытие страницы с задачей
@@ -57,6 +59,7 @@ public class TaskController {
     public String taskEdit(@PathVariable(value = "id") long id,  Model model) {
 
         Task task = taskRepository.findById(id).orElseThrow();
+        task.sortSubTasks();
         model.addAttribute("task", task);
         Iterable<Performer> performers = performerRepository.findAll();
         model.addAttribute("performers", performers);
@@ -82,6 +85,7 @@ public class TaskController {
         model.addAttribute("performers", performers);
 
         Project project = task.getProject();
+        project.sortTasks();
 
         model.addAttribute("project", project);
 
@@ -92,6 +96,30 @@ public class TaskController {
         model.addAttribute("projectManagers", projectManagers);
 
         return "project-edit";
+    }
+
+    //Добавление подзадачи из страницы редактирвоания задачи
+    @PostMapping("/task/{id}/add_subtask")
+    public String AddSubTaskFromTask(@PathVariable(value = "id") long id,
+                                //Параметры для исполнителя
+                                @RequestParam String name,
+                                @RequestParam String subTaskIndex, @RequestParam String startDate,
+                                @RequestParam Long duration, @RequestParam String progress,
+                                @RequestParam(defaultValue="") String previousIndex,
+                                Model model){
+
+        Task task = taskRepository.findById(id).orElseThrow();
+        SubTask subTask = new SubTask(subTaskIndex, name, progress, duration, previousIndex, LocalDate.parse(startDate), task);
+
+        subTaskRepository.save(subTask);
+
+
+        task = taskRepository.findById(id).orElseThrow();
+        task.sortSubTasks();
+        model.addAttribute("task", task);
+        Iterable<Performer> performers = performerRepository.findAll();
+        model.addAttribute("performers", performers);
+        return "task-edit";
     }
 
     //Добавление коммерческого предложения из страницы редактирвоания задачи

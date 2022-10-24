@@ -4,8 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Comparator;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 public class Task{
@@ -46,6 +45,9 @@ public class Task{
     @OneToMany(mappedBy = "task")
     private Set<CommercialOffer> commercialOffers;
 
+    @OneToMany(mappedBy = "task")
+    private Set<SubTask> subTasks;
+
 
     public Task() {
 
@@ -55,6 +57,22 @@ public class Task{
 
         this.name = name;
         this.description = description;
+    }
+
+    public int getProgress() {
+        return progress;
+    }
+
+    public void setProgress(int progress) {
+        this.progress = progress;
+    }
+
+    public Set<SubTask> getSubTasks() {
+        return subTasks;
+    }
+
+    public void setSubTasks(Set<SubTask> subTasks) {
+        this.subTasks = subTasks;
     }
 
     public Long getTaskId() {
@@ -145,6 +163,13 @@ public class Task{
             return taskIndex1.compareTo(taskIndex2);
         }
     };
+
+    public void sortSubTasks(){
+        List<SubTask> subTasksList = new ArrayList<SubTask>(this.subTasks);
+        Collections.sort(subTasksList, SubTask.SubTaskIndexComparator);
+
+        this.subTasks = new LinkedHashSet<SubTask>(subTasksList);
+    }
 
 
 

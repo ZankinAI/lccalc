@@ -74,27 +74,28 @@
                       <th scope="col">Дата начала</th>
                       <th scope="col">Срок исполнения</th>
                       <th scope="col">Прогресс</th>
-                      <th scope="col">Предшественники</th>
+                      <th scope="col">Предшественник</th>
                       <th scope="col">Ресурсы</th>
+                      <th scope="col">Действие</th>
                     </tr>
                     </thead>
 
-                    <!--<tbody>
-                    <div th:each="el:${project.tasks}">
+                    <tbody>
+                    <div th:each="el:${task.subTasks}">
                       <tr>
-                        <td scope="row"></td>
+                        <td scope="row" th:text="${el.subTaskIndex}"></td>
                         <td th:text="${el.name}"/>
-                        <td>Otto</td>
-                        <td th:value="${el.budget}"></td>
-                        <td th:value="${el.startDate}"></td>
-                        <td th:value="${el.duration}"></td>
-                        <td th:value="${el.state}"></td>
+                        <td th:text="${el.startDate}"></td>
+                        <td th:text="${el.duration}"></td>
+                        <td th:text="${el.progress}"></td>
+                        <td th:text="${el.previousIndex}"></td>
+                        <td >Сюда потом ресурсы</td>
                         <td>
 
-                          <a th:href="'/task/'+ ${el.taskId}+ '/edit'" class="btn btn-round">
+                          <a th:href="'/task/'+ ${el.subTaskId}+ '/edit'" class="btn btn-round">
                             <i class="material-icons">edit</i>
                           </a>
-                          <form th:action="'/task/'+ ${el.taskId}+'/remove'" method="post" class="col">
+                          <form th:action="'/task/'+ ${el.subTaskId}+'/remove'" method="post" class="col">
                             <button onclick="return confirm('Вы действительно хотите удалить задачу?')" class="btn btn-round">
                               <i class="material-icons">delete</i>
                             </button>
@@ -103,7 +104,7 @@
                       </tr>
                     </div>
                     </tbody>
-                    -->
+
                   </table>
                 </div>
             </div>
@@ -253,7 +254,7 @@
   </form>
 
   <!--Форма-окно для добавления подзадачи-->
-  <form class="modal fade" id="co-add-subtask"  tabindex="-1" style="display:none;" aria-hidden="true" method="post">
+  <form class="modal fade" th:action="'/task/'+${task.taskId}+'/add_subtask'" id="co-add-subtask"  tabindex="-1" style="display:none;" aria-hidden="true" method="post">
     <div class="modal-dialog modal-xl" role="document">
       <div class="modal-content p-2">
         <div class="modal-header">
@@ -272,7 +273,7 @@
 
           <div class="form-group row mb-2 align-items-center">
             <label class="col-3">Индекс подзадачи</label>
-            <input class="form-control col" type="text" placeholder="Индекс подзадачи" name="taskIndex">
+            <input class="form-control col" type="text" placeholder="Индекс подзадачи" name="subTaskIndex">
           </div>
 
           <div class="form-group row mb-2 align-items-center">
@@ -293,10 +294,11 @@
 
           <div class="form-group row mb-2 align-items-center">
             <label class="col-3 mb-2">Предшественник:</label>
-            <select class="form-select form-select-lg" aria-label=".form-select-lg" name="performerId">
+            <select class="form-select form-select-lg" aria-label=".form-select-lg" name="previousIndex">
               <option disabled>Выберите предшествующую задачу</option>
-              <div th:each="el:${performers}">
-                <option th:value="${el.performerId}" th:text="${el.name}"></option>
+              <option selected></option>
+              <div th:each="el:${task.subTasks}">
+                <option th:value="${el.subTaskIndex}" th:text="${el.subTaskIndex}+'  '+${el.name}"></option>
               </div>
             </select>
           </div>

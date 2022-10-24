@@ -1,11 +1,15 @@
 package com.cpp.lccalc.classes;
 
+import com.cpp.lccalc.models.SubTask;
 import com.cpp.lccalc.models.Task;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 public class GanttData {
     private String id;
@@ -82,9 +86,54 @@ public class GanttData {
         this.id = task.getTaskIndex();
         this.name = task.getName();
         this.actualStart = task.getStartDate();
-        this.actualEnd = task.getStartDate();
+
+        if (task.getDuration()==null) this.actualEnd = task.getStartDate();
+        else this.actualEnd = task.getStartDate().plusDays(task.getDuration());
         this.children = new ArrayList<>();
         this.progressValue = "1";
+
+
+
+
+        task.sortSubTasks();
+
+        this.children = new ArrayList<>();
+
+        List<SubTask> subTasks = new ArrayList<>(task.getSubTasks());
+
+        for (SubTask subtask: subTasks) {
+
+            if (subtask.getSubTaskIndex().matches(task.getTaskIndex()+"(\\.\\d){1}"))
+            {
+                //subTasks.remove(subTaskFromList);
+                this.addChild(new GanttData(subtask,subTasks));
+            }
+
+
+
+        }
+
+
+    }
+
+    public GanttData(SubTask subTask, List<SubTask> subTasks){
+        this.id = subTask.getSubTaskIndex();
+        this.name = subTask.getName();
+        this.actualStart = subTask.getStartDate();
+        if (subTask.getDuration()==null) this.actualEnd = subTask.getStartDate();
+        else this.actualEnd = subTask.getStartDate().plusDays(subTask.getDuration());
+        this.children = new ArrayList<>();
+        this.progressValue = subTask.getProgress();
+
+        for (SubTask subTaskFromList: subTasks) {
+           if (subTaskFromList.getSubTaskIndex().matches(subTask.getSubTaskIndex()+"(\\.\\d){1}"))
+           {
+               //subTasks.remove(subTaskFromList);
+               this.addChild(new GanttData(subTaskFromList,subTasks));
+           }
+
+        }
+
 
     }
 
