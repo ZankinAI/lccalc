@@ -123,7 +123,7 @@
                                 <tbody>
                                 <div th:each="el:${project.tasks}">
                                     <tr data-toggle="collapse" th:data-target="'#'+${el.taskId}" class="accordion-toggle">
-                                        <td scope="row"></td>
+                                        <td scope="row" th:text="${el.taskIndex}"></td>
                                         <td th:text="${el.name}"/>
                                         <td>Otto</td>
                                         <td th:text="${el.budget}"></td>

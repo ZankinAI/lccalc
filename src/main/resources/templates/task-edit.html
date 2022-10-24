@@ -30,7 +30,7 @@
 
   <section class="bg-light text-dark p-3">
     <!--Форма-окно для редактирования задачи-->
-    <form form id="task-edit"  name="projectEdit" method="post">
+    <form form id="task-edit" th:action="'/task/'+ ${task.taskId} +'/edit'" name="taskEdit" method="post">
       <div class="container">
         <h2 class="text-left">Редактирование задачи</h2>
 
@@ -51,7 +51,7 @@
 
           <div class="form-group row mb-2 align-items-center">
             <label class="col-3">Индекс</label>
-            <input class="form-control col" type="text" placeholder="Индекс"  name="index">
+            <input class="form-control col" type="text" placeholder="Индекс" th:value="${task.taskIndex}" name="taskIndex">
           </div>
           </div>
 
@@ -143,6 +143,7 @@
 
               </table>
             </div>
+          </div>
           <button type="submit" class="btn btn-success">Обновить задачу</button>
 
       </div>

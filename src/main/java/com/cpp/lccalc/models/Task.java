@@ -4,10 +4,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.Set;
 
 @Entity
-public class Task {
+public class Task{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long taskId;
@@ -47,9 +48,11 @@ public class Task {
 
 
     public Task() {
+
     }
 
     public Task(String name, String description) {
+
         this.name = name;
         this.description = description;
     }
@@ -110,6 +113,14 @@ public class Task {
         this.state = state;
     }
 
+    public String getTaskIndex() {
+        return taskIndex;
+    }
+
+    public void setTaskIndex(String taskIndex) {
+        this.taskIndex = taskIndex;
+    }
+
     public Project getProject() {
         return project;
     }
@@ -125,4 +136,16 @@ public class Task {
     public void setCommercialOffers(Set<CommercialOffer> commercialOffers) {
         this.commercialOffers = commercialOffers;
     }
+
+    public static Comparator TaskIndexComparator = new Comparator<Task>() {
+        @Override
+        public int compare(Task task1, Task task2) {
+            String taskIndex1 = task1.getTaskIndex();
+            String taskIndex2 = task2.getTaskIndex();
+            return taskIndex1.compareTo(taskIndex2);
+        }
+    };
+
+
+
 }

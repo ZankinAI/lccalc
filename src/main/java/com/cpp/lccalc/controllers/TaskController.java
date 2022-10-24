@@ -64,6 +64,37 @@ public class TaskController {
         return "task-edit";
     }
 
+    //Обновление задачи
+    @PostMapping("/task/{id}/edit")
+    public String taskEditPost(@PathVariable(value = "id") long id,
+                               @RequestParam String name,
+                               @RequestParam String description, @RequestParam String taskIndex,
+                               Model model) {
+
+        Task task = taskRepository.findById(id).orElseThrow();
+
+        task.setName(name);
+        task.setDescription(description);
+        task.setTaskIndex(taskIndex);
+        taskRepository.save(task);
+        model.addAttribute("task", task);
+        Iterable<Performer> performers = performerRepository.findAll();
+        model.addAttribute("performers", performers);
+
+        Project project = task.getProject();
+
+        model.addAttribute("project", project);
+
+        Iterable<Customer> customers = customerRepository.findAll();
+        Iterable<ProjectManager> projectManagers = projectManagerRepository.findAll();
+
+        model.addAttribute("customers", customers);
+        model.addAttribute("projectManagers", projectManagers);
+
+        return "project-edit";
+    }
+
+    //Добавление коммерческого предложения из страницы редактирвоания задачи
     @PostMapping("/co/{id}/add_from_task")
     public String coAddFromTask(@PathVariable(value = "id") long id,
                                 //Параметры для исполнителя

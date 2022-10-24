@@ -26,9 +26,9 @@
   rawFile.send(null);
   return res;
 }
-var idc = [[${id}]]
-console.log('idc', idc)
-const URL = "/gantt_data/1";
+var projectId = [[${id}]]
+console.log('idc', projectId)
+const URL = "/gantt_data/"+projectId;
 const result = readJSON(URL, function(text) {
   return JSON.parse(text);
 });

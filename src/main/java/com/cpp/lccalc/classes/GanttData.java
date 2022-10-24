@@ -1,5 +1,6 @@
 package com.cpp.lccalc.classes;
 
+import com.cpp.lccalc.models.Task;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDate;
@@ -75,6 +76,16 @@ public class GanttData {
         this.actualEnd = actualEnd;
         this.children = new ArrayList<>();
         this.progressValue = progress;
+    }
+
+    public GanttData(Task task){
+        this.id = task.getTaskIndex();
+        this.name = task.getName();
+        this.actualStart = task.getStartDate();
+        this.actualEnd = task.getStartDate();
+        this.children = new ArrayList<>();
+        this.progressValue = "1";
+
     }
 
     public void addChild(GanttData ganttData){
