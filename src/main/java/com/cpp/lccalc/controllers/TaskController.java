@@ -67,6 +67,12 @@ public class TaskController {
         return "task-edit";
     }
 
+    //Тестирование чекбокса
+    @PostMapping("/task/{id}/add_resources")
+    public String test(@RequestParam("idChecked") List<String> names, @RequestParam("quantity") List<Long> duration){
+        return "task-edit";
+    }
+
     //Обновление задачи
     @PostMapping("/task/{id}/edit")
     public String taskEditPost(@PathVariable(value = "id") long id,

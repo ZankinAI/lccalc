@@ -89,7 +89,11 @@
                         <td th:text="${el.duration}"></td>
                         <td th:text="${el.progress}"></td>
                         <td th:text="${el.previousIndex}"></td>
-                        <td >Сюда потом ресурсы</td>
+                        <td>
+                          <button type="button" class="btn btn-success btn-sm btn-round" data-toggle="modal" data-target="#co-add-resources">
+                            <i class="material-icons">add</i>
+                          </button>
+                        </td>
                         <td>
 
                           <a th:href="'/task/'+ ${el.subTaskId}+ '/edit'" class="btn btn-round">
@@ -332,6 +336,31 @@
           </button>
         </div>
       </div>
+    </div>
+  </form>
+
+  <!--Форма-окно для добавления ресурсов в подзадачи-->
+  <form class="modal fade" th:action="'/task/'+${task.taskId}+'/add_resources'" id="co-add-resources"  tabindex="-1" style="display:none;" aria-hidden="true" method="post">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content p-2">
+        <div class="modal-header">
+          <h5 class="modal-title">Выберите ресурсы, необходимые для данной задачи</h5>
+          <button type="button" class="close btn btn-round" data-dismiss="modal" aria-label="Close">
+            <i class="material-icons">close</i>
+          </button>
+        </div>
+        <!--end of modal head-->
+        <div class="modal-body">
+          <div th:each="el:${task.subTasks}" class="form-group row mb-2 align-items-center">
+            <input type="checkbox" th:name="idChecked" th:value="${el.name}" class="col-2"/>
+            <input class="form-control col" type="number"  th:placeholder="${el.duration}" th:name="quantity" min="0" max="100">
+          </div>
+      </div>
+        <div class="modal-footer">
+          <button role="button" class="btn btn-primary" type="submit">
+            Подтвердить
+          </button>
+        </div>
     </div>
   </form>
 
