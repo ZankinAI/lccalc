@@ -23,6 +23,8 @@ public class GanttData {
 
     private String progressValue;
 
+    private String connectTo;
+
     private List<GanttData> children;
 
     public String getId() {
@@ -41,9 +43,19 @@ public class GanttData {
         this.name = name;
     }
 
+    public String getConnectTo() {
+        return connectTo;
+    }
+
+    public void setConnectTo(String connectTo) {
+        this.connectTo = connectTo;
+    }
+
     public LocalDate getActualStart() {
         return actualStart;
     }
+
+
 
     public void setActualStart(LocalDate actualStart) {
         this.actualStart = actualStart;
@@ -92,9 +104,6 @@ public class GanttData {
         this.children = new ArrayList<>();
         this.progressValue = "1";
 
-
-
-
         task.sortSubTasks();
 
         this.children = new ArrayList<>();
@@ -102,16 +111,22 @@ public class GanttData {
         List<SubTask> subTasks = new ArrayList<>(task.getSubTasks());
 
         for (SubTask subtask: subTasks) {
-
             if (subtask.getSubTaskIndex().matches(task.getTaskIndex()+"(\\.\\d){1}"))
             {
                 //subTasks.remove(subTaskFromList);
                 this.addChild(new GanttData(subtask,subTasks));
             }
+        }
 
 
+
+        for (GanttData ganttData: this.children){
+            SubTask subTaskFindPrev = subTasks.stream().filter(prevSubTask->(prevSubTask.getPreviousIndex().equals(ganttData.getId()))).findFirst().orElse(null);
+            if (subTaskFindPrev!=null)
+                ganttData.setConnectTo(subTaskFindPrev.getSubTaskIndex());
 
         }
+
 
 
     }
@@ -134,7 +149,11 @@ public class GanttData {
 
         }
 
-
+        for (GanttData ganttData: this.children){
+            SubTask subTaskFindPrev = subTasks.stream().filter(prevSubTask->(prevSubTask.getPreviousIndex().equals(ganttData.getId()))).findFirst().orElse(null);
+            if (subTaskFindPrev!=null)
+                ganttData.setConnectTo(subTaskFindPrev.getSubTaskIndex());
+        }
     }
 
     public void addChild(GanttData ganttData){
