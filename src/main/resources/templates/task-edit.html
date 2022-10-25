@@ -121,6 +121,16 @@
                 <button type="button" class="btn btn-success btn-sm ms-3" data-toggle="modal" data-target="#co-add-modal">Добавить КП</button>
               </div>
             </div>
+
+              <label class="mt-3 col-3">Подходящее коммерческое предложение:</label>
+              <select class="mt-3 form-select form-select-lg" aria-label=".form-select-lg" name="commercialOffers">
+                <option disabled>Выберите предшествующую задачу</option>
+                <div th:each="el:${task.commercialOffers}">
+                  <option th:value="${el.coId}" th:text="'Исполнитель: ' + ${el.performer.name} + ', Стоимость: ' + ${el.budget}"></option>
+                </div>
+              </select>
+
+
             <div class="mt-5 table-responsive">
               <table class="table table-striped table-hover">
                 <thead>
@@ -133,13 +143,25 @@
                 </tr>
                 </thead>
                 <div th:each="el:${task.commercialOffers}">
-                  <tr>
-                    <td scope="row"></td>
-                    <td th:text="${el.performer.name}"></td>
-                    <td th:text="${el.budget}"></td>
-                    <td th:text="${el.duration}"></td>
-                    <td th:text="${el.status}"></td>
-                  </tr>
+                  <div th:if="${el.isOptimal}">
+                    <tr class="bg-success">
+                      <td scope="row"></td>
+                      <td th:text="${el.performer.name}"></td>
+                      <td th:text="${el.budget}"></td>
+                      <td th:text="${el.duration}"></td>
+                      <td th:text="${el.status}"></td>
+                    </tr>
+                  </div>
+
+                  <div th:unless="${el.isOptimal}">
+                    <tr>
+                      <td scope="row"></td>
+                      <td th:text="${el.performer.name}"></td>
+                      <td th:text="${el.budget}"></td>
+                      <td th:text="${el.duration}"></td>
+                      <td th:text="${el.status}"></td>
+                    </tr>
+                  </div>
                 </div>
 
               </table>

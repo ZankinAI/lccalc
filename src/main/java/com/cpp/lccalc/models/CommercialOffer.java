@@ -11,6 +11,8 @@ public class CommercialOffer {
 
     private Long duration;
 
+    private boolean isOptimal;
+
     private Long budget;
 
     private String status;
@@ -38,6 +40,14 @@ public class CommercialOffer {
 
     public void setDuration(Long duration) {
         this.duration = duration;
+    }
+
+    public boolean isOptimal() {
+        return isOptimal;
+    }
+
+    public void setOptimal(boolean optimal) {
+        isOptimal = optimal;
     }
 
     public Long getBudget() {
@@ -79,5 +89,6 @@ public class CommercialOffer {
         this.duration = duration;
         this.budget = budget;
         this.status = status;
+        this.isOptimal = false;
     }
 }
