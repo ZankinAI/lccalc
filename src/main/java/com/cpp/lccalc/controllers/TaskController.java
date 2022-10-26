@@ -1,6 +1,8 @@
 package com.cpp.lccalc.controllers;
 
 import com.cpp.lccalc.classes.Category;
+import com.cpp.lccalc.classes.ResourcesDTO;
+import com.cpp.lccalc.classes.ResourcesListDTO;
 import com.cpp.lccalc.models.*;
 import com.cpp.lccalc.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 public class TaskController {
@@ -35,6 +36,7 @@ public class TaskController {
     private CommercialOfferRepository commercialOfferRepository;
 
     @Autowired SubTaskRepository subTaskRepository;
+
 
 
 
@@ -64,12 +66,28 @@ public class TaskController {
         Iterable<Performer> performers = performerRepository.findAll();
         model.addAttribute("performers", performers);
 
+        ResourcesListDTO resourcesList = new ResourcesListDTO();
+        resourcesList.addResource(new ResourcesDTO(true, 10L, "name 1"));
+        resourcesList.addResource(new ResourcesDTO(false, 11L, "name 2"));
+        resourcesList.addResource(new ResourcesDTO(false, 110L, "name 3"));
+        resourcesList.addResource(new ResourcesDTO(true, 140L, "name 4"));
+        resourcesList.addResource(new ResourcesDTO(true, 1L, "name 5"));
+        model.addAttribute("resourcesList", resourcesList);
+
         return "task-edit";
     }
 
     //Тестирование чекбокса
     @PostMapping("/task/{id}/add_resources")
-    public String test(@RequestParam("idChecked") List<String> names, @RequestParam("quantity") List<Long> duration){
+    public String test(@PathVariable(value = "id") long id, @ModelAttribute ResourcesListDTO resourcesList, Model model){
+        Task task = taskRepository.findById(id).orElseThrow();
+        task.sortSubTasks();
+        model.addAttribute("task", task);
+        Iterable<Performer> performers = performerRepository.findAll();
+        model.addAttribute("performers", performers);
+
+        model.addAttribute("resourcesList", resourcesList);
+
         return "task-edit";
     }
 

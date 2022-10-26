@@ -90,6 +90,10 @@
                         <td th:text="${el.progress}"></td>
                         <td th:text="${el.previousIndex}"></td>
                         <td>
+                                <div th:each="el:${task.subTasks}">
+                                <span th:text="${el.name} + ', ' + ${el.duration}"></span>
+                              </div>
+
                           <button type="button" class="btn btn-success btn-sm btn-round" data-toggle="modal" data-target="#co-add-resources">
                             <i class="material-icons">add</i>
                           </button>
@@ -340,7 +344,7 @@
   </form>
 
   <!--Форма-окно для добавления ресурсов в подзадачи-->
-  <form class="modal fade" th:action="'/task/'+${task.taskId}+'/add_resources'" id="co-add-resources"  tabindex="-1" style="display:none;" aria-hidden="true" method="post">
+  <form class="modal fade" th:action="'/task/'+${task.taskId}+'/add_resources'" th:object="${resourcesList}" id="co-add-resources"  tabindex="-1" style="display:none;" aria-hidden="true" method="post">
     <div class="modal-dialog modal-xl" role="document">
       <div class="modal-content p-2">
         <div class="modal-header">
@@ -350,17 +354,61 @@
           </button>
         </div>
         <!--end of modal head-->
-        <div class="modal-body">
-          <div th:each="el:${task.subTasks}" class="form-group row mb-2 align-items-center">
-            <input type="checkbox" th:name="idChecked" th:value="${el.name}" class="col-2"/>
-            <input class="form-control col" type="number"  th:placeholder="${el.duration}" th:name="quantity" min="0" max="100">
+        <div class="modal-body m-3">
+          <div th:each="resource, itemStat : *{resources}" class="form-group row mb-2 align-items-center">
+
+            <div class="form-check col-2">
+              <input  class="form-check-input" type="checkbox" th:name="idChecked" th:field="*{resources[__${itemStat.index}__].checked}" id="flexCheckChecked">
+
+              <label class="form-check-label" for="flexCheckChecked" th:text="*{resources[__${itemStat.index}__].name}"></label>
+            </div>
+            <input class="form-control col" type="number"  th:field="*{resources[__${itemStat.index}__].amount}"  >
+
           </div>
+
+          <a class="btn btn-primary mt-3 mb-3" data-toggle="collapse" href="#collapseNewResource" role="button" aria-expanded="false" aria-controls="collapseNewResource">
+            Добавить ресурс
+          </a>
+          <div class="collapse" id="collapseNewResource">
+            <div class="card card-body">
+
+              <div class="form-group row mb-2 align-items-center">
+                <label class="col-3">Наименование</label>
+                <input class="form-control col" type="text" placeholder="Название ресурса" name="name">
+              </div>
+
+              <div class="form-group row mb-2 align-items-center">
+                <label class="col-3">Общее количество ресурса</label>
+                <input class="form-control col" type="number" placeholder="Количество ресурса" name="amount">
+              </div>
+
+            </div>
+          </div>
+
+
+<!--          <fieldset>-->
+<!--          <table>-->
+<!--            <thead>-->
+<!--            <tr>-->
+<!--              <th> Name</th>-->
+<!--              <th> Duration</th>-->
+<!--            </tr>-->
+<!--            </thead>-->
+<!--            <tbody>-->
+<!--            <tr th:each="resource, itemStat : *{resources}">-->
+<!--              <td><input th:field="*{resources[__${itemStat.index}__].name}" /></td>-->
+<!--              <td><input th:field="*{resources[__${itemStat.index}__].amount}" /></td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+<!--          </table></fieldset>-->
       </div>
+
         <div class="modal-footer">
           <button role="button" class="btn btn-primary" type="submit">
             Подтвердить
           </button>
         </div>
+      </div>
     </div>
   </form>
 
