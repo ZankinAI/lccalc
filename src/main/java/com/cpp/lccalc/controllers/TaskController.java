@@ -3,6 +3,7 @@ package com.cpp.lccalc.controllers;
 import com.cpp.lccalc.classes.Category;
 import com.cpp.lccalc.classes.ResourcesDTO;
 import com.cpp.lccalc.classes.ResourcesListDTO;
+import com.cpp.lccalc.classes.Utils;
 import com.cpp.lccalc.models.*;
 import com.cpp.lccalc.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +66,8 @@ public class TaskController {
         model.addAttribute("task", task);
         Iterable<Performer> performers = performerRepository.findAll();
         model.addAttribute("performers", performers);
+
+        Long idCO = Utils.getOptimalCommercialOfferId(task.getCommercialOffers());
 
         ResourcesListDTO resourcesList = new ResourcesListDTO();
         resourcesList.addResource(new ResourcesDTO(true, 10L, "name 1"));
