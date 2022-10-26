@@ -15,15 +15,17 @@ public class Utils {
     CommercialOfferRepository commercialOfferRepository;
 
     public static Long getOptimalCommercialOfferId(Set<CommercialOffer> commercialOffers){
-        Long optimalBudget;
-        Long optimalDuration;
-        Long optimalParam;
+        if (commercialOffers.isEmpty()) return 0L;
+
+        double optimalBudget;
+        double optimalDuration;
+        double optimalParam;
         Long idOptimal;
         List<CommercialOffer> commercialOfferList = new ArrayList<>(commercialOffers);
-        Long minBudget = commercialOfferList.get(0).getBudget();
-        Long maxBudget = commercialOfferList.get(0).getBudget();
-        Long minDuration = commercialOfferList.get(0).getDuration();
-        Long maxDuration = commercialOfferList.get(0).getDuration();
+        double minBudget = commercialOfferList.get(0).getBudget();
+        double maxBudget = commercialOfferList.get(0).getBudget();
+        double minDuration = commercialOfferList.get(0).getDuration();
+        double maxDuration = commercialOfferList.get(0).getDuration();
         for (CommercialOffer co: commercialOfferList) {
             if (minBudget > co.getBudget()) minBudget = co.getBudget();
             if (maxBudget < co.getBudget()) maxBudget = co.getBudget();
@@ -37,19 +39,19 @@ public class Utils {
         else optimalBudget = (long)(0.5*(commercialOfferList.get(0).getBudget()-minBudget)/(maxBudget-minBudget));
 
         if (Objects.equals(maxDuration, minDuration)) optimalDuration = (long)0;
-        else optimalDuration = (long)(0.5*(commercialOfferList.get(0).getDuration()-minDuration)/(maxDuration-minDuration));
+        else optimalDuration = (0.5*(commercialOfferList.get(0).getDuration().doubleValue()-minDuration)/(maxDuration - minDuration));
 
-        optimalDuration = (long)(0.5*(commercialOfferList.get(0).getDuration()-minDuration)/(maxDuration-minDuration));
+        optimalDuration = (0.5*(commercialOfferList.get(0).getDuration()-minDuration)/(maxDuration - minDuration));
         optimalParam = optimalBudget + optimalDuration;
 
-        long optimalBudgetCo;
-        long optimalDurationCo;
+        double optimalBudgetCo;
+        double optimalDurationCo;
         for (CommercialOffer co: commercialOfferList) {
-            if (Objects.equals(maxBudget, minBudget)) optimalBudgetCo = (long)0;
-            else optimalBudgetCo = (long)(0.5*(co.getBudget()-minBudget)/(maxBudget-minBudget));
+            if (Objects.equals(maxBudget, minBudget)) optimalBudgetCo = 0;
+            else optimalBudgetCo = (0.5*(co.getBudget()-minBudget)/(maxBudget-minBudget));
 
             if (Objects.equals(maxDuration, minDuration)) optimalDurationCo = (long)0;
-            else optimalDurationCo = (long)(0.5*(co.getDuration()-minDuration)/(maxDuration-minDuration));
+            else optimalDurationCo = (0.5*(co.getDuration()-minDuration)/(maxDuration-minDuration));
 
             if (optimalParam > (optimalBudgetCo + optimalDurationCo)) {
                 optimalParam = optimalBudgetCo + optimalDurationCo;

@@ -151,8 +151,9 @@ public class Project {
     public void sortTasks(){
         List<Task> tasksList = new ArrayList<Task>(this.tasks);
         Collections.sort(tasksList, Task.TaskIndexComparator);
-
         this.tasks = new LinkedHashSet<Task>(tasksList);
+
+
     }
 
 

@@ -182,6 +182,13 @@ public class TaskController {
         model.addAttribute("task", task);
         Iterable<Performer> performers = performerRepository.findAll();
         model.addAttribute("performers", performers);
+        ResourcesListDTO resourcesList = new ResourcesListDTO();
+        resourcesList.addResource(new ResourcesDTO(true, 10L, "name 1"));
+        resourcesList.addResource(new ResourcesDTO(false, 11L, "name 2"));
+        resourcesList.addResource(new ResourcesDTO(false, 110L, "name 3"));
+        resourcesList.addResource(new ResourcesDTO(true, 140L, "name 4"));
+        resourcesList.addResource(new ResourcesDTO(true, 1L, "name 5"));
+        model.addAttribute("resourcesList", resourcesList);
         return "task-edit";
     }
 

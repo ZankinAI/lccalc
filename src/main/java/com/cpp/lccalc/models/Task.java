@@ -159,7 +159,9 @@ public class Task{
         @Override
         public int compare(Task task1, Task task2) {
             String taskIndex1 = task1.getTaskIndex();
+            if (taskIndex1==null) taskIndex1 = "";
             String taskIndex2 = task2.getTaskIndex();
+            if (taskIndex2==null) taskIndex2 = "";
             return taskIndex1.compareTo(taskIndex2);
         }
     };
