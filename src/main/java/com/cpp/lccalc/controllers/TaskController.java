@@ -62,6 +62,12 @@ public class TaskController {
     public String taskEdit(@PathVariable(value = "id") long id,  Model model) {
 
         Task task = taskRepository.findById(id).orElseThrow();
+        CommercialOffer selectedCommercialOffer = new CommercialOffer();
+        for (CommercialOffer co:task.getCommercialOffers()) {
+            if (co.getStatus().equals("В работе")) selectedCommercialOffer = co;
+
+        }
+        model.addAttribute("selectedCo",selectedCommercialOffer );
         task.sortSubTasks();
         model.addAttribute("task", task);
         Iterable<Performer> performers = performerRepository.findAll();
@@ -99,14 +105,42 @@ public class TaskController {
     public String taskEditPost(@PathVariable(value = "id") long id,
                                @RequestParam String name,
                                @RequestParam String description, @RequestParam String taskIndex,
-                               Model model) {
+                               @RequestParam Long coId,
+                               @RequestParam String startDate, Model model) {
 
         Task task = taskRepository.findById(id).orElseThrow();
 
+        for (CommercialOffer co: task.getCommercialOffers()) {
+            if (co.getCoId().equals(coId)){
+                if (!co.getStatus().equals("В работе")){
+                    co.setStatus("В работе");
+                    commercialOfferRepository.save(co);
+                }
+            }
+            else if (!co.getStatus().equals("Отклонено")){
+                co.setStatus("Отклонено");
+                commercialOfferRepository.save(co);
+            }
+        }
         task.setName(name);
         task.setDescription(description);
         task.setTaskIndex(taskIndex);
+
+        if (!startDate.isEmpty()) task.setStartDate(LocalDate.parse(startDate));
         taskRepository.save(task);
+
+
+        task = taskRepository.findById(id).orElseThrow();
+        CommercialOffer selectedCommercialOffer = new CommercialOffer();
+        for (CommercialOffer co:task.getCommercialOffers()) {
+            if (co.getStatus().equals("В работе")) selectedCommercialOffer = co;
+
+        }
+
+        task.setBudget(selectedCommercialOffer.getBudget());
+        task.setDuration(selectedCommercialOffer.getDuration());
+        taskRepository.save(task);
+        model.addAttribute("selectedCo",selectedCommercialOffer );
         model.addAttribute("task", task);
         Iterable<Performer> performers = performerRepository.findAll();
         model.addAttribute("performers", performers);
@@ -140,9 +174,16 @@ public class TaskController {
 
         subTaskRepository.save(subTask);
 
-
         task = taskRepository.findById(id).orElseThrow();
         task.sortSubTasks();
+
+        CommercialOffer selectedCommercialOffer = new CommercialOffer();
+        for (CommercialOffer co:task.getCommercialOffers()) {
+            if (co.getStatus().equals("В работе")) selectedCommercialOffer = co;
+
+        }
+        model.addAttribute("selectedCo",selectedCommercialOffer );
+
         model.addAttribute("task", task);
         Iterable<Performer> performers = performerRepository.findAll();
         model.addAttribute("performers", performers);
@@ -179,6 +220,30 @@ public class TaskController {
         commercialOffer.setTask(task);
         commercialOfferRepository.save(commercialOffer);
         task = taskRepository.findById(id).orElseThrow();
+
+        Long idOptimalCO = Utils.getOptimalCommercialOfferId(task.getCommercialOffers());
+
+        for (CommercialOffer co:task.getCommercialOffers()) {
+            if (co.getCoId().equals(idOptimalCO))
+                if (!co.isOptimal())
+                {
+                    co.setOptimal(true);
+                    commercialOfferRepository.save(co);
+                }
+            else if (co.isOptimal()){
+                    co.setOptimal(false);
+                    commercialOfferRepository.save(co);
+                }
+        }
+        task = taskRepository.findById(id).orElseThrow();
+
+        CommercialOffer selectedCommercialOffer = new CommercialOffer();
+        for (CommercialOffer co:task.getCommercialOffers()) {
+            if (co.getStatus().equals("В работе")) selectedCommercialOffer = co;
+
+        }
+        model.addAttribute("selectedCo",selectedCommercialOffer );
+
         model.addAttribute("task", task);
         Iterable<Performer> performers = performerRepository.findAll();
         model.addAttribute("performers", performers);
@@ -197,7 +262,6 @@ public class TaskController {
     public List<Category> getCategories(@PathVariable(value = "id") long id){
         List<Category> categories = new ArrayList<>();
 
-
         Category category = new Category(LocalDate.of(2014, 8, 1), LocalDate.of(2014, 8, 31), "Август 2014");
         categories.add(category);
 
@@ -214,6 +278,7 @@ public class TaskController {
 
         category = new Category(LocalDate.of(2014, 12, 1), LocalDate.of(2014, 12, 31), "Декабрь 2014");
         categories.add(category);
+
         category = new Category(LocalDate.of(2015, 1, 1), LocalDate.of(2015, 1, 31), "янаврь 2015");
         categories.add(category);
 
@@ -222,8 +287,6 @@ public class TaskController {
 
         category = new Category(LocalDate.of(2015, 3, 1), LocalDate.of(2015, 3, 31), "март 2015");
         categories.add(category);
-
-
 
         return categories;
     }

@@ -16,15 +16,15 @@ public class Task{
 
     private String name, description;
 
-    public int getBudget() {
+    public Long getBudget() {
         return budget;
     }
 
-    public void setBudget(int budget) {
+    public void setBudget(Long budget) {
         this.budget = budget;
     }
 
-    private int budget;
+    private Long budget;
 
     private int progress;
 
