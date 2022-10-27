@@ -121,21 +121,21 @@
                                 </thead>
 
                                 <tbody>
-                                <div th:each="el:${project.tasks}">
-                                    <tr data-toggle="collapse" th:data-target="'#'+${el.taskId}" class="accordion-toggle">
-                                        <td scope="row" th:text="${el.taskIndex}"></td>
-                                        <td th:text="${el.name}"/>
-                                        <td>Otto</td>
-                                        <td th:text="${el.budget}"></td>
-                                        <td th:text="${el.startDate}"></td>
-                                        <td th:text="${el.duration}"></td>
-                                        <td th:text="${el.state}"></td>
+                                <div th:each="task:${project.tasks}">
+                                    <tr data-toggle="collapse" th:data-target="'#'+${task.taskId}" class="accordion-toggle">
+                                        <td scope="row" th:text="${task.taskIndex}"></td>
+                                        <td th:text="${task.name}"/>
+                                        <td th:text="${task.performerName}"></td>
+                                        <td th:text="${task.budget}"></td>
+                                        <td th:text="${task.startDate}"></td>
+                                        <td th:text="${task.duration}"></td>
+                                        <td th:text="${task.state}"></td>
                                         <td>
 
-                                            <a th:href="'/task/'+ ${el.taskId}+ '/edit'" class="btn btn-round">
+                                            <a th:href="'/task/'+ ${task.taskId}+ '/edit'" class="btn btn-round">
                                                 <i class="material-icons">edit</i>
                                             </a>
-                                            <form th:action="'/task/'+ ${el.taskId}+'/remove'" method="post" class="col">
+                                            <form th:action="'/task/'+ ${task.taskId}+'/remove'" method="post" class="col">
                                                 <button onclick="return confirm('Вы действительно хотите удалить задачу?')" class="btn btn-round">
                                                     <i class="material-icons">delete</i>
                                                 </button>
@@ -145,20 +145,34 @@
 
                                     <tr>
                                         <td colspan="12" class="hiddenRow">
-                                            <div class="accordian-body collapse" th:id="${el.taskId}">
+                                            <div class="accordian-body collapse" th:id="${task.taskId}">
                                                 <table class="table">
                                                     <thead>
                                                     <tr>
                                                         <th scope="col">#</th>
                                                         <th scope="col">Наименование</th>
-                                                        <th scope="col">Исполнитель</th>
-                                                        <th scope="col">Стоимость</th>
                                                         <th scope="col">Дата начала</th>
                                                         <th scope="col">Срок исполнения</th>
-                                                        <th scope="col">Статус</th>
-                                                        <th scope="col">Действие</th>
+                                                        <th scope="col">Прогресс</th>
+                                                        <th scope="col">Предшественник</th>
+
+
                                                     </tr>
                                                     </thead>
+                                                    <tbody>
+                                                        <div th:each="subTask:${task.subTasks}">
+                                                            <tr>
+                                                                <td scope="row" th:text="${subTask.subTaskIndex}"></td>
+                                                                <td th:text="${subTask.name}"/>
+                                                                <td th:text="${subTask.startDate}"></td>
+                                                                <td th:text="${subTask.duration}"></td>
+                                                                <td th:text="${subTask.progress}"></td>
+                                                                <td th:text="${subTask.previousIndex}"></td>
+                                                            </tr>
+
+                                                        </div>
+
+                                                    </tbody>
 
                                                 </table>
                                             </div>

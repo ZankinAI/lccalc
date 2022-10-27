@@ -38,19 +38,18 @@
 
           <h6>Основная информация</h6>
             <div class="row g-0 p-2 mb-2 align-items-center">
-            <label class="col-3">Наименование</label>
-            <input class="form-control col" type="text" placeholder="Наименование" th:value="${task.name}" name="name">
-          </div>
+              <label class="col-3">Наименование</label>
+              <input class="form-control col" type="text" placeholder="Наименование" th:value="${task.name}" name="name">
+            </div>
 
             <div class="row g-0 p-2 mb-2 align-items-center">
-            <label class="col-3">Описание</label>
-            <input class="form-control col" type="text" placeholder="Описание"  th:value="${task.description}" name="description">
-          </div>
-
+              <label class="col-3">Описание</label>
+              <input class="form-control col" type="text" placeholder="Описание"  th:value="${task.description}" name="description">
+            </div>
             <div class="row g-0 p-2 mb-2 align-items-center">
-            <label class="col-3">Индекс</label>
-            <input class="form-control col" type="text" placeholder="Индекс" th:value="${task.taskIndex}" name="taskIndex">
-          </div>
+              <label class="col-3">Индекс</label>
+              <input class="form-control col" type="text" placeholder="Индекс" th:value="${task.taskIndex}" name="taskIndex">
+            </div>
 
             <div class="row g-0 p-2 mb-2 align-items-center">
               <label class="col-3">Дата начала</label>
@@ -93,9 +92,9 @@
                         <td th:text="${el.progress}"></td>
                         <td th:text="${el.previousIndex}"></td>
                         <td>
-                                <div th:each="el:${task.subTasks}">
-                                <span th:text="${el.name} + ', ' + ${el.duration}"></span>
-                              </div>
+                          <div th:each="el:${task.subTasks}">
+                            <span th:text="${el.name} + ', ' + ${el.duration}"></span>
+                          </div>
 
                           <button type="button" class="btn btn-success btn-sm btn-round" data-toggle="modal" data-target="#co-add-resources">
                             <i class="material-icons">add</i>

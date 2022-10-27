@@ -1,6 +1,7 @@
 package com.cpp.lccalc.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -15,6 +16,7 @@ public class Task{
     private String taskIndex;
 
     private String name, description;
+    private String performerName;
 
     public Long getBudget() {
         return budget;
@@ -23,6 +25,7 @@ public class Task{
     public void setBudget(Long budget) {
         this.budget = budget;
     }
+
 
     private Long budget;
 
@@ -57,6 +60,14 @@ public class Task{
 
         this.name = name;
         this.description = description;
+    }
+
+    public String getPerformerName() {
+        return performerName;
+    }
+
+    public void setPerformerName(String performerName) {
+        this.performerName = performerName;
     }
 
     public int getProgress() {

@@ -105,10 +105,11 @@ public class TaskController {
     public String taskEditPost(@PathVariable(value = "id") long id,
                                @RequestParam String name,
                                @RequestParam String description, @RequestParam String taskIndex,
-                               @RequestParam Long coId,
+                               @RequestParam(defaultValue = "0") Long coId,
                                @RequestParam String startDate, Model model) {
 
         Task task = taskRepository.findById(id).orElseThrow();
+
 
         for (CommercialOffer co: task.getCommercialOffers()) {
             if (co.getCoId().equals(coId)){
@@ -131,14 +132,17 @@ public class TaskController {
 
 
         task = taskRepository.findById(id).orElseThrow();
-        CommercialOffer selectedCommercialOffer = new CommercialOffer();
+        CommercialOffer selectedCommercialOffer = null;
         for (CommercialOffer co:task.getCommercialOffers()) {
             if (co.getStatus().equals("В работе")) selectedCommercialOffer = co;
 
         }
+        if (selectedCommercialOffer!=null){
+            task.setBudget(selectedCommercialOffer.getBudget());
+            task.setDuration(selectedCommercialOffer.getDuration());
+            task.setPerformerName(selectedCommercialOffer.getPerformer().getName());
+        }
 
-        task.setBudget(selectedCommercialOffer.getBudget());
-        task.setDuration(selectedCommercialOffer.getDuration());
         taskRepository.save(task);
         model.addAttribute("selectedCo",selectedCommercialOffer );
         model.addAttribute("task", task);
@@ -147,6 +151,9 @@ public class TaskController {
 
         Project project = task.getProject();
         project.sortTasks();
+        for (Task taskOfProject: project.getTasks()) {
+            taskOfProject.sortSubTasks();
+        }
 
         model.addAttribute("project", project);
 
@@ -177,7 +184,7 @@ public class TaskController {
         task = taskRepository.findById(id).orElseThrow();
         task.sortSubTasks();
 
-        CommercialOffer selectedCommercialOffer = new CommercialOffer();
+        CommercialOffer selectedCommercialOffer = null;
         for (CommercialOffer co:task.getCommercialOffers()) {
             if (co.getStatus().equals("В работе")) selectedCommercialOffer = co;
 

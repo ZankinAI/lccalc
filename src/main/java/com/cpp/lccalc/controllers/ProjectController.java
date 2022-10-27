@@ -151,6 +151,10 @@ public class ProjectController {
         Project project = projectRes.get(0);
         project.sortTasks();
 
+        for (Task task: project.getTasks()) {
+            task.sortSubTasks();
+        }
+
         model.addAttribute("project", project);
 
         Iterable<Customer> customers = customerRepository.findAll();
