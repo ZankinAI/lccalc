@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>Задача</title>
+  <title>Управление ресурсами</title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -23,101 +23,11 @@
 </div>
 
 <main class="px-md-4 bg-light">
-  <!— "Проект" + выбор проекта —>
-  <section class="bg-light text-dark p-3">
-    <form form action="/task/projectselect" name="projectChange" method="post">
-      <div class="container">
-        <h2 class="text-left">Проект</h2>
-        <select class="form-select form-select-lg mt-5" aria-label=".form-select-lg" name="projectId" onchange="document.forms.projectChange.submit()">
-          <option disabled>Выберите проект</option>
-          <option th:value="${project.projectId}" th:text="${project.projectName}" selected></option>
-          <div th:each="el:${projects}">
-            <option th:value="${el.projectId}" th:text="${el.projectName}"></option>
-          </div>
-        </select>
-      </div>
-
-    </form>
-  </section>
-
-  <!— "Задача" + выбор задачи —>
-  <section class="bg-light text-dark p-3">
-    <form form action="/task/taskselect" name="taskChange" method="post">
-      <div class="container">
-        <h2 class="text-left">Задача</h2>
-        <select class="form-select form-select-lg mt-5" aria-label=".form-select-lg" name="taskId" onchange="document.forms.projectChange.submit()">
-          <option disabled>Выберите задачу</option>
-          <option th:value="${task.taskId}" th:text="${task.name}" selected></option>
-          <div th:each="el:${project.tasks}">
-            <option th:value="${el.taskId}" th:text="${el.name}"></option>
-          </div>
-        </select>
-      </div>
-
-    </form>
-  </section>
-
-
-
-  <!— Данные по проекту —>
-  <section class="bg-light text-dark p-3">
-    <div class="container p-2">
-      <h2 class="text-left mb-5 ps">Данные по задаче</h2>
-      <div class="row gx-3">
-        <div class="col">
-          <div class="card text-center">
-            <div class="card-body"  style="min-height: 190px;">
-              <h5 class="card-title mb-3">Статус</h5>
-              <h4 class="card-text text-primary mb-3">Выполнено: 61%</h4>
-              <div class="progress  mb-1">
-                <div class="progress-bar bg-info" role="progressbar" style="width: 61%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-              </div>
-
-              <div class="mt-3">
-                <p th:text="${task.state}" class="fs-6 fw-weight-bold"></p>
-
-              </div>
-
-            </div>
-          </div>
-
-        </div>
-        <div class="col">
-          <div class="card text-center">
-            <div class="card-body" style="min-height: 190px;">
-              <h5 class="card-title mb-4" >Бюджет</h5>
-              <h4 th:text="${task.budget}+' руб.'" class="card-text text-primary"></h4>
-              <p class="card-text">Освоено 140000 руб.</p>
-              <div class="progress  mb-3">
-                <div class="progress-bar bg-info" role="progressbar" style="width: 20%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card text-center">
-            <div class="card-body"  style="min-height: 190px;">
-              <h5 class="card-title  mb-4">Начало</h5>
-              <h4 th:text="${task.startDate}" class="card-text text-primary "></h4>
-            </div>
-                 </div>
-        </div>
-        <div class="col">
-          <div class="card text-center">
-            <div class="card-body" style="min-height: 190px;">
-              <h5 class="card-title mb-4" >Длительность задачи</h5>
-              <h4 th:text="${task.duration} + ' дней'" class="card-text text-primary"></h4>
-            </div>
-
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <!--Подзадачи -->
   <section class="bg-light text-dark p-3">
     <div class="container p-2">
+      <h2>Ресурсы</h2>
       <div class="card g-0 p-2 mt-2">
     <div class="row g-0">
       <div class="col-md-4">

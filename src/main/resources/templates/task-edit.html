@@ -38,18 +38,19 @@
 
           <h6>Основная информация</h6>
             <div class="row g-0 p-2 mb-2 align-items-center">
-              <label class="col-3">Наименование</label>
-              <input class="form-control col" type="text" placeholder="Наименование" th:value="${task.name}" name="name">
-            </div>
+            <label class="col-3">Наименование</label>
+            <input class="form-control col" type="text" placeholder="Наименование" th:value="${task.name}" name="name">
+          </div>
 
             <div class="row g-0 p-2 mb-2 align-items-center">
-              <label class="col-3">Описание</label>
-              <input class="form-control col" type="text" placeholder="Описание"  th:value="${task.description}" name="description">
-            </div>
+            <label class="col-3">Описание</label>
+            <input class="form-control col" type="text" placeholder="Описание"  th:value="${task.description}" name="description">
+          </div>
+
             <div class="row g-0 p-2 mb-2 align-items-center">
-              <label class="col-3">Индекс</label>
-              <input class="form-control col" type="text" placeholder="Индекс" th:value="${task.taskIndex}" name="taskIndex">
-            </div>
+            <label class="col-3">Индекс</label>
+            <input class="form-control col" type="text" placeholder="Индекс" th:value="${task.taskIndex}" name="taskIndex">
+          </div>
 
             <div class="row g-0 p-2 mb-2 align-items-center">
               <label class="col-3">Дата начала</label>
@@ -62,12 +63,12 @@
             <div class="row g-0">
               <div class="col-md-4">
                 <h6 class="card-title mb-1">Подзадачи</h6>
+                <button type="button" class="mt-3 btn btn-success btn-sm" data-toggle="modal" data-target="#co-add-subtask">Добавить подзадачу</button>
               </div>
-              <div class="col-md-3">
-                <button type="button" class="btn btn-success btn-sm ms-3" data-toggle="modal" data-target="#co-add-subtask">Добавить подзадачу</button>
-              </div>
+
+
               <!--Список подзадач -->
-                <div class="mt-5 table-responsive">
+                <div class="mt-1 table-responsive">
                   <table class="table table-striped table-hover">
                     <thead>
                     <tr>
@@ -92,9 +93,9 @@
                         <td th:text="${el.progress}"></td>
                         <td th:text="${el.previousIndex}"></td>
                         <td>
-                          <div th:each="el:${task.subTasks}">
-                            <span th:text="${el.name} + ', ' + ${el.duration}"></span>
-                          </div>
+                                <div th:each="el:${task.subTasks}">
+                                <span th:text="${el.name} + ', ' + ${el.duration}"></span>
+                              </div>
 
                           <button type="button" class="btn btn-success btn-sm btn-round" data-toggle="modal" data-target="#co-add-resources">
                             <i class="material-icons">add</i>
@@ -127,9 +128,9 @@
               <div class="col-md-4">
                 <h6 class="card-title mb-1">Коммерческие предложения</h6>
               </div>
-              <div class="col-md-3">
-                <button type="button" class="btn btn-success btn-sm ms-3" data-toggle="modal" data-target="#co-add-modal">Добавить КП</button>
-              </div>
+
+
+
             </div>
 
               <label class="mt-3 col-3">Выберете коммерческое предложение для работы:</label>
@@ -141,8 +142,11 @@
                 </div>
               </select>
 
+            <div class="col-md-4">
+              <button type="button" class="btn btn-success btn-sm mt-3" data-toggle="modal" data-target="#co-add-modal">Добавить КП</button>
+            </div>
 
-            <div class="mt-5 table-responsive">
+            <div class="table-responsive">
               <table class="table table-striped table-hover">
                 <thead>
                 <tr>
