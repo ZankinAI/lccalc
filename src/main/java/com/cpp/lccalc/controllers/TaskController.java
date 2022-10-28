@@ -52,6 +52,37 @@ public class TaskController {
         return "task";
     }
 
+    //Страница редактирования подзадачи
+    @GetMapping("/subtask/{id}/edit")
+    public String subTaskEdit(@PathVariable(value = "id") long id,  Model model) {
+        SubTask subTask = subTaskRepository.findById(id).orElseThrow();
+        Task task = subTask.getTask();
+        model.addAttribute("task", task);
+        model.addAttribute("subtask", subTask);
+
+        MaterialResourcesListDTO materialResourcesList = new MaterialResourcesListDTO();
+
+        materialResourcesList.addResource(new MaterialResourcesDTO(true, 10L, "name 1"));
+        materialResourcesList.addResource(new MaterialResourcesDTO(false, 11L, "name 2"));
+        materialResourcesList.addResource(new MaterialResourcesDTO(false, 110L, "name 3"));
+        materialResourcesList.addResource(new MaterialResourcesDTO(true, 140L, "name 4"));
+        materialResourcesList.addResource(new MaterialResourcesDTO(true, 1L, "name 5"));
+
+        model.addAttribute("materialResourcesList", materialResourcesList);
+
+        HumanResourcesListDTO humanResourcesList = new HumanResourcesListDTO();
+
+        humanResourcesList.addResource(new HumanResourcesDTO(true, 10L, 10L, "name 1"));
+        humanResourcesList.addResource(new HumanResourcesDTO(false,10L, 11L, "name 2"));
+        humanResourcesList.addResource(new HumanResourcesDTO(false, 10L,110L, "name 3"));
+        humanResourcesList.addResource(new HumanResourcesDTO(true, 10L,140L, "name 4"));
+        humanResourcesList.addResource(new HumanResourcesDTO(true, 10L,1L, "name 5"));
+
+        model.addAttribute("humanResourcesList", humanResourcesList);
+
+        return "subtask-edit";
+    }
+
 
 
     //Страница редактирования задачи
@@ -73,12 +104,12 @@ public class TaskController {
 
         Long idCO = Utils.getOptimalCommercialOfferId(task.getCommercialOffers());
 
-        ResourcesListDTO resourcesList = new ResourcesListDTO();
-        resourcesList.addResource(new ResourcesDTO(true, 10L, "name 1"));
-        resourcesList.addResource(new ResourcesDTO(false, 11L, "name 2"));
-        resourcesList.addResource(new ResourcesDTO(false, 110L, "name 3"));
-        resourcesList.addResource(new ResourcesDTO(true, 140L, "name 4"));
-        resourcesList.addResource(new ResourcesDTO(true, 1L, "name 5"));
+        MaterialResourcesListDTO resourcesList = new MaterialResourcesListDTO();
+        resourcesList.addResource(new MaterialResourcesDTO(true, 10L, "name 1"));
+        resourcesList.addResource(new MaterialResourcesDTO(false, 11L, "name 2"));
+        resourcesList.addResource(new MaterialResourcesDTO(false, 110L, "name 3"));
+        resourcesList.addResource(new MaterialResourcesDTO(true, 140L, "name 4"));
+        resourcesList.addResource(new MaterialResourcesDTO(true, 1L, "name 5"));
         model.addAttribute("resourcesList", resourcesList);
 
         return "task-edit";
@@ -86,7 +117,7 @@ public class TaskController {
 
     //Тестирование чекбокса
     @PostMapping("/task/{id}/add_resources")
-    public String test(@PathVariable(value = "id") long id, @ModelAttribute ResourcesListDTO resourcesList, Model model){
+    public String test(@PathVariable(value = "id") long id, @ModelAttribute MaterialResourcesListDTO resourcesList, Model model){
         Task task = taskRepository.findById(id).orElseThrow();
         task.sortSubTasks();
         model.addAttribute("task", task);
@@ -197,13 +228,13 @@ public class TaskController {
         Iterable<Performer> performers = performerRepository.findAll();
         model.addAttribute("performers", performers);
 
-        ResourcesListDTO resourcesList = new ResourcesListDTO();
-        resourcesList.addResource(new ResourcesDTO(true, 10L, "name 1"));
-        resourcesList.addResource(new ResourcesDTO(false, 11L, "name 2"));
-        resourcesList.addResource(new ResourcesDTO(false, 110L, "name 3"));
-        resourcesList.addResource(new ResourcesDTO(true, 140L, "name 4"));
-        resourcesList.addResource(new ResourcesDTO(true, 1L, "name 5"));
-        model.addAttribute("resourcesList", resourcesList);
+        MaterialResourcesListDTO materialResourcesList = new MaterialResourcesListDTO();
+        materialResourcesList.addResource(new MaterialResourcesDTO(true, 10L, "name 1"));
+        materialResourcesList.addResource(new MaterialResourcesDTO(false, 11L, "name 2"));
+        materialResourcesList.addResource(new MaterialResourcesDTO(false, 110L, "name 3"));
+        materialResourcesList.addResource(new MaterialResourcesDTO(true, 140L, "name 4"));
+        materialResourcesList.addResource(new MaterialResourcesDTO(true, 1L, "name 5"));
+        model.addAttribute("materialResourcesList", materialResourcesList);
         return "task-edit";
     }
 
@@ -264,12 +295,12 @@ public class TaskController {
         model.addAttribute("task", task);
         Iterable<Performer> performers = performerRepository.findAll();
         model.addAttribute("performers", performers);
-        ResourcesListDTO resourcesList = new ResourcesListDTO();
-        resourcesList.addResource(new ResourcesDTO(true, 10L, "name 1"));
-        resourcesList.addResource(new ResourcesDTO(false, 11L, "name 2"));
-        resourcesList.addResource(new ResourcesDTO(false, 110L, "name 3"));
-        resourcesList.addResource(new ResourcesDTO(true, 140L, "name 4"));
-        resourcesList.addResource(new ResourcesDTO(true, 1L, "name 5"));
+        MaterialResourcesListDTO resourcesList = new MaterialResourcesListDTO();
+        resourcesList.addResource(new MaterialResourcesDTO(true, 10L, "name 1"));
+        resourcesList.addResource(new MaterialResourcesDTO(false, 11L, "name 2"));
+        resourcesList.addResource(new MaterialResourcesDTO(false, 110L, "name 3"));
+        resourcesList.addResource(new MaterialResourcesDTO(true, 140L, "name 4"));
+        resourcesList.addResource(new MaterialResourcesDTO(true, 1L, "name 5"));
         model.addAttribute("resourcesList", resourcesList);
         return "task-edit";
     }

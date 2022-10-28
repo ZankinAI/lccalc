@@ -21,6 +21,8 @@ public class SubTask {
 
     private Long duration;
 
+    private Long laboriousness;
+
     private String previousIndex;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
@@ -33,13 +35,14 @@ public class SubTask {
     public SubTask() {
     }
 
-    public SubTask(String subTaskIndex, String name, String progress, Long duration, String previousIndex, LocalDate startDate, Task task) {
+    public SubTask(String subTaskIndex, String name, String progress, Long duration, String previousIndex, LocalDate startDate, Task task/*, Long laboriousness*/) {
         this.subTaskIndex = subTaskIndex;
         this.name = name;
         this.progress = progress;
         this.duration = duration;
         this.previousIndex = previousIndex;
         this.startDate = startDate;
+        //this.laboriousness = laboriousness;
         this.task = task;
     }
 
@@ -107,6 +110,13 @@ public class SubTask {
         this.task = task;
     }
 
+    public Long getLaboriousness() {
+        return laboriousness;
+    }
+
+    public void setLaboriousness(Long laboriousness) {
+        this.laboriousness = laboriousness;
+    }
 
     public static Comparator SubTaskIndexComparator = new Comparator<SubTask>() {
         @Override

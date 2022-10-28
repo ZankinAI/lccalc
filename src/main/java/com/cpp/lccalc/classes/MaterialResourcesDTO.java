@@ -1,6 +1,6 @@
 package com.cpp.lccalc.classes;
 
-public class ResourcesDTO {
+public class MaterialResourcesDTO {
     private boolean checked;
     private Long amount;
     private String name;
@@ -29,10 +29,10 @@ public class ResourcesDTO {
         this.name = name;
     }
 
-    public ResourcesDTO() {
+    public MaterialResourcesDTO() {
     }
 
-    public ResourcesDTO(boolean checked, Long amount, String name) {
+    public MaterialResourcesDTO(boolean checked, Long amount, String name) {
         this.amount = amount;
         this.checked = checked;
         this.name = name;
