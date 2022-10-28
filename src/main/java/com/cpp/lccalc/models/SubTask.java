@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Comparator;
+import java.util.Set;
 
 @Entity
 public class SubTask {
@@ -32,6 +33,9 @@ public class SubTask {
     @JoinColumn(name="task_id", nullable=true)
     private Task task;
 
+    @OneToMany(mappedBy = "subTask", cascade = CascadeType.ALL, orphanRemoval = true )
+    private Set<HumanResourcesSubTask> humanResourcesSubTasks;
+
     public SubTask() {
     }
 
@@ -48,6 +52,14 @@ public class SubTask {
 
     public Long getSubTaskId() {
         return subTaskId;
+    }
+
+    public Set<HumanResourcesSubTask> getHumanResourcesSubTasks() {
+        return humanResourcesSubTasks;
+    }
+
+    public void setHumanResourcesSubTasks(Set<HumanResourcesSubTask> humanResourcesSubTasks) {
+        this.humanResourcesSubTasks = humanResourcesSubTasks;
     }
 
     public void setSubTaskId(Long subTaskId) {
