@@ -1,11 +1,23 @@
 package com.cpp.lccalc.classes;
 
+import com.cpp.lccalc.models.HumanResources;
+
 public class HumanResourcesDTO {
     private boolean checked;
 
     private Long tariff;
     private Long amount;
     private String name;
+
+    private Long id;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public boolean isChecked() {
         return checked;
@@ -47,5 +59,13 @@ public class HumanResourcesDTO {
         this.checked = checked;
         this.tariff = tariff;
         this.name = name;
+    }
+
+    public HumanResourcesDTO(HumanResources humanResource) {
+        this.amount = humanResource.getAmount();
+        this.checked = false;
+        this.tariff = humanResource.getTariff();
+        this.name = humanResource.getName();
+        this.id = humanResource.getHumanResourceId();
     }
 }

@@ -35,6 +35,12 @@ public class TaskController {
 
     @Autowired SubTaskRepository subTaskRepository;
 
+    @Autowired
+    private HumanResourceRepository humanResourceRepository;
+
+    @Autowired
+    private HumanResourceSubTaskRepository humanResourceSubTaskRepository;
+
 
 
 
@@ -70,14 +76,12 @@ public class TaskController {
 
         model.addAttribute("materialResourcesList", materialResourcesList);
 
+        Iterable<HumanResources> humanResources = humanResourceRepository.findAll();
         HumanResourcesListDTO humanResourcesList = new HumanResourcesListDTO();
 
-        humanResourcesList.addResource(new HumanResourcesDTO(true, 10L, 10L, "name 1"));
-        humanResourcesList.addResource(new HumanResourcesDTO(false,10L, 11L, "name 2"));
-        humanResourcesList.addResource(new HumanResourcesDTO(false, 10L,110L, "name 3"));
-        humanResourcesList.addResource(new HumanResourcesDTO(true, 10L,140L, "name 4"));
-        humanResourcesList.addResource(new HumanResourcesDTO(true, 10L,1L, "name 5"));
-
+        for (HumanResources humanResource: humanResources) {
+            humanResourcesList.addResource(new HumanResourcesDTO(humanResource));
+        }
         model.addAttribute("humanResourcesList", humanResourcesList);
 
         return "subtask-edit";
@@ -104,27 +108,57 @@ public class TaskController {
 
         Long idCO = Utils.getOptimalCommercialOfferId(task.getCommercialOffers());
 
-        MaterialResourcesListDTO resourcesList = new MaterialResourcesListDTO();
-        resourcesList.addResource(new MaterialResourcesDTO(true, 10L, "name 1"));
-        resourcesList.addResource(new MaterialResourcesDTO(false, 11L, "name 2"));
-        resourcesList.addResource(new MaterialResourcesDTO(false, 110L, "name 3"));
-        resourcesList.addResource(new MaterialResourcesDTO(true, 140L, "name 4"));
-        resourcesList.addResource(new MaterialResourcesDTO(true, 1L, "name 5"));
-        model.addAttribute("resourcesList", resourcesList);
+        Iterable<HumanResources> humanResources = humanResourceRepository.findAll();
+        HumanResourcesListDTO humanResourcesList = new HumanResourcesListDTO();
+
+        for (HumanResources humanResource: humanResources) {
+            humanResourcesList.addResource(new HumanResourcesDTO(humanResource));
+        }
+        model.addAttribute("humanResourcesList", humanResourcesList);
 
         return "task-edit";
     }
 
-    //Тестирование чекбокса
-    @PostMapping("/task/{id}/add_resources")
-    public String test(@PathVariable(value = "id") long id, @ModelAttribute MaterialResourcesListDTO resourcesList, Model model){
-        Task task = taskRepository.findById(id).orElseThrow();
-        task.sortSubTasks();
-        model.addAttribute("task", task);
+    //Обновление человеческих ресурсов в подзадаче
+    @PostMapping("/subtask/{id}/add_human_resources")
+    public String test(@PathVariable(value = "id") long id, @ModelAttribute HumanResourcesListDTO resourcesList, Model model){
+        SubTask subTask = subTaskRepository.findById(id).orElseThrow();
+
+        HumanResourcesSubTask humanResourcesSubTask = null;
+        for (HumanResourcesDTO humanresourcesDTO: resourcesList.getHumanResources()) {
+            humanResourcesSubTask = null;
+            if (humanresourcesDTO.isChecked()){
+                humanResourcesSubTask = subTask.findResourceById(humanresourcesDTO.getId());
+                if (humanResourcesSubTask == null){
+                    HumanResourcesSubTask humanResourcesSubTask1 = new HumanResourcesSubTask(humanresourcesDTO.getAmount(), humanResourceRepository.findById(humanresourcesDTO.getId()).orElseThrow(), subTask);
+                    humanResourceSubTaskRepository.save(humanResourcesSubTask1);
+                }
+                else {
+                    HumanResourcesSubTask humanResourcesSubTaskEdit = humanResourceSubTaskRepository.findById(humanResourcesSubTask.getHumanResourceSubTaskId()).orElseThrow();
+                    humanResourcesSubTaskEdit.setAmount(humanresourcesDTO.getAmount());
+                    humanResourceSubTaskRepository.save(humanResourcesSubTaskEdit);
+                }
+
+            }
+
+        }
+
+        subTask = subTaskRepository.findById(id).orElseThrow();
+
+
+        model.addAttribute("task", subTask.getTask());
         Iterable<Performer> performers = performerRepository.findAll();
         model.addAttribute("performers", performers);
 
         model.addAttribute("resourcesList", resourcesList);
+
+        Iterable<HumanResources> humanResources = humanResourceRepository.findAll();
+        HumanResourcesListDTO humanResourcesList = new HumanResourcesListDTO();
+
+        for (HumanResources humanResource: humanResources) {
+            humanResourcesList.addResource(new HumanResourcesDTO(humanResource));
+        }
+        model.addAttribute("humanResourcesList", humanResourcesList);
 
         return "task-edit";
     }
@@ -350,5 +384,29 @@ public class TaskController {
         model.addAttribute("id", id);
         return "gantt-project";
     }
+
+    //Открыть страницу с ресурсами
+    @GetMapping(value = "/resources")
+    public String resources(Model model){
+
+        Iterable<HumanResources> humanResources = humanResourceRepository.findAll();
+        model.addAttribute("humanResources", humanResources);
+        return "resources";
+    }
+
+    @PostMapping(value = "/resources/add_human_resource")
+    public String addHumanResource(@RequestParam String name, @RequestParam Long tariff,
+                                   @RequestParam Long amount,
+                                   Model model){
+
+
+        HumanResources humanResource = new HumanResources(tariff, amount, name);
+        humanResourceRepository.save(humanResource);
+        Iterable<HumanResources> humanResources = humanResourceRepository.findAll();
+        model.addAttribute("humanResources", humanResources);
+
+        return "resources";
+    }
+
 
 }

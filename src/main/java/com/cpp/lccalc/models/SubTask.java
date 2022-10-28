@@ -139,4 +139,14 @@ public class SubTask {
         }
     };
 
+    public HumanResourcesSubTask findResourceById(Long id){
+
+
+        for (HumanResourcesSubTask humanResourcesSubTask1: this.humanResourcesSubTasks) {
+            if (humanResourcesSubTask1.getHumanResource().getHumanResourceId().equals(id)) return humanResourcesSubTask1;
+        }
+
+        return null;
+    }
+
 }

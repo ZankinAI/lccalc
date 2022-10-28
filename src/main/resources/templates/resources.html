@@ -47,7 +47,7 @@
             </tr>
             </thead>
 
-            <tbody>
+            <!--<tbody>
             <div th:each="materialResource, itemStat : ${materialResourcesList.materialResources}">
               <tr>
                 <td scope="row"></td>
@@ -55,7 +55,7 @@
                 <td th:text="${materialResourcesList.materialResources[__${itemStat.index}__].amount}"></td>
               </tr>
             </div>
-            </tbody>
+            </tbody>-->
 
           </table>
         </div>
@@ -103,13 +103,13 @@
             </tr>
             </thead>
 
-            <tbody>
-            <div th:each="humanResource, itemStat :${humanResourcesList.humanResources}">
+         <tbody>
+            <div th:each="humanResource:${humanResources}">
               <tr>
                 <td scope="row"></td>
-                <td th:text="${humanResourcesList.humanResources[__${itemStat.index}__].name}"></td>
-                <td th:text="${humanResourcesList.humanResources[__${itemStat.index}__].tariff}"></td>
-                <td th:text="${humanResourcesList.humanResources[__${itemStat.index}__].amount}"></td>
+                <td th:text="${humanResource.name}"></td>
+                <td th:text="${humanResource.tariff}"></td>
+                <td th:text="${humanResource.amount}"></td>
               </tr>
             </div>
             </tbody>
@@ -123,28 +123,29 @@
         </div>
 
         <div class="collapse" id="collapseNewHumanResource">
-          <div class="card card-body">
+          <form th:action="'/resources/add_human_resource'" method="post">
+            <div class="card card-body">
 
-            <div class="form-group row mb-2 align-items-center">
-              <label class="col-3">Должность</label>
-              <input class="form-control col" type="text" placeholder="Должность" name="name">
-            </div>
+              <div class="form-group row mb-2 align-items-center">
+                <label class="col-3">Должность</label>
+                <input class="form-control col" type="text" placeholder="Должность" name="name">
+              </div>
 
-            <div class="form-group row mb-2 align-items-center">
-              <label class="col-3">Тарифная ставка</label>
-              <input class="form-control col" type="number" placeholder="Тарифная ставка" name="tariff">
-            </div>
+              <div class="form-group row mb-2 align-items-center">
+                <label class="col-3">Тарифная ставка</label>
+                <input class="form-control col" type="number" placeholder="Тарифная ставка" name="tariff">
+              </div>
 
-            <div class="form-group row mb-2 align-items-center">
-              <label class="col-3">Общее количество ресурса</label>
-              <input class="form-control col" type="number" placeholder="Количество ресурса" name="amount">
-            </div>
+              <div class="form-group row mb-2 align-items-center">
+                <label class="col-3">Общее количество ресурса</label>
+                <input class="form-control col" type="number" placeholder="Количество ресурса" name="amount">
+              </div>
 
-            <a class="btn btn-success btn-sm col-1" role="button" aria-expanded="false">
-              Добавить
-            </a>
-
+              <button role="button" class="btn btn-primary" type="submit">
+                Добавить ресурс
+              </button>
           </div>
+          </form>
         </div>
       </div>
     </div>

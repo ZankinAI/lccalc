@@ -109,6 +109,15 @@ public class TaskCalculation {
         for (int i=0; i < this.children.size(); i++){
             this.children.get(i).setEarlyStart(this.children.get(i).findEarlyStart(this.children));
         }
+        Long duration = 0L;
+
+        for (int i=0; i < this.children.size(); i++){
+           if ((this.children.get(i).getDuration() + this.children.get(i).getEarlyStart())>duration) {
+               duration = this.children.get(i).getDuration() + this.children.get(i).getEarlyStart();
+           }
+        }
+
+        this.duration = duration;
 
 
 

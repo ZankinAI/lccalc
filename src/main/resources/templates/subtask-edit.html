@@ -134,12 +134,12 @@
                 </thead>
 
                 <tbody>
-                <div th:each="humanResource, itemStat :${humanResourcesList.humanResources}">
+                <div th:each="humanResource :${subtask.humanResourcesSubTasks}">
                   <tr>
                     <td scope="row"></td>
-                    <td th:text="${humanResourcesList.humanResources[__${itemStat.index}__].name}"></td>
-                    <td th:text="${humanResourcesList.humanResources[__${itemStat.index}__].tariff}"></td>
-                    <td th:text="${humanResourcesList.humanResources[__${itemStat.index}__].amount}"></td>
+                    <td th:text="${humanResource.humanResource?.name}"></td>
+                    <td th:text="${humanResource.humanResource?.tariff}"></td>
+                    <td th:text="${humanResource.amount}"></td>
                   </tr>
                 </div>
                 </tbody>
@@ -248,6 +248,8 @@
 
               <label class="form-check-label" for="flexCheckChecked" th:text="*{humanResources[__${itemStat.index}__].name}"></label>
             </div>
+            <input type="hidden" class="form-control col" th:field="*{humanResources[__${itemStat.index}__].name}"  >
+            <input type="hidden" class="form-control col" th:field="*{humanResources[__${itemStat.index}__].id}"  >
             <input class="form-control col" type="number" th:field="*{humanResources[__${itemStat.index}__].tariff}"  >
             <input class="form-control col" type="number" th:field="*{humanResources[__${itemStat.index}__].amount}"  >
 
