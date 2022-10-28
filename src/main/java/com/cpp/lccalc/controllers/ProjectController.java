@@ -220,13 +220,15 @@ public class ProjectController {
     //Добавление ответственного по проекту во вкладке редактирования проекта
     @PostMapping("/project/{id}/edit/taskAdd")
     public String taskAdd(@PathVariable(value = "id") long id, @RequestParam String name,
-                          @RequestParam String description, Model model) {
+                          @RequestParam String description, @RequestParam String index, Model model) {
 
 
         Project project = projectRopository.findById(id).orElseThrow();
         Task task = new Task(name, description);
         task.setProject(project);
         task.setState("Не начата");
+        task.setBudget(0L);
+        task.setTaskIndex(index);
         taskRepository.save(task);
         project = projectRopository.findById(id).orElseThrow();
 

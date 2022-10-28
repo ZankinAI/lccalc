@@ -113,7 +113,6 @@ public class GanttData {
         for (SubTask subtask: subTasks) {
             if (subtask.getSubTaskIndex().matches(task.getTaskIndex()+"(\\.\\d){1}"))
             {
-                //subTasks.remove(subTaskFromList);
                 this.addChild(new GanttData(subtask,subTasks));
             }
         }

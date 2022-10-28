@@ -1,9 +1,6 @@
 package com.cpp.lccalc.controllers;
 
-import com.cpp.lccalc.classes.Category;
-import com.cpp.lccalc.classes.ResourcesDTO;
-import com.cpp.lccalc.classes.ResourcesListDTO;
-import com.cpp.lccalc.classes.Utils;
+import com.cpp.lccalc.classes.*;
 import com.cpp.lccalc.models.*;
 import com.cpp.lccalc.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +66,7 @@ public class TaskController {
         }
         model.addAttribute("selectedCo",selectedCommercialOffer );
         task.sortSubTasks();
+        TaskCalculation taskCalculation = new TaskCalculation(task);
         model.addAttribute("task", task);
         Iterable<Performer> performers = performerRepository.findAll();
         model.addAttribute("performers", performers);
@@ -171,12 +169,13 @@ public class TaskController {
     public String AddSubTaskFromTask(@PathVariable(value = "id") long id,
                                 //Параметры для исполнителя
                                 @RequestParam String name,
-                                @RequestParam String subTaskIndex, @RequestParam String startDate,
-                                @RequestParam Long duration, @RequestParam String progress,
+                                @RequestParam String subTaskIndex, @RequestParam(defaultValue="2022-05-20") String startDate,
+                                @RequestParam(defaultValue="0") Long duration, @RequestParam String progress,
                                 @RequestParam(defaultValue="") String previousIndex,
                                 Model model){
 
         Task task = taskRepository.findById(id).orElseThrow();
+
         SubTask subTask = new SubTask(subTaskIndex, name, progress, duration, previousIndex, LocalDate.parse(startDate), task);
 
         subTaskRepository.save(subTask);
@@ -189,11 +188,22 @@ public class TaskController {
             if (co.getStatus().equals("В работе")) selectedCommercialOffer = co;
 
         }
+
+        TaskCalculation taskCalculation = new TaskCalculation(task);
+
         model.addAttribute("selectedCo",selectedCommercialOffer );
 
         model.addAttribute("task", task);
         Iterable<Performer> performers = performerRepository.findAll();
         model.addAttribute("performers", performers);
+
+        ResourcesListDTO resourcesList = new ResourcesListDTO();
+        resourcesList.addResource(new ResourcesDTO(true, 10L, "name 1"));
+        resourcesList.addResource(new ResourcesDTO(false, 11L, "name 2"));
+        resourcesList.addResource(new ResourcesDTO(false, 110L, "name 3"));
+        resourcesList.addResource(new ResourcesDTO(true, 140L, "name 4"));
+        resourcesList.addResource(new ResourcesDTO(true, 1L, "name 5"));
+        model.addAttribute("resourcesList", resourcesList);
         return "task-edit";
     }
 
