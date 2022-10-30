@@ -118,7 +118,7 @@ public class ProjectController {
     //Добавление проекта
     @PostMapping(path = "/project/add", params = "projectName")
     public String projectAddProject(@RequestParam String projectName,  @RequestParam String description,
-                                    @RequestParam Long budget,  @RequestParam String startDate,
+                                    @RequestParam(defaultValue = "0") Long budget,  @RequestParam String startDate,
                                     @RequestParam String finishDate, @RequestParam Long customerId,
                                     @RequestParam Long pmId, Model model){
 

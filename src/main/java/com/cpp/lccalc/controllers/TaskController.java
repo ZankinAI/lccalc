@@ -102,6 +102,8 @@ public class TaskController {
         model.addAttribute("selectedCo",selectedCommercialOffer );
         task.sortSubTasks();
         TaskCalculation taskCalculation = new TaskCalculation(task);
+        task.setDuration(taskCalculation.getDuration());
+        taskRepository.save(task);
         model.addAttribute("task", task);
         Iterable<Performer> performers = performerRepository.findAll();
         model.addAttribute("performers", performers);
@@ -144,6 +146,9 @@ public class TaskController {
         }
 
         subTask = subTaskRepository.findById(id).orElseThrow();
+        subTask.findDuration();
+        subTaskRepository.save(subTask);
+
 
 
         model.addAttribute("task", subTask.getTask());
@@ -160,7 +165,7 @@ public class TaskController {
         }
         model.addAttribute("humanResourcesList", humanResourcesList);
 
-        return "task-edit";
+        return "subtask-edit";
     }
 
     //Обновление задачи
@@ -236,12 +241,15 @@ public class TaskController {
                                 @RequestParam String name,
                                 @RequestParam String subTaskIndex, @RequestParam(defaultValue="2022-05-20") String startDate,
                                 @RequestParam(defaultValue="0") Long duration, @RequestParam String progress,
+                                @RequestParam(defaultValue="0") Long laboriousness,
                                 @RequestParam(defaultValue="") String previousIndex,
                                 Model model){
 
         Task task = taskRepository.findById(id).orElseThrow();
 
-        SubTask subTask = new SubTask(subTaskIndex, name, progress, duration, previousIndex, LocalDate.parse(startDate), task);
+        SubTask subTask = new SubTask(subTaskIndex, name, progress, laboriousness, previousIndex, LocalDate.parse(startDate), task);
+
+        subTask.findDuration();
 
         subTaskRepository.save(subTask);
 
@@ -269,6 +277,15 @@ public class TaskController {
         materialResourcesList.addResource(new MaterialResourcesDTO(true, 140L, "name 4"));
         materialResourcesList.addResource(new MaterialResourcesDTO(true, 1L, "name 5"));
         model.addAttribute("materialResourcesList", materialResourcesList);
+
+        Iterable<HumanResources> humanResources = humanResourceRepository.findAll();
+        HumanResourcesListDTO humanResourcesList = new HumanResourcesListDTO();
+
+        for (HumanResources humanResource: humanResources) {
+            humanResourcesList.addResource(new HumanResourcesDTO(humanResource));
+        }
+        model.addAttribute("humanResourcesList", humanResourcesList);
+
         return "task-edit";
     }
 
@@ -284,6 +301,14 @@ public class TaskController {
                                 //Параметры для КП
                                 @RequestParam Long duration, @RequestParam Long budget,
                                       Model model){
+
+        Iterable<HumanResources> humanResources = humanResourceRepository.findAll();
+        HumanResourcesListDTO humanResourcesList = new HumanResourcesListDTO();
+
+        for (HumanResources humanResource: humanResources) {
+            humanResourcesList.addResource(new HumanResourcesDTO(humanResource));
+        }
+        model.addAttribute("humanResourcesList", humanResourcesList);
 
         Performer performer;
         Task task = taskRepository.findById(id).orElseThrow();
@@ -336,6 +361,8 @@ public class TaskController {
         resourcesList.addResource(new MaterialResourcesDTO(true, 140L, "name 4"));
         resourcesList.addResource(new MaterialResourcesDTO(true, 1L, "name 5"));
         model.addAttribute("resourcesList", resourcesList);
+
+
         return "task-edit";
     }
 

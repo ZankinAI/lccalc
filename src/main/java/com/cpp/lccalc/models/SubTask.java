@@ -39,14 +39,14 @@ public class SubTask {
     public SubTask() {
     }
 
-    public SubTask(String subTaskIndex, String name, String progress, Long duration, String previousIndex, LocalDate startDate, Task task/*, Long laboriousness*/) {
+    public SubTask(String subTaskIndex, String name, String progress, Long laboriousness, String previousIndex, LocalDate startDate, Task task/*, Long laboriousness*/) {
         this.subTaskIndex = subTaskIndex;
         this.name = name;
         this.progress = progress;
         this.duration = duration;
         this.previousIndex = previousIndex;
         this.startDate = startDate;
-        //this.laboriousness = laboriousness;
+        this.laboriousness = laboriousness;
         this.task = task;
     }
 
@@ -147,6 +147,14 @@ public class SubTask {
         }
 
         return null;
+    }
+
+    public void findDuration(){
+        if (this.humanResourcesSubTasks!=null){
+            this.duration = this.laboriousness / this.humanResourcesSubTasks.size() / 8L;
+        }
+        else this.duration = this.laboriousness / 8L;
+
     }
 
 }
