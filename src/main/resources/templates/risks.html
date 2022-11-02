@@ -112,12 +112,12 @@
 
             <tbody>
             <div th:each="risk : ${risks}">
-              <tr>
+              <tr th:style="${risk.color}">
                 <td scope="row"></td>
                 <td th:text="${risk.name}"></td>
                 <td th:text="${risk.likelihood}"></td>
                 <td th:text="${risk.consequence}"></td>
-                </tr>
+              </tr>
             </div>
             </tbody>
 

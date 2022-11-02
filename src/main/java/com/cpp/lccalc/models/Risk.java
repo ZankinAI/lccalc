@@ -12,9 +12,11 @@ public class Risk {
 
     private String name;
 
-    private String likelihood;
+    private int likelihood;
 
-    private String consequence;
+    private int consequence;
+
+    private String color;
 
     public Long getRiskId() {
         return riskId;
@@ -32,25 +34,105 @@ public class Risk {
         this.name = name;
     }
 
-    public String getLikelihood() {
+    public int getLikelihood() {
         return likelihood;
     }
 
-    public void setLikelihood(String likelihood) {
+    public void setLikelihood(int likelihood) {
         this.likelihood = likelihood;
     }
 
-    public String getConsequence() {
+    public int getConsequence() {
         return consequence;
     }
 
-    public void setConsequence(String consequence) {
+    public void setConsequence(int consequence) {
         this.consequence = consequence;
     }
 
-    public Risk(String name, String likelihood, String consequence) {
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public Risk(String name, int likelihood, int consequence) {
         this.name = name;
         this.likelihood = likelihood;
         this.consequence = consequence;
+        this.color = getColor(likelihood,consequence);
+    }
+
+    public String getColor(int likelihood, int consequence){
+        switch (likelihood) {
+            case (1):
+                switch (consequence) {
+                    case (1):
+                        return "background-color:#92D050";
+                    case (2):
+                        return "background-color:yellow";
+                    case (3):
+                        return "background-color:#FFC000";
+                    case (4):
+                        return "background-color:red";
+                    case (5):
+                        return "background-color:red";
+                }
+            case (2):
+                switch (consequence) {
+                    case (1):
+                        return "background-color:#00B050";
+                    case (2):
+                        return "background-color:#92D050";
+                    case (3):
+                        return "background-color:yellow";
+                    case (4):
+                        return "background-color:#FFC000";
+                    case (5):
+                        return "background-color:red";
+                }
+            case (3):
+                switch (consequence) {
+                    case (1):
+                        return "background-color:#00B050";
+                    case (2):
+                        return "background-color:#92D050";
+                    case (3):
+                        return "background-color:yellow";
+                    case (4):
+                        return "background-color:#FFC000";
+                    case (5):
+                        return "background-color:#FFC000";
+                }
+            case (4):
+                switch (consequence) {
+                    case (1):
+                        return "background-color:#00B050";
+                    case (2):
+                        return "background-color:#92D050";
+                    case (3):
+                        return "background-color:#92D050";
+                    case (4):
+                        return "background-color:yellow";
+                    case (5):
+                        return "background-color:#FFC000";
+                }
+            case (5):
+                switch (consequence) {
+                    case (1):
+                        return "background-color:#00B050";
+                    case (2):
+                        return "background-color:#00B050";
+                    case (3):
+                        return "background-color:#92D050";
+                    case (4):
+                        return "background-color:yellow";
+                    case (5):
+                        return "background-color:yellow";
+                }
+        }
+        return null;
     }
 }
