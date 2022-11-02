@@ -150,6 +150,7 @@ public class SubTask {
     }
 
     public void findDuration(){
+
         if (this.humanResourcesSubTasks!=null){
             this.duration = this.laboriousness / this.humanResourcesSubTasks.size() / 8L;
         }

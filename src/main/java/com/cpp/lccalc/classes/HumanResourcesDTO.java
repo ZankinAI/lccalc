@@ -56,7 +56,7 @@ public class HumanResourcesDTO {
 
     public HumanResourcesDTO(boolean checked, Long tariff, Long amount, String name) {
         this.amount = amount;
-        this.checked = checked;
+        this.checked = false;
         this.tariff = tariff;
         this.name = name;
     }

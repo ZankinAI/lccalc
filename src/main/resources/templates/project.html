@@ -44,7 +44,7 @@
         <section class="bg-light text-dark p-3">
             <div class="container d-flex justify-content-evenly">
                 <button type="button" class="btn btn-outline-secondary">Назначение исполнителей</button>
-                <button type="button" class="btn btn-outline-secondary">План-графики</button>
+                <a th:href="'/gantt_project/'+ ${project.projectId}" ><button type="button" class="btn btn-outline-secondary">План-графики</button></a>
                 <button type="button" class="btn btn-outline-secondary">Оценка целесообразности</button>
                 <button type="button" class="btn btn-outline-secondary">Оценка и анализ рисков</button>
             </div>
@@ -58,10 +58,10 @@
                     <div class="col">
                         <div class="card text-center">
                             <div class="card-body"  style="min-height: 190px;">
-                                <h5 class="card-title mb-3">Статус</h5>
-                                <h4 class="card-text text-primary mb-3">Выполнено: 61%</h4>
+                                <h5 class="card-title mb-4">Статус</h5>
+                                <h4 class="card-text text-primary mb-3">Выполнено: 0%</h4>
                                 <div class="progress  mb-1">
-                                    <div class="progress-bar bg-info" role="progressbar" style="width: 61%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                    <div class="progress-bar bg-info" role="progressbar" style="width: 0%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
                                 </div>
 
                                 <div th:switch="${project.status}" class="mt-3">
@@ -83,9 +83,9 @@
                             <div class="card-body" style="min-height: 190px;">
                                 <h5 class="card-title mb-4" >Бюджет</h5>
                                 <h4 th:text="${project.budget}+' руб.'" class="card-text text-primary"></h4>
-                                <p class="card-text">Освоено 140000 руб.</p>
+                                <p class="card-text">Освоено 0 руб.</p>
                                 <div class="progress  mb-3">
-                                    <div class="progress-bar bg-info" role="progressbar" style="width: 20%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                    <div class="progress-bar bg-info" role="progressbar" style="width: 0%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
                                 </div>
                             </div>
                             <div class="card-footer text-muted">
@@ -159,7 +159,7 @@
 
             </div>
         </section>
-
+<!--
         <section class="bg-light text-dark p-3">
             <div class="container p-2">
                 <a href="/gantt_data/1" >Данные для ганта</a>
@@ -173,7 +173,7 @@
                 <a th:href="'/gantt_project/'+ ${project.projectId}" >Гант</a>
             </div>
 
-        </section>
+        </section>-->
 
         <section class="bg-light text-dark p-3">
             <div class="container p-2">
@@ -198,15 +198,15 @@
                             </thead>
                             <div th:each="el:${project.tasks}">
                                 <tr>
-                                    <td scope="row"></td>
+                                    <td th:text="${el.taskIndex}"></td>
                                     <td >
                                         <a th:href="'/task/' + ${el.taskId}" th:text="${el.name}"></a>
                                     </td>
-                                    <td>Otto</td>
-                                    <td th:value="${el.budget}"></td>
-                                    <td th:value="${el.startDate}"></td>
-                                    <td th:value="${el.duration}"></td>
-                                    <td th:value="${el.state}"></td>
+                                    <td th:text="${el.performerName}"></td>
+                                    <td th:text="${el.budget}"></td>
+                                    <td th:text="${el.startDate}"></td>
+                                    <td th:text="${el.duration}"></td>
+                                    <td th:text="${el.state}"></td>
                                 </tr>
                             </div>
 

@@ -93,9 +93,9 @@
                         <td th:text="${el.progress}"></td>
                         <td th:text="${el.previousIndex}"></td>
                         <td>
-                                <div th:each="el:${task.subTasks}">
+                                <!--<div th:each="el:${task.subTasks}">
                                 <span th:text="${el.name} + ', ' + ${el.laboriousness}"></span>
-                              </div>
+                              </div>-->
                         </td>
                         <td>
 
@@ -129,7 +129,7 @@
 
             </div>
 
-              <label class="mt-3 col-3">Выберете коммерческое предложение для работы:</label>
+              <label class="mt-3 col-3">Выберите коммерческое предложение для работы:</label>
               <select class="mt-3 form-select form-select-lg" aria-label=".form-select-lg" name="coId">
                 <option disabled>Выберите КП</option>
                 <option th:value="${selectedCo?.coId}" th:text="'Исполнитель: ' + ${selectedCo?.performer?.name} + ', Стоимость: ' + ${selectedCo?.budget}" selected></option>

@@ -45,10 +45,10 @@ public class Task{
     @JoinColumn(name="project_id", nullable=true)
     private Project project;
 
-    @OneToMany(mappedBy = "task")
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
     private Set<CommercialOffer> commercialOffers;
 
-    @OneToMany(mappedBy = "task")
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
     private Set<SubTask> subTasks;
 
 

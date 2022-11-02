@@ -66,7 +66,8 @@
         </div>
 
         <div class="collapse" id="collapseNewMaterialResource">
-          <div class="card card-body">
+          <form th:action="'/resources/add_material_resource'" method="post">
+            <div class="card card-body">
 
             <div class="form-group row mb-2 align-items-center">
               <label class="col-3">Наименование</label>
@@ -77,10 +78,11 @@
               <label class="col-3">Общее количество ресурса</label>
               <input class="form-control col" type="number" placeholder="Количество ресурса" name="amount">
             </div>
-            <a class="btn btn-success btn-sm col-1"  role="button">
+            <button class="btn btn-success btn-sm col-1"  role="button" type="submit">
               Добавить
-            </a>
+            </button>
           </div>
+          </form>
         </div>
 
       </div>
@@ -141,8 +143,8 @@
                 <input class="form-control col" type="number" placeholder="Количество ресурса" name="amount">
               </div>
 
-              <button role="button" class="btn btn-primary" type="submit">
-                Добавить ресурс
+              <button role="button" class="btn btn-success btn-sm col-1" type="submit">
+                Добавить
               </button>
           </div>
           </form>

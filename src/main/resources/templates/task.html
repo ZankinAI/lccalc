@@ -68,9 +68,9 @@
           <div class="card text-center">
             <div class="card-body"  style="min-height: 190px;">
               <h5 class="card-title mb-3">Статус</h5>
-              <h4 class="card-text text-primary mb-3">Выполнено: 61%</h4>
+              <h4 class="card-text text-primary mb-3">Выполнено: 0%</h4>
               <div class="progress  mb-1">
-                <div class="progress-bar bg-info" role="progressbar" style="width: 61%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                <div class="progress-bar bg-info" role="progressbar" style="width: 0%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
               </div>
 
               <div class="mt-3">
@@ -87,9 +87,9 @@
             <div class="card-body" style="min-height: 190px;">
               <h5 class="card-title mb-4" >Бюджет</h5>
               <h4 th:text="${task.budget}+' руб.'" class="card-text text-primary"></h4>
-              <p class="card-text">Освоено 140000 руб.</p>
+              <p class="card-text">Освоено 0 руб.</p>
               <div class="progress  mb-3">
-                <div class="progress-bar bg-info" role="progressbar" style="width: 20%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                <div class="progress-bar bg-info" role="progressbar" style="width: 0%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
               </div>
             </div>
           </div>
@@ -147,10 +147,10 @@
               <td th:text="${el.duration}"></td>
               <td th:text="${el.progress}"></td>
               <td th:text="${el.previousIndex}"></td>
-              <td>
+              <td><!--
                 <div th:each="el:${task.subTasks}">
                   <span th:text="${el.name} + ', ' + ${el.duration}"></span>
-                </div>
+                </div>-->
               </td>
             </tr>
           </div>

@@ -1,0 +1,228 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Риски</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          crossorigin="anonymous"
+  />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+        rel="stylesheet">
+  <link rel="stylesheet" href="/styles/style.css">
+</head>
+<body>
+<header th:insert = "blocks/header::header"></header>
+
+<div class="container-fluid">
+  <div class="row">
+    <nav th:insert = "blocks/sideBar::side-bar"></nav>
+  </div>
+</div>
+
+<main class="px-md-4 bg-light">
+
+  <!--Риски -->
+  <section class="bg-light text-dark p-3">
+    <div class="container p-2">
+      <h2>Риски</h2>
+      <!-- Матрица рисков -->
+      <div class="card g-0 p-2 mt-5">
+
+        <div class="col-md-4">
+          <h6 class="card-title mb-1">Матрица рисков</h6>
+        </div>
+        <table class="table table-bordered mt-3">
+          <tbody>
+          <tr>
+
+            <td>Крайне вероятно</td>
+            <td style="background-color:#92D050"></td>
+            <td style="background-color:yellow"></td>
+            <td style="background-color:#FFC000"></td>
+            <td style="background-color:red"></td>
+            <td style="background-color:red"></td>
+          </tr>
+          <tr>
+            <td>Вероятно</td>
+            <td style="background-color:#00B050"></td>
+            <td style="background-color:#92D050"></td>
+            <td style="background-color:yellow"></td>
+            <td style="background-color:#FFC000"></td>
+            <td style="background-color:red"></td></tr>
+          <tr>
+            <td>Возможно</td>
+            <td style="background-color:#00B050"></td>
+            <td style="background-color:#92D050"></td>
+            <td style="background-color:yellow"></td>
+            <td style="background-color:#FFC000"></td>
+            <td style="background-color:#FFC000"></td></tr>
+          <tr>
+            <td>Маловероятно</td>
+            <td style="background-color:#00B050"></td>
+            <td style="background-color:#92D050"></td>
+            <td style="background-color:#92D050"></td>
+            <td style="background-color:yellow"></td>
+            <td style="background-color:#FFC000"></td></tr>
+          <tr>
+            <td>Крайне маловероятно</td>
+            <td style="background-color:#00B050"></td>
+            <td style="background-color:#00B050"></td>
+            <td style="background-color:#92D050"></td>
+            <td style="background-color:yellow"></td>
+            <td style="background-color:yellow"></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>Пренебрежимое</td>
+            <td>Небольшое</td>
+            <td>Умеренное</td>
+            <td>Значительное</td>
+            <td>Существенное</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+
+
+      <!-- Список рисков -->
+      <div class="card g-0 p-2 mt-5">
+
+        <div class="col-md-4">
+          <h6 class="card-title mb-1">Список рисков</h6>
+          <button type="button" class="mt-3 btn btn-success btn-sm" data-toggle="modal" data-target="#co-add-risk">Добавить риски</button>
+        </div>
+
+        <!--Список ресурсов -->
+        <div class="mt-3 table-responsive">
+          <table class="table table-striped table-hover">
+            <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Наименование</th>
+              <th scope="col">Вероятность</th>
+              <th scope="col">Степень влияния</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <div th:each="risk : ${risks}">
+              <tr>
+                <td scope="row"></td>
+                <td th:text="${risk.name}"></td>
+                <td th:text="${risk.likelihood}"></td>
+                <td th:text="${risk.consequence}"></td>
+                </tr>
+            </div>
+            </tbody>
+
+          </table>
+        </div><!--
+        <div class="col-md-4">
+          <a class="btn btn-success btn-sm mb-3 mt-1" data-toggle="collapse" href="#collapseNewMaterialResource" role="button" aria-expanded="false" aria-controls="collapseNewMaterialResource">
+            Новый ресурс
+          </a>
+        </div>
+
+        <div class="collapse" id="collapseNewMaterialResource">
+          <div class="card card-body">
+
+            <div class="form-group row mb-2 align-items-center">
+              <label class="col-3">Наименование</label>
+              <input class="form-control col" type="text" placeholder="Название ресурса" name="name">
+            </div>
+
+            <div class="form-group row mb-2 align-items-center">
+              <label class="col-3">Общее количество ресурса</label>
+              <input class="form-control col" type="number" placeholder="Количество ресурса" name="amount">
+            </div>
+            <button class="btn btn-success btn-sm col-1"  role="button">
+              Добавить
+            </button>
+          </div>
+        </div>
+
+      --></div></div>
+  </section>
+
+  <div id="container"></div>
+
+  <!--Форма-окно для добавления риска-->
+  <form class="modal fade" th:action="'/risks/add_risk'" id="co-add-risk" tabindex="-1" style="display:none;" aria-hidden="true" method="post">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content p-2">
+        <div class="modal-header">
+          <h5 class="modal-title">Новый риск</h5>
+          <button type="button" class="close btn btn-round" data-dismiss="modal" aria-label="Close">
+            <i class="material-icons">close</i>
+          </button>
+        </div>
+        <!--end of modal head-->
+        <div class="modal-body">
+
+          <div class="form-group row mb-2 align-items-center">
+            <label class="col-3">Наименование риска</label>
+            <input class="form-control col" type="text" placeholder="Наименование риска" name="name">
+          </div>
+
+          <label class="col mt-3">Вероятность возникновения риска</label>
+          <select class="form-select form-select-lg mt-1" aria-label=".form-select-lg" name="likelihood">
+            <option value="0">Выберите вероятность возникновения риска</option>
+            <option value="1">Крайне маловероятно</option>
+            <option value="2">Маловероятно</option>
+            <option value="3">Возможно</option>
+            <option value="4">Вероятно</option>
+            <option value="5">Крайне вероятно</option>
+          </select>
+
+          <label class="col mt-3">Степень влияния на целевые показатели (последствия)</label>
+          <select class="form-select form-select-lg mt-1" aria-label=".form-select-lg" name="consequence">
+            <option value="0">Выберите степень влияния реализации риска на целевые показатели</option>
+            <option value="1">Пренебрежимое</option>
+            <option value="2">Небольшое</option>
+            <option value="3">Умеренное</option>
+            <option value="4">Значительное</option>
+            <option value="5">Существенное</option>
+          </select>
+<!--
+
+          <div class="form-group row mb-2 align-items-center">
+            <label class="col-3">Длительность работы</label>
+            <input class="form-control col" type="text" placeholder="Длительность работы (кол-во рабочих дней)" name="duration">
+          </div>
+          <div class="form-group row mb-2 align-items-center">
+            <label class="col-3">Стоимость</label>
+            <input class="form-control col" type="text" placeholder="Стоимость" name="budget">
+          </div>
+-->
+
+
+
+        </div>
+        <div class="modal-footer">
+          <button role="button" class="btn btn-primary" type="submit">
+            Добавить риск
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+
+
+</main>
+
+<script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"
+></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>

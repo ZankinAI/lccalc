@@ -121,6 +121,53 @@ public class TaskController {
         return "task-edit";
     }
 
+/*    //Обновление материальных ресурсов в подзадаче
+    @PostMapping("/subtask/{id}/add_material_resources")
+    public String test(@PathVariable(value = "id") long id, @ModelAttribute MaterialResourcesListDTO resourcesList, Model model){
+        SubTask subTask = subTaskRepository.findById(id).orElseThrow();
+
+        MaterialResourcesSubTask materialResourcesSubTask = null;
+        for (MaterialResourcesDTO materialresourcesDTO: resourcesList.getMaterialResources()) {
+            materialResourcesSubTask = null;
+            if (materialresourcesDTO.isChecked()){
+                materialResourcesSubTask = subTask.findResourceById(materialresourcesDTO.getId());
+                if (materialResourcesSubTask == null){
+                    MaterialResourcesSubTask materialResourcesSubTask1 = new MaterialResourcesSubTask(materialresourcesDTO.getAmount(), materialResourceRepository.findById(materialresourcesDTO.getId()).orElseThrow(), subTask);
+                    materialResourceSubTaskRepository.save(materialResourcesSubTask1);
+                }
+                else {
+                    MaterialResourcesSubTask materialResourcesSubTaskEdit = materialResourceSubTaskRepository.findById(materialResourcesSubTask.getMaterialResourceSubTaskId()).orElseThrow();
+                    materialResourcesSubTaskEdit.setAmount(materialresourcesDTO.getAmount());
+                    materialResourceSubTaskRepository.save(materialResourcesSubTaskEdit);
+                }
+
+            }
+
+        }
+
+        subTask = subTaskRepository.findById(id).orElseThrow();
+        subTask.findDuration();
+        subTaskRepository.save(subTask);
+
+        model.addAttribute("subtask", subTask);
+
+        model.addAttribute("task", subTask.getTask());
+        Iterable<Performer> performers = performerRepository.findAll();
+        model.addAttribute("performers", performers);
+
+        model.addAttribute("resourcesList", resourcesList);
+
+        Iterable<MaterialResources> materialResources = materialResourceRepository.findAll();
+        HumanResourcesListDTO humanResourcesList = new HumanResourcesListDTO();
+
+        for (HumanResources humanResource: humanResources) {
+            humanResourcesList.addResource(new HumanResourcesDTO(humanResource));
+        }
+        model.addAttribute("humanResourcesList", humanResourcesList);
+
+        return "subtask-edit";
+    }*/
+
     //Обновление человеческих ресурсов в подзадаче
     @PostMapping("/subtask/{id}/add_human_resources")
     public String test(@PathVariable(value = "id") long id, @ModelAttribute HumanResourcesListDTO resourcesList, Model model){
@@ -149,7 +196,7 @@ public class TaskController {
         subTask.findDuration();
         subTaskRepository.save(subTask);
 
-
+        model.addAttribute("subtask", subTask);
 
         model.addAttribute("task", subTask.getTask());
         Iterable<Performer> performers = performerRepository.findAll();
@@ -289,6 +336,8 @@ public class TaskController {
         return "task-edit";
     }
 
+
+
     //Добавление коммерческого предложения из страницы редактирвоания задачи
     @PostMapping("/co/{id}/add_from_task")
     public String coAddFromTask(@PathVariable(value = "id") long id,
@@ -421,11 +470,36 @@ public class TaskController {
         return "resources";
     }
 
+    //Открыть страницу с рисками
+    @GetMapping(value = "/risks")
+    public String risks(Model model){
+
+        Risk risk1 = new Risk("risk1", "1", "1");
+        Risk risk2 = new Risk("risk2", "2", "2");
+        Risk[] risks = {risk1, risk2};
+        //Iterable<HumanResources> humanResources = humanResourceRepository.findAll();
+        model.addAttribute("risks", risks);
+        return "risks";
+    }
+
+    //Добавление риска
+    @PostMapping("/risks/add_risk")
+    public String AddRisk(           //Параметры для исполнителя
+                                     @RequestParam String name,
+                                     @RequestParam String likelihood,
+                                     @RequestParam String consequence,
+                                     Model model){
+
+        model.addAttribute("name", name);
+        model.addAttribute("likelihood", likelihood);
+        model.addAttribute("consequence", consequence);
+        return "risks";
+    }
+
     @PostMapping(value = "/resources/add_human_resource")
     public String addHumanResource(@RequestParam String name, @RequestParam Long tariff,
                                    @RequestParam Long amount,
                                    Model model){
-
 
         HumanResources humanResource = new HumanResources(tariff, amount, name);
         humanResourceRepository.save(humanResource);
@@ -434,6 +508,4 @@ public class TaskController {
 
         return "resources";
     }
-
-
 }

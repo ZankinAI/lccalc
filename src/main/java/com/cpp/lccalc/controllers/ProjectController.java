@@ -1,9 +1,9 @@
 package com.cpp.lccalc.controllers;
 
-import com.cpp.lccalc.models.Customer;
-import com.cpp.lccalc.models.Project;
-import com.cpp.lccalc.models.ProjectManager;
-import com.cpp.lccalc.models.Task;
+import com.cpp.lccalc.classes.MaterialResourcesDTO;
+import com.cpp.lccalc.classes.MaterialResourcesListDTO;
+import com.cpp.lccalc.classes.TaskCalculation;
+import com.cpp.lccalc.models.*;
 import com.cpp.lccalc.repo.CustomerRepository;
 import com.cpp.lccalc.repo.ProjectManagerRepository;
 import com.cpp.lccalc.repo.ProjectRopository;
@@ -70,6 +70,8 @@ public class ProjectController {
 
         return "projects";
     }
+
+
 
     //Отекрытие страницы создания проекта
     @GetMapping("/project/add")
