@@ -14,7 +14,11 @@ public class Risk {
 
     private int likelihood;
 
+    private String likelihoodTitle;
+
     private int consequence;
+
+    private String consequenceTitle;
 
     private String color;
 
@@ -58,11 +62,61 @@ public class Risk {
         this.color = color;
     }
 
+    public String getLikelihoodTitle() {
+        return likelihoodTitle;
+    }
+
+    public void setLikelihoodTitle(String likelihoodTitle) {
+        this.likelihoodTitle = likelihoodTitle;
+    }
+
+    public String getConsequenceTitle() {
+        return consequenceTitle;
+    }
+
+    public void setConsequenceTitle(String consequenceTitle) {
+        this.consequenceTitle = consequenceTitle;
+    }
+
     public Risk(String name, int likelihood, int consequence) {
         this.name = name;
         this.likelihood = likelihood;
         this.consequence = consequence;
         this.color = getColor(likelihood,consequence);
+        this.likelihoodTitle = likelihoodToTitle(likelihood);
+        this.consequenceTitle = consequenceToTitle(consequence);
+    }
+
+    public String likelihoodToTitle(int likelihood){
+        switch (likelihood){
+            case (1):
+                return "Крайне вероятно";
+            case (2):
+                return "Вероятно";
+            case (3):
+                return "Возможно";
+            case (4):
+                return "Маловероятно";
+            case (5):
+                return "Крайне маловероятно";
+        }
+        return null;
+    }
+
+    public String consequenceToTitle(int consequence){
+        switch (consequence){
+            case (1):
+                return "Пренебрежимое";
+            case (2):
+                return "Небольшое";
+            case (3):
+                return "Умеренное";
+            case (4):
+                return "Значительное";
+            case (5):
+                return "Существенное";
+        }
+        return null;
     }
 
     public String getColor(int likelihood, int consequence){
