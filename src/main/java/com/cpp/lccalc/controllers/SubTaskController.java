@@ -75,6 +75,66 @@ public class SubTaskController {
         return "subtask-edit";
     }
 
+    //Обновление подзадачи
+    @PostMapping("/subtask/{id}/edit")
+    public String subTaskUpdate(@PathVariable(value = "id") long id,
+                                @RequestParam String name,
+                                @RequestParam String subTaskIndex,
+                                @RequestParam(defaultValue="0") Long laboriousness,
+                                @RequestParam(defaultValue="") String previousIndex,
+                                @RequestParam String progress,
+                                Model model) {
+        SubTask subTask = subTaskRepository.findById(id).orElseThrow();
+        Task task = subTask.getTask();
+
+        subTask.setName(name);
+        subTask.setSubTaskIndex(subTaskIndex);
+        subTask.setLaboriousness(laboriousness);
+        subTask.setPreviousIndex(previousIndex);
+        subTask.setProgress(progress);
+
+        model.addAttribute("subtask", subTask);
+
+        task.sortSubTasks();
+
+        CommercialOffer selectedCommercialOffer = null;
+        for (CommercialOffer co:task.getCommercialOffers()) {
+            if (co.getStatus().equals("В работе")) selectedCommercialOffer = co;
+
+        }
+
+        TaskCalculation taskCalculation = new TaskCalculation(task);
+
+        model.addAttribute("selectedCo",selectedCommercialOffer );
+
+        model.addAttribute("task", task);
+        Iterable<Performer> performers = performerRepository.findAll();
+        model.addAttribute("performers", performers);
+        MaterialResourcesListDTO materialResourcesList = new MaterialResourcesListDTO();
+
+        Iterable<MaterialResources> materialResources = materialResourcesRepository.findAll();
+
+        for(MaterialResources materialResource: materialResources){
+            materialResourcesList.addResource(new MaterialResourcesDTO(materialResource));
+        }
+
+        model.addAttribute("materialResourcesList", materialResourcesList);
+
+        Iterable<HumanResources> humanResources = humanResourceRepository.findAll();
+        HumanResourcesListDTO humanResourcesList = new HumanResourcesListDTO();
+
+        for (HumanResources humanResource: humanResources) {
+            humanResourcesList.addResource(new HumanResourcesDTO(humanResource));
+        }
+        model.addAttribute("humanResourcesList", humanResourcesList);
+
+        return "task-edit";
+
+
+    }
+
+
+
     //Добавление подзадачи из страницы редактирвоания задачи
     @PostMapping("/task/{id}/add_subtask")
     public String AddSubTaskFromTask(@PathVariable(value = "id") long id,
@@ -110,13 +170,14 @@ public class SubTaskController {
         model.addAttribute("task", task);
         Iterable<Performer> performers = performerRepository.findAll();
         model.addAttribute("performers", performers);
-
         MaterialResourcesListDTO materialResourcesList = new MaterialResourcesListDTO();
-        materialResourcesList.addResource(new MaterialResourcesDTO(true, 10L, "name 1"));
-        materialResourcesList.addResource(new MaterialResourcesDTO(false, 11L, "name 2"));
-        materialResourcesList.addResource(new MaterialResourcesDTO(false, 110L, "name 3"));
-        materialResourcesList.addResource(new MaterialResourcesDTO(true, 140L, "name 4"));
-        materialResourcesList.addResource(new MaterialResourcesDTO(true, 1L, "name 5"));
+
+        Iterable<MaterialResources> materialResources = materialResourcesRepository.findAll();
+
+        for(MaterialResources materialResource: materialResources){
+            materialResourcesList.addResource(new MaterialResourcesDTO(materialResource));
+        }
+
         model.addAttribute("materialResourcesList", materialResourcesList);
 
         Iterable<HumanResources> humanResources = humanResourceRepository.findAll();

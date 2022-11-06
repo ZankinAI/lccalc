@@ -178,11 +178,13 @@ public class TaskController {
         model.addAttribute("performers", performers);
 
         Project project = task.getProject();
-        project.sortTasks();
+
         for (Task taskOfProject: project.getTasks()) {
             taskOfProject.sortSubTasks();
         }
-
+        project.findBudget();
+        projectRopository.save(project);
+        project.sortTasks();
         model.addAttribute("project", project);
 
         Iterable<Customer> customers = customerRepository.findAll();
@@ -210,6 +212,8 @@ public class TaskController {
         for (Task taskOfProject: project.getTasks()) {
             taskOfProject.sortSubTasks();
         }
+        project.findBudget();
+        projectRopository.save(project);
 
         model.addAttribute("project", project);
 

@@ -15,7 +15,7 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long projectId;
     private String projectName, description;
-    private Long  budget;
+    private double  budget;
     private int status;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate startDateFormat;
@@ -38,7 +38,7 @@ public class Project {
     @JoinColumn(name="pm_id", nullable=true)
     private ProjectManager projectManager;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true )
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL )
     private Set<Task> tasks;
 
 
@@ -86,11 +86,11 @@ public class Project {
         this.description = description;
     }
 
-    public Long getBudget() {
+    public double getBudget() {
         return budget;
     }
 
-    public void setBudget(Long budget) {
+    public void setBudget(double budget) {
         this.budget = budget;
     }
 
@@ -152,6 +152,16 @@ public class Project {
         List<Task> tasksList = new ArrayList<Task>(this.tasks);
         Collections.sort(tasksList, Task.TaskIndexComparator);
         this.tasks = new LinkedHashSet<Task>(tasksList);
+    }
+
+    public void findBudget(){
+        this.budget = 0;
+        if (this.tasks!=null){
+            for (Task task:
+                 this.tasks) {
+                this.budget += task.getBudget();
+            }
+        }
     }
 
 

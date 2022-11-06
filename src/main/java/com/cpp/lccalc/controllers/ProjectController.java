@@ -246,7 +246,7 @@ public class ProjectController {
     //Обновление проекта
     @PostMapping(path = "/project/{id}/edit", params = "projectName")
     public String projectEdit(@PathVariable(value = "id") long id, @RequestParam String projectName,  @RequestParam String description,
-                                    @RequestParam Long budget,  @RequestParam String startDate,
+                                    @RequestParam double budget,  @RequestParam String startDate,
                                     @RequestParam String finishDate, @RequestParam Long customerId,
                                     @RequestParam Long pmId, Model model){
 
