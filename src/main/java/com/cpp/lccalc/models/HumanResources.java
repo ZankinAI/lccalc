@@ -14,7 +14,7 @@ public class HumanResources {
     private Long amount;
     private String name;
 
-    @OneToMany(mappedBy = "humanResource", cascade = CascadeType.ALL, orphanRemoval = true )
+    @OneToMany(mappedBy = "humanResource", cascade = CascadeType.ALL)
     private Set<HumanResourcesSubTask> humanResourcesSubTasks;
 
 

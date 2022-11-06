@@ -1,11 +1,22 @@
 package com.cpp.lccalc.classes;
 
+import com.cpp.lccalc.models.MaterialResources;
+
 public class MaterialResourcesDTO {
     private boolean checked;
     private Long amount;
-    private String name;
 
+    private double rate;
+    private String name;
     private Long id;
+
+    public double getRate() {
+        return rate;
+    }
+
+    public void setRate(Long rate) {
+        this.rate = rate;
+    }
 
     public boolean isChecked() {
         return checked;
@@ -48,10 +59,11 @@ public class MaterialResourcesDTO {
         this.name = name;
     }
 
-    /*public MaterialResourcesDTO(MaterialResources materialResources) {
-        this.amount = materialResources.getAmount;
+    public MaterialResourcesDTO(MaterialResources materialResources) {
+        this.amount = materialResources.getAmount();
         this.checked = false;
-        this.name = materialResources.getName();;
-        this.id = humanResource.getMaterialResourceId();
-    }*/
+        this.rate = materialResources.getRate();
+        this.name = materialResources.getName();
+        this.id = materialResources.getMaterialResourceId();
+    }
 }

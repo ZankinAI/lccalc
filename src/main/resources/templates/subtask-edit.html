@@ -76,7 +76,7 @@
 
 
         </div>
-<!--        &lt;!&ndash;Материальные ресурсы &ndash;&gt;
+       <!--Материальные ресурсы -->
         <div class="card g-0 p-2 mt-3">
           <div class="row g-0">
             <div class="col-md-4">
@@ -86,7 +86,7 @@
             <div class="col-md-4">
               <button type="button" class="btn btn-success btn-sm mt-3" data-toggle="modal" data-target="#co-add-material-resources">Изменить</button>
             </div>
-            &lt;!&ndash;Список ресурсов &ndash;&gt;
+
             <div class="mt-1 table-responsive">
               <table class="table table-striped table-hover">
                 <thead>
@@ -98,11 +98,11 @@
                 </thead>
 
                 <tbody>
-                <div th:each="materialResource, itemStat : ${materialResourcesList.materialResources}">
+                <div th:each="materialResourcesSubTask, itemStat : ${subtask.materialResourcesSubTasks}">
                   <tr>
                     <td scope="row"></td>
-                    <td th:text="${materialResourcesList.materialResources[__${itemStat.index}__].name}"></td>
-                    <td th:text="${materialResourcesList.materialResources[__${itemStat.index}__].amount}"></td>
+                    <td th:text="${materialResourcesSubTask.materialResource?.name}"></td>
+                    <td th:text="${materialResourcesSubTask.amount}"></td>
                   </tr>
                 </div>
                 </tbody>
@@ -110,7 +110,7 @@
               </table>
             </div>
 
-        </div>-->
+        </div>
         <!--Кадровые ресурсы -->
         <div class="card g-0 p-2 mt-3">
           <div class="row g-0">
@@ -157,8 +157,8 @@
     </form>
   </section>
 
-<!--
-  &lt;!&ndash;Форма-окно для добавления материальных ресурсов&ndash;&gt;
+
+  <!--Форма-окно для добавления материальных ресурсов-->
   <form class="modal fade" th:action="'/subtask/' + ${subtask.subTaskId} + '/add_material_resources'" th:object="${materialResourcesList}" id="co-add-material-resources"  tabindex="-1" style="display:none;" aria-hidden="true" method="post">
     <div class="modal-dialog modal-xl" role="document">
       <div class="modal-content p-2">
@@ -169,7 +169,7 @@
           </button>
         </div>
 
-        &lt;!&ndash;end of modal head&ndash;&gt;
+
         <div class="modal-body m-3 mb-0">
 
           <div class="row gap-5 mb-2 align-items-center">
@@ -184,29 +184,17 @@
 
             <div class="form-check col-2">
               <input  class="form-check-input" type="checkbox" th:name="idChecked" th:field="*{materialResources[__${itemStat.index}__].checked}" id="flexCheckChecked">
-
               <label class="form-check-label" for="flexCheckChecked" th:text="*{materialResources[__${itemStat.index}__].name}"></label>
             </div>
+
+            <input type="hidden" class="form-control col" th:field="*{materialResources[__${itemStat.index}__].name}"  >
+            <input type="hidden" class="form-control col" th:field="*{materialResources[__${itemStat.index}__].id}"  >
             <input class="form-control col" type="number"  th:field="*{materialResources[__${itemStat.index}__].amount}"  >
 
           </div>
 
 
-          &lt;!&ndash;          <fieldset>&ndash;&gt;
-          &lt;!&ndash;          <table>&ndash;&gt;
-          &lt;!&ndash;            <thead>&ndash;&gt;
-          &lt;!&ndash;            <tr>&ndash;&gt;
-          &lt;!&ndash;              <th> Name</th>&ndash;&gt;
-          &lt;!&ndash;              <th> Duration</th>&ndash;&gt;
-          &lt;!&ndash;            </tr>&ndash;&gt;
-          &lt;!&ndash;            </thead>&ndash;&gt;
-          &lt;!&ndash;            <tbody>&ndash;&gt;
-          &lt;!&ndash;            <tr th:each="resource, itemStat : *{resources}">&ndash;&gt;
-          &lt;!&ndash;              <td><input th:field="*{resources[__${itemStat.index}__].name}" /></td>&ndash;&gt;
-          &lt;!&ndash;              <td><input th:field="*{resources[__${itemStat.index}__].amount}" /></td>&ndash;&gt;
-          &lt;!&ndash;            </tr>&ndash;&gt;
-          &lt;!&ndash;            </tbody>&ndash;&gt;
-          &lt;!&ndash;          </table></fieldset>&ndash;&gt;
+
         </div>
 
         <div class="modal-footer">
@@ -217,7 +205,7 @@
       </div>
     </div>
   </form>
--->
+
 
   <!--Форма-окно для добавления кадровых ресурсов-->
   <form class="modal fade" th:action="'/subtask/'+ ${subtask.subTaskId} + '/add_human_resources'" th:object="${humanResourcesList}" id="co-add-human-resources"  tabindex="-1" style="display:none;" aria-hidden="true" method="post">
@@ -247,8 +235,8 @@
 
             <div class="form-check col-2">
               <input  class="form-check-input" type="checkbox" th:name="idChecked" th:field="*{humanResources[__${itemStat.index}__].checked}">
-
               <label class="form-check-label" for="flexCheckChecked" th:text="*{humanResources[__${itemStat.index}__].name}"></label>
+
             </div>
             <input type="hidden" class="form-control col" th:field="*{humanResources[__${itemStat.index}__].name}"  >
             <input type="hidden" class="form-control col" th:field="*{humanResources[__${itemStat.index}__].id}"  >

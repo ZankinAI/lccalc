@@ -23,6 +23,8 @@ public class TaskCalculation {
 
     private String prevIndex;
 
+    private LocalDate startDate;
+
 
 
     private List<TaskCalculation> children;
@@ -91,6 +93,14 @@ public class TaskCalculation {
         this.children = children;
     }
 
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
     public TaskCalculation(Task task)
     {
         this.id = task.getTaskIndex();
@@ -99,6 +109,8 @@ public class TaskCalculation {
         task.sortSubTasks();
         this.children = new ArrayList<>();
         List<SubTask> subTasks = new ArrayList<>(task.getSubTasks());
+
+        this.startDate = task.getStartDate();
 
         for (SubTask subtask: subTasks) {
             if (subtask.getSubTaskIndex().matches(task.getTaskIndex()+"(\\.\\d){1}"))
@@ -119,11 +131,28 @@ public class TaskCalculation {
 
         this.duration = duration;
 
+        if (this.getStartDate()!=null){
+            for (int i=0; i < this.children.size(); i++){
+                this.children.get(i).setStartDate(this.children.get(i).findStartDate(this.children, this.startDate));
+            }
+        }
+
 
 
 
         //this.findDuration(this.children);
     }
+
+    public TaskCalculation findChildById(String id){
+
+        for (TaskCalculation taskCalculationChild: this.children) {
+            if (taskCalculationChild.getId().equals(id)) return taskCalculationChild;
+        }
+
+        return null;
+    }
+
+
 
     public TaskCalculation(SubTask subTask) {
         this.id = subTask.getSubTaskIndex();
@@ -163,6 +192,23 @@ public class TaskCalculation {
         }
         return earlyStart;
     }
+
+    public LocalDate findStartDate(List<TaskCalculation> tasksOneRang, LocalDate taskStartDate){
+        LocalDate startDate = taskStartDate;
+
+        for (TaskCalculation taskCalculation:tasksOneRang) {
+            if ((taskCalculation.getId().equals(this.prevIndex)))
+                if (taskCalculation.getStartDate()!=null) startDate = taskCalculation.getStartDate().plusDays(taskCalculation.getDuration());
+                else {
+                    startDate = taskCalculation.findStartDate(tasksOneRang, taskStartDate).plusDays(taskCalculation.getDuration());
+                    return startDate;
+                }
+        }
+
+        return startDate;
+    }
+
+
 
     public void addChild(TaskCalculation taskCalculation){
         if (this.children.isEmpty()) {

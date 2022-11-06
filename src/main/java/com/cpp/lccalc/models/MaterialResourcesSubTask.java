@@ -6,38 +6,39 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 
 @Entity
-public class HumanResourcesSubTask {
+public class MaterialResourcesSubTask {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long humanResourceSubTaskId;
+    private Long materialResourceSubTaskId;
 
     private Long amount;
 
     @ManyToOne
-    @JoinColumn(name="human_resource_id", nullable=true)
+    @JoinColumn(name="material_resource_id", nullable=true)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private HumanResources humanResource;
+    private MaterialResources materialResource;
 
     @ManyToOne
     @JoinColumn(name="sub_task_id", nullable=true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private SubTask subTask;
 
-    public HumanResourcesSubTask() {
+    public MaterialResourcesSubTask() {
     }
 
-    public HumanResourcesSubTask(Long amount, HumanResources humanResource, SubTask subTask) {
+    public MaterialResourcesSubTask(Long amount, MaterialResources materialResource, SubTask subTask) {
         this.amount = amount;
-        this.humanResource = humanResource;
+        this.materialResource = materialResource;
         this.subTask = subTask;
     }
 
-    public Long getHumanResourceSubTaskId() {
-        return humanResourceSubTaskId;
+    public Long getMaterialResourceSubTaskId() {
+        return materialResourceSubTaskId;
     }
 
-    public void setHumanResourceSubTaskId(Long humanResourceSubTaskId) {
-        this.humanResourceSubTaskId = humanResourceSubTaskId;
+    public void setMaterialResourceSubTaskId(Long materialResourceSubTaskId) {
+        this.materialResourceSubTaskId = materialResourceSubTaskId;
     }
 
     public Long getAmount() {
@@ -48,12 +49,12 @@ public class HumanResourcesSubTask {
         this.amount = amount;
     }
 
-    public HumanResources getHumanResource() {
-        return humanResource;
+    public MaterialResources getMaterialResource() {
+        return materialResource;
     }
 
-    public void setHumanResource(HumanResources humanResource) {
-        this.humanResource = humanResource;
+    public void setMaterialResource(MaterialResources materialResource) {
+        this.materialResource = materialResource;
     }
 
     public SubTask getSubTask() {

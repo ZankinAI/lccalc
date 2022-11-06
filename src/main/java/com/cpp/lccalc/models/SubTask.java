@@ -1,10 +1,13 @@
 package com.cpp.lccalc.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -26,6 +29,8 @@ public class SubTask {
 
     private String previousIndex;
 
+    private double budget;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate startDate;
 
@@ -33,8 +38,12 @@ public class SubTask {
     @JoinColumn(name="task_id", nullable=true)
     private Task task;
 
-    @OneToMany(mappedBy = "subTask", cascade = CascadeType.ALL, orphanRemoval = true )
+    @OneToMany(mappedBy = "subTask", cascade = CascadeType.ALL)
+
     private Set<HumanResourcesSubTask> humanResourcesSubTasks;
+
+    @OneToMany(mappedBy = "subTask", cascade = CascadeType.ALL)
+    private Set<MaterialResourcesSubTask> materialResourcesSubTasks;
 
     public SubTask() {
     }
@@ -48,6 +57,23 @@ public class SubTask {
         this.startDate = startDate;
         this.laboriousness = laboriousness;
         this.task = task;
+    }
+
+
+    public double getBudget() {
+        return budget;
+    }
+
+    public void setBudget(double budget) {
+        this.budget = budget;
+    }
+
+    public Set<MaterialResourcesSubTask> getMaterialResourcesSubTasks() {
+        return materialResourcesSubTasks;
+    }
+
+    public void setMaterialResourcesSubTasks(Set<MaterialResourcesSubTask> materialResourcesSubTasks) {
+        this.materialResourcesSubTasks = materialResourcesSubTasks;
     }
 
     public Long getSubTaskId() {
@@ -149,12 +175,71 @@ public class SubTask {
         return null;
     }
 
+    public MaterialResourcesSubTask findMaterialResourceById(Long id){
+
+
+        for (MaterialResourcesSubTask materialResourcesSubTask1: this.materialResourcesSubTasks) {
+            if (materialResourcesSubTask1.getMaterialResource().getMaterialResourceId().equals(id)) return materialResourcesSubTask1;
+        }
+
+        return null;
+    }
+
     public void findDuration(){
 
-        if (this.humanResourcesSubTasks!=null){
-            this.duration = this.laboriousness / this.humanResourcesSubTasks.size() / 8L;
+        int amountSum = 0;
+        if (this.humanResourcesSubTasks==null) {this.duration = this.laboriousness / 8L; return;}
+        for (HumanResourcesSubTask humanResourcesSubTask: this.humanResourcesSubTasks) {
+            amountSum+=humanResourcesSubTask.getAmount();
+        }
+
+        if (amountSum!=0){
+            this.duration = this.laboriousness / amountSum / 8L;
         }
         else this.duration = this.laboriousness / 8L;
+
+    }
+
+    public void addHumanResource(HumanResourcesSubTask humanResourcesSubTask){
+        if (this.humanResourcesSubTasks==null)
+            this.humanResourcesSubTasks = new HashSet<>();
+        this.humanResourcesSubTasks.add(humanResourcesSubTask);
+    }
+    public void deleteHumanResource(Long humanResourceSubTaskId){
+        for (HumanResourcesSubTask humanResourcesSubTask:this.humanResourcesSubTasks) {
+            if (humanResourcesSubTask.getHumanResourceSubTaskId().equals(humanResourceSubTaskId)){
+                this.humanResourcesSubTasks.remove(humanResourcesSubTask);
+            }
+        }
+    }
+
+    public void addMaterialResource(MaterialResourcesSubTask materialResourcesSubTask){
+        if (this.materialResourcesSubTasks==null)
+            this.materialResourcesSubTasks = new HashSet<>();
+        this.materialResourcesSubTasks.add(materialResourcesSubTask);
+    }
+    public void deleteMaterialResource(Long materialResourceSubTaskId){
+        for (MaterialResourcesSubTask materialResourcesSubTask:this.materialResourcesSubTasks) {
+            if (materialResourcesSubTask.getMaterialResourceSubTaskId().equals(materialResourceSubTaskId)){
+                this.materialResourcesSubTasks.remove(materialResourcesSubTask);
+            }
+        }
+    }
+
+    public void findBudget(){
+        this.budget = 0;
+        if (this.humanResourcesSubTasks!=null){
+            for (HumanResourcesSubTask humanResourcesSubTask: this.humanResourcesSubTasks ) {
+                this.budget += this.duration * 8 * humanResourcesSubTask.getHumanResource().getTariff() * humanResourcesSubTask.getAmount();
+            }
+        }
+
+        if (this.materialResourcesSubTasks != null){
+            for (MaterialResourcesSubTask materialResourcesSubTask: this.materialResourcesSubTasks) {
+                this.budget += this.laboriousness * materialResourcesSubTask.getAmount()*materialResourcesSubTask.getMaterialResource().getRate();
+            }
+        }
+
 
     }
 

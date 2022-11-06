@@ -18,16 +18,16 @@ public class Task{
     private String name, description;
     private String performerName;
 
-    public Long getBudget() {
+    public double getBudget() {
         return budget;
     }
 
-    public void setBudget(Long budget) {
+    public void setBudget(double budget) {
         this.budget = budget;
     }
 
 
-    private Long budget;
+    private double budget;
 
     private int progress;
 
@@ -182,6 +182,19 @@ public class Task{
         Collections.sort(subTasksList, SubTask.SubTaskIndexComparator);
 
         this.subTasks = new LinkedHashSet<SubTask>(subTasksList);
+    }
+
+    public double findBudgetBySubTasks(){
+        double budget = 0;
+
+        if (this.subTasks!=null){
+            for (SubTask subtask:
+                 this.subTasks) {
+                 budget += subtask.getBudget();
+            }
+        }
+        return budget;
+
     }
 
 

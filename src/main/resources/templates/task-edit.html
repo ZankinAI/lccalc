@@ -76,6 +76,7 @@
                       <th scope="col">Наименование</th>
                       <th scope="col">Дата начала</th>
                       <th scope="col">Трудоемкость</th>
+                      <th scope="col">Затраты</th>
                       <th scope="col">Прогресс</th>
                       <th scope="col">Предшественник</th>
                       <th scope="col">Ресурсы</th>
@@ -90,12 +91,25 @@
                         <td th:text="${el.name}"/>
                         <td th:text="${el.startDate}"></td>
                         <td th:text="${el.laboriousness}"></td>
+                        <td th:text="${el.budget}"></td>
                         <td th:text="${el.progress}"></td>
                         <td th:text="${el.previousIndex}"></td>
                         <td>
-                                <!--<div th:each="el:${task.subTasks}">
-                                <span th:text="${el.name} + ', ' + ${el.laboriousness}"></span>
-                              </div>-->
+                          <div>
+                            <b>Кадровые ресурсы:</b>
+                            <div th:each="humanResource:${el.humanResourcesSubTasks}">
+                              <span th:text="${humanResource.humanResource?.name} + ', ' + ${humanResource.amount} + 'шт.'"></span>
+                            </div>
+                          </div>
+
+                          <div>
+                            <b>Материальные ресурсы:</b>
+                            <div th:each="materialResource:${el.materialResourcesSubTasks}">
+                              <span th:text="${materialResource.materialResource?.name} + ', ' + ${materialResource.amount} + 'шт.'"></span>
+                            </div>
+                          </div>
+
+
                         </td>
                         <td>
 
@@ -133,6 +147,7 @@
               <select class="mt-3 form-select form-select-lg" aria-label=".form-select-lg" name="coId">
                 <option disabled>Выберите КП</option>
                 <option th:value="${selectedCo?.coId}" th:text="'Исполнитель: ' + ${selectedCo?.performer?.name} + ', Стоимость: ' + ${selectedCo?.budget}" selected></option>
+                <option th:value = "0" >Выполнить своими силами, Стоимость:</option>
                 <div th:each="el:${task.commercialOffers}">
                   <option th:value="${el.coId}" th:text="'Исполнитель: ' + ${el.performer.name} + ', Стоимость: ' + ${el.budget}"></option>
                 </div>
@@ -301,6 +316,7 @@
 
           <div class="form-group row mb-2 align-items-center">
             <label class="col-3">Наименование подзадачи</label>
+            <input class="form-control col" type="text" placeholder="Наименование подзадачи" name="name">
           </div>
 
           <div class="form-group row mb-2 align-items-center">

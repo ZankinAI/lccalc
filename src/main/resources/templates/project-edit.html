@@ -30,7 +30,7 @@
 
 
         <!--Форма-окно для редактирования проекта-->
-        <form form id="project-edit" th:action="'/project/'+ ${project.projectId} +'/edit'" name="projectEdit" method="post">
+        <form id="project-edit" th:action="'/project/'+ ${project.projectId} +'/edit'" name="projectEdit" method="post">
             <div class="container">
                 <h2 class="text-left">Редактирование проекта</h2>
 
@@ -135,11 +135,9 @@
                                             <a th:href="'/task/'+ ${task.taskId}+ '/edit'" class="btn btn-round">
                                                 <i class="material-icons">edit</i>
                                             </a>
-                                            <form th:action="'/task/'+ ${task.taskId}+'/remove'" method="post" class="col">
-                                                <button onclick="return confirm('Вы действительно хотите удалить задачу?')" class="btn btn-round">
-                                                    <i class="material-icons">delete</i>
-                                                </button>
-                                            </form>
+                                            <a th:href="'/task/'+ ${task.taskId}+ '/remove'" class="btn btn-round">
+                                                <i class="material-icons">delete</i>
+                                            </a>
                                         </td>
                                     </tr>
 

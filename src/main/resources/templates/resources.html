@@ -44,18 +44,20 @@
               <th scope="col">#</th>
               <th scope="col">Наименование</th>
               <th scope="col">Количество</th>
+              <th scope="col">Тариф, руб/ч</th>
             </tr>
             </thead>
 
-            <!--<tbody>
-            <div th:each="materialResource, itemStat : ${materialResourcesList.materialResources}">
+            <tbody>
+            <div th:each="materialResource, itemStat : ${materialResources}">
               <tr>
                 <td scope="row"></td>
-                <td th:text="${materialResourcesList.materialResources[__${itemStat.index}__].name}"></td>
-                <td th:text="${materialResourcesList.materialResources[__${itemStat.index}__].amount}"></td>
+                <td th:text="${materialResource.name}"></td>
+                <td th:text="${materialResource.amount}"></td>
+                <td th:text="${materialResource.rate}"></td>
               </tr>
             </div>
-            </tbody>-->
+            </tbody>
 
           </table>
         </div>
@@ -78,6 +80,12 @@
               <label class="col-3">Общее количество ресурса</label>
               <input class="form-control col" type="number" placeholder="Количество ресурса" name="amount">
             </div>
+
+              <div class="form-group row mb-2 align-items-center">
+                <label class="col-3">Общее количество ресурса</label>
+                <input class="form-control col" type="number" step="0.01" placeholder="Тариф использования (руб/час)" name="rate">
+              </div>
+
             <button class="btn btn-success btn-sm col-1"  role="button" type="submit">
               Добавить
             </button>
