@@ -1,9 +1,11 @@
 package com.cpp.lccalc.models;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+@Entity
 public class Risk {
 
     @Id
@@ -78,6 +80,10 @@ public class Risk {
         this.consequenceTitle = consequenceTitle;
     }
 
+    public Risk(){
+
+    }
+
     public Risk(String name, int likelihood, int consequence) {
         this.name = name;
         this.likelihood = likelihood;
@@ -87,19 +93,12 @@ public class Risk {
         this.consequenceTitle = consequenceToTitle(consequence);
     }
 
-    public String likelihoodToTitle(int likelihood){
-        switch (likelihood){
-            case (1):
-                return "Крайне вероятно";
-            case (2):
-                return "Вероятно";
-            case (3):
-                return "Возможно";
-            case (4):
-                return "Маловероятно";
-            case (5):
-                return "Крайне маловероятно";
-        }
+    public String likelihoodToTitle(int likelihood) {
+        if (likelihood < 20) return "Крайне маловероятно";
+        else if (likelihood < 40) return "Маловероятно";
+        else if (likelihood < 60) return "Возможно";
+        else if (likelihood < 80) return "Вероятно";
+        else if (likelihood <= 100) return "Крайне вероятно";
         return null;
     }
 
@@ -120,72 +119,82 @@ public class Risk {
     }
 
     public String getColor(int likelihood, int consequence){
-        switch (likelihood) {
-            case (1):
-                switch (consequence) {
-                    case (1):
-                        return "background-color:#92D050";
-                    case (2):
-                        return "background-color:yellow";
-                    case (3):
-                        return "background-color:#FFC000";
-                    case (4):
-                        return "background-color:red";
-                    case (5):
-                        return "background-color:red";
-                }
-            case (2):
-                switch (consequence) {
-                    case (1):
-                        return "background-color:#00B050";
-                    case (2):
-                        return "background-color:#92D050";
-                    case (3):
-                        return "background-color:yellow";
-                    case (4):
-                        return "background-color:#FFC000";
-                    case (5):
-                        return "background-color:red";
-                }
-            case (3):
-                switch (consequence) {
-                    case (1):
-                        return "background-color:#00B050";
-                    case (2):
-                        return "background-color:#92D050";
-                    case (3):
-                        return "background-color:yellow";
-                    case (4):
-                        return "background-color:#FFC000";
-                    case (5):
-                        return "background-color:#FFC000";
-                }
-            case (4):
-                switch (consequence) {
-                    case (1):
-                        return "background-color:#00B050";
-                    case (2):
-                        return "background-color:#92D050";
-                    case (3):
-                        return "background-color:#92D050";
-                    case (4):
-                        return "background-color:yellow";
-                    case (5):
-                        return "background-color:#FFC000";
-                }
-            case (5):
-                switch (consequence) {
-                    case (1):
-                        return "background-color:#00B050";
-                    case (2):
-                        return "background-color:#00B050";
-                    case (3):
-                        return "background-color:#92D050";
-                    case (4):
-                        return "background-color:yellow";
-                    case (5):
-                        return "background-color:yellow";
-                }
+
+        if (likelihood < 20) {
+
+            switch (consequence) {
+                case (1):
+                    return "background-color:#00B050";
+                case (2):
+                    return "background-color:#00B050";
+                case (3):
+                    return "background-color:#92D050";
+                case (4):
+                    return "background-color:yellow";
+                case (5):
+                    return "background-color:yellow";
+            }
+        }
+        else if (likelihood < 40) {
+
+            switch (consequence) {
+                case (1):
+                    return "background-color:#00B050";
+                case (2):
+                    return "background-color:#92D050";
+                case (3):
+                    return "background-color:#92D050";
+                case (4):
+                    return "background-color:yellow";
+                case (5):
+                    return "background-color:#FFC000";
+            }
+        }
+        else if (likelihood < 60) {
+
+            switch (consequence) {
+                case (1):
+                    return "background-color:#00B050";
+                case (2):
+                    return "background-color:#92D050";
+                case (3):
+                    return "background-color:yellow";
+                case (4):
+                    return "background-color:#FFC000";
+                case (5):
+                    return "background-color:#FFC000";
+            }
+        }
+        else if (likelihood < 80) {
+
+            switch (consequence) {
+                case (1):
+                    return "background-color:#00B050";
+                case (2):
+                    return "background-color:#92D050";
+                case (3):
+                    return "background-color:yellow";
+                case (4):
+                    return "background-color:#FFC000";
+                case (5):
+                    return "background-color:red";
+            }
+
+        }
+        else if (likelihood <= 100) {
+
+            switch (consequence) {
+                case (1):
+                    return "background-color:#92D050";
+                case (2):
+                    return "background-color:yellow";
+                case (3):
+                    return "background-color:#FFC000";
+                case (4):
+                    return "background-color:red";
+                case (5):
+                    return "background-color:red";
+            }
         }
         return null;
     }

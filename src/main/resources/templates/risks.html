@@ -95,7 +95,7 @@
 
         <div class="col-md-4">
           <h6 class="card-title mb-1">Список рисков</h6>
-          <button type="button" class="mt-3 btn btn-success btn-sm" data-toggle="modal" data-target="#co-add-risk">Добавить риски</button>
+          <button type="button" class="mt-3 btn btn-success btn-sm" data-toggle="modal" data-target="#add-risk">Добавить риски</button>
         </div>
 
         <!--Список ресурсов -->
@@ -107,6 +107,9 @@
               <th scope="col">Наименование</th>
               <th scope="col">Вероятность</th>
               <th scope="col">Степень влияния</th>
+              <th scope="col">Вероятность, %</th>
+              <th scope="col">Финансовые потери</th>
+              <th scope="col">Действие</th>
             </tr>
             </thead>
 
@@ -117,6 +120,18 @@
                 <td th:text="${risk.name}"></td>
                 <td th:text="${risk.likelihoodTitle}"></td>
                 <td th:text="${risk.consequenceTitle}"></td>
+                <td th:text="${risk.likelihood}"></td>
+                <td th:text="${risk.consequence}"></td>
+                <td>
+                  <a th:href="'/risk/'+ ${risk.name}+'/edit'" class="btn btn-round">
+                    <i class="material-icons">edit</i>
+                  </a>
+                  <!--<form th:action="'/risk/'+ ${risk.riskId}+'/remove'" method="post" class="col">
+                    <button onclick="return confirm('Вы действительно хотите удалить риск?')" class="btn btn-round">
+                      <i class="material-icons">delete</i>
+                    </button>
+                  </form>-->
+                </td>
               </tr>
             </div>
             </tbody>
@@ -153,7 +168,7 @@
   <div id="container"></div>
 
   <!--Форма-окно для добавления риска-->
-  <form class="modal fade" th:action="'/risks/add_risk'" id="co-add-risk" tabindex="-1" style="display:none;" aria-hidden="true" method="post">
+  <form class="modal fade" th:action="'/risks/add'" id="add-risk" tabindex="-1" style="display:none;" aria-hidden="true" method="post">
     <div class="modal-dialog modal-xl" role="document">
       <div class="modal-content p-2">
         <div class="modal-header">
@@ -170,7 +185,18 @@
             <input class="form-control col" type="text" placeholder="Наименование риска" name="name">
           </div>
 
-          <label class="col mt-3">Вероятность возникновения риска</label>
+          <div class="form-group row mb-2 align-items-center">
+            <label class="col-3">Вероятность возникновения риска:
+              <output id="num">0</output></label>
+            <input class="form-control col" type="range" value="0" max="100" oninput="num.value = this.value + '%'" name="likelihood">
+          </div>
+
+          <div class="form-group row mb-2 align-items-center">
+            <label class="col-3">Финансовые потери, связанные с реализацией риска</label>
+            <input class="form-control col" type="text" placeholder="Финансовые потери, руб." name="consequence">
+          </div>
+
+          <!--<label class="col mt-3">Вероятность возникновения риска</label>
           <select class="form-select form-select-lg mt-1" aria-label=".form-select-lg" name="likelihood">
             <option value="0">Выберите вероятность возникновения риска</option>
             <option value="1">Крайне маловероятно</option>
@@ -188,7 +214,7 @@
             <option value="3">Умеренное</option>
             <option value="4">Значительное</option>
             <option value="5">Существенное</option>
-          </select>
+          </select>-->
 <!--
 
           <div class="form-group row mb-2 align-items-center">

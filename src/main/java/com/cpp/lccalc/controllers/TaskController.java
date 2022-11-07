@@ -47,6 +47,9 @@ public class TaskController {
     @Autowired
     private MaterialResourcesSubTaskRepository materialResourcesSubTaskRepository;
 
+    @Autowired
+    private RiskRepository riskRepository;
+
 
 
 
@@ -117,7 +120,15 @@ public class TaskController {
                                @RequestParam String startDate, Model model) {
 
         Task task = taskRepository.findById(id).orElseThrow();
+
+
+        task.setName(name);
+        task.setDescription(description);
+        task.setTaskIndex(taskIndex);
+
         TaskCalculation taskCalculation = new TaskCalculation(task);
+
+
         if (coId.equals(0L)){
             task.setDuration(taskCalculation.getDuration());
             task.setBudget(task.findBudgetBySubTasks());
@@ -143,11 +154,6 @@ public class TaskController {
                 }
             }
         }
-
-
-        task.setName(name);
-        task.setDescription(description);
-        task.setTaskIndex(taskIndex);
 
         if (!startDate.isEmpty()){
             task.setStartDate(LocalDate.parse(startDate));
@@ -338,6 +344,32 @@ public class TaskController {
         return categories;
     }
 
+    //Страница редактирования
+    @GetMapping("/risk/{name}/edit")
+    public String riskEdit(@PathVariable(value = "name") String name,  Model model) {
+        //Risk risk = riskRepository.findById(id).orElseThrow();
+        Risk risk = new Risk("risk1", 1, 1);
+        model.addAttribute("risk", risk);
+        return "risk-edit";
+    }
+
+
+    //Добавление риска
+    @PostMapping("/risks/add")
+    public String AddRisk(           //Параметры для исполнителя
+                                     @RequestParam String name,
+                                     @RequestParam int likelihood,
+                                     @RequestParam int consequence,
+                                     Model model){
+        Risk risk = new Risk(name,likelihood,consequence);
+        riskRepository.save(risk);
+
+        Iterable<Risk> risks = riskRepository.findAll();
+        model.addAttribute("risks", risks);
+        return "/risks";
+    }
+
+
     @GetMapping(value = "/gantt/{id}")
         public String getGantt(@PathVariable(value = "id") long id,Model model){
         model.addAttribute("id", id);
@@ -355,50 +387,10 @@ public class TaskController {
     //Открыть страницу с рисками
     @GetMapping(value = "/risks")
     public String risks(Model model){
-
-        Risk risk1 = new Risk("risk1", 1, 1);
-        Risk risk2 = new Risk("risk2", 1, 2);
-        Risk risk3 = new Risk("risk2", 1, 3);
-        Risk risk4 = new Risk("risk2", 1, 4);
-        Risk risk5 = new Risk("risk2", 1, 5);
-        Risk risk6 = new Risk("risk1", 2, 1);
-        Risk risk7 = new Risk("risk2", 2, 2);
-        Risk risk8 = new Risk("risk2", 2, 3);
-        Risk risk9 = new Risk("risk2", 2, 4);
-        Risk risk10 = new Risk("risk2", 2, 5);
-        Risk risk11 = new Risk("risk1", 3, 1);
-        Risk risk12 = new Risk("risk2", 3, 2);
-        Risk risk13 = new Risk("risk2", 3, 3);
-        Risk risk14 = new Risk("risk2", 3, 4);
-        Risk risk15 = new Risk("risk2", 3, 5);
-        Risk risk16 = new Risk("risk1", 4, 1);
-        Risk risk17 = new Risk("risk2", 4, 2);
-        Risk risk18 = new Risk("risk2", 4, 3);
-        Risk risk19 = new Risk("risk2", 4, 4);
-        Risk risk20 = new Risk("risk2", 4, 5);
-        Risk risk21 = new Risk("risk1", 5, 1);
-        Risk risk22 = new Risk("risk2", 5, 2);
-        Risk risk23 = new Risk("risk2", 5, 3);
-        Risk risk24 = new Risk("risk2", 5, 4);
-        Risk risk25 = new Risk("risk2", 5, 5);
-        Risk[] risks = {risk1, risk2, risk3, risk4, risk5, risk6, risk7,risk8,risk9,risk10,risk11,risk12,risk13,risk14,risk15,risk16,risk17,risk18,risk19,risk20,risk21,risk22,risk23,risk24,risk25};
-        //Iterable<HumanResources> humanResources = humanResourceRepository.findAll();
+        Iterable<Risk> risks = riskRepository.findAll();
         model.addAttribute("risks", risks);
         return "risks";
     }
 
-    //Добавление риска
-    @PostMapping("/risks/add_risk")
-    public String AddRisk(           //Параметры для исполнителя
-                                     @RequestParam String name,
-                                     @RequestParam String likelihood,
-                                     @RequestParam String consequence,
-                                     Model model){
-
-        model.addAttribute("name", name);
-        model.addAttribute("likelihood", likelihood);
-        model.addAttribute("consequence", consequence);
-        return "risks";
-    }
 
 }
