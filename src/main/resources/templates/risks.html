@@ -114,7 +114,7 @@
             </thead>
 
             <tbody>
-            <div th:each="risk : ${risks}">
+            <div th:each="risk : ${project.risks}">
               <tr th:style="${risk.color}">
                 <td scope="row"></td>
                 <td th:text="${risk.name}"></td>
@@ -168,7 +168,7 @@
   <div id="container"></div>
 
   <!--Форма-окно для добавления риска-->
-  <form class="modal fade" th:action="'/risks/add'" id="add-risk" tabindex="-1" style="display:none;" aria-hidden="true" method="post">
+  <form class="modal fade" th:action="'/project/'+ ${project.projectId} + '/add_risk'" id="add-risk" tabindex="-1" style="display:none;" aria-hidden="true" method="post">
     <div class="modal-dialog modal-xl" role="document">
       <div class="modal-content p-2">
         <div class="modal-header">

@@ -345,10 +345,14 @@ public class TaskController {
     }
 
     //Открыть страницу с рисками
-    @GetMapping(value = "/project/ {id} /risks")
-    public String risks(Model model){
+    @GetMapping(value = "/project/{id}/risks")
+    public String risks(@PathVariable(value = "id") Long id, Model model){
+
+        Project project = projectRopository.findById(id).orElseThrow();
+
         Iterable<Risk> risks = riskRepository.findAll();
         model.addAttribute("risks", risks);
+        model.addAttribute("project", project);
         return "risks";
     }
 
@@ -366,17 +370,22 @@ public class TaskController {
 
 
     //Добавление риска
-    @PostMapping("/risks/add")
-    public String AddRisk(           //Параметры для исполнителя
+    @PostMapping("/project/{id}/add_risk")
+    public String AddRisk(         @PathVariable Long id,  //Параметры для исполнителя
                                      @RequestParam String name,
                                      @RequestParam int likelihood,
                                      @RequestParam int consequence,
                                      Model model){
-        Risk risk = new Risk(name,likelihood,consequence);
-        riskRepository.save(risk);
+        Project project = projectRopository.findById(id).orElseThrow();
 
-        Iterable<Risk> risks = riskRepository.findAll();
-        model.addAttribute("risks", risks);
+        Risk risk = new Risk(name,likelihood,consequence);
+        risk.setProject(project);
+        riskRepository.save(risk);
+        project = projectRopository.findById(id).orElseThrow();
+
+        //Iterable<Risk> risks = riskRepository.findAll();
+        //model.addAttribute("risks", risks);
+        model.addAttribute("project", project);
         return "/risks";
     }
 
