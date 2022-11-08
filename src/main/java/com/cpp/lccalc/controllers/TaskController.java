@@ -50,8 +50,8 @@ public class TaskController {
     @Autowired
     private RiskRepository riskRepository;
 
-
-
+    @Autowired
+    private RiskSolutionRepository riskSolutionRepository;
 
     //Открытие страницы с задачей
     @GetMapping("/task/{id}")
@@ -344,12 +344,23 @@ public class TaskController {
         return categories;
     }
 
-    //Страница редактирования
-    @GetMapping("/risk/{name}/edit")
-    public String riskEdit(@PathVariable(value = "name") String name,  Model model) {
-        //Risk risk = riskRepository.findById(id).orElseThrow();
-        Risk risk = new Risk("risk1", 1, 1);
+    //Открыть страницу с рисками
+    @GetMapping(value = "/project/ {id} /risks")
+    public String risks(Model model){
+        Iterable<Risk> risks = riskRepository.findAll();
+        model.addAttribute("risks", risks);
+        return "risks";
+    }
+
+    //Страница редактирования риска
+    @GetMapping("/risk/{id}/edit")
+    public String riskEdit(@PathVariable(value = "id") Long id,  Model model) {
+        Risk risk = riskRepository.findById(id).orElseThrow();
+        Iterable<RiskSolution> riskSolution = riskSolutionRepository.findAll();
+        //Risk risk = new Risk("risk1", 1, 1);
+
         model.addAttribute("risk", risk);
+        model.addAttribute("riskSolution", riskSolution);
         return "risk-edit";
     }
 
@@ -369,6 +380,19 @@ public class TaskController {
         return "/risks";
     }
 
+    //Добавление обработки риска
+    @PostMapping("/risk/{id}/add_solution")
+    public String AddSolution (@PathVariable(value = "id") Long id, Model model, @RequestParam String name, @RequestParam int probability, @RequestParam Long cost, @RequestParam int reduction){
+        RiskSolution riskSolution = new RiskSolution(name, probability, cost, reduction);
+        riskSolutionRepository.save(riskSolution);
+
+        Risk risk = riskRepository.findById(id).orElseThrow();
+        model.addAttribute("risk", risk);
+        Iterable<RiskSolution> riskSolution1 = riskSolutionRepository.findAll();
+        model.addAttribute("riskSolution", riskSolution1);
+        return "risk-edit";
+    }
+
 
     @GetMapping(value = "/gantt/{id}")
         public String getGantt(@PathVariable(value = "id") long id,Model model){
@@ -380,16 +404,6 @@ public class TaskController {
     public String getGanttProject(@PathVariable(value = "id") long id,Model model){
         model.addAttribute("id", id);
         return "gantt-project";
-    }
-
-
-
-    //Открыть страницу с рисками
-    @GetMapping(value = "/risks")
-    public String risks(Model model){
-        Iterable<Risk> risks = riskRepository.findAll();
-        model.addAttribute("risks", risks);
-        return "risks";
     }
 
 

@@ -34,8 +34,18 @@
             <div class="container">
                 <h2 class="text-left">Редактирование проекта</h2>
 
-                <div class="card mt-2">
+                <section class="bg-light text-dark p-3">
+                    <div class="container d-flex justify-content-evenly">
+                        <button type="button" class="btn btn-outline-secondary">Назначение исполнителей</button>
+                        <a th:href="'/gantt_project/'+ ${project.projectId}" ><button type="button" class="btn btn-outline-secondary">План-графики</button></a>
+                        <button type="button" class="btn btn-outline-secondary">Оценка целесообразности</button>
+                        <a th:href="'/project/'+ ${project.projectId} + '/risks'" ><button type="button" class="btn btn-outline-secondary">Оценка и анализ рисков</button></a>
+                    </div>
+                </section>
+
+                <div class="card g-0 p-2 mt-3">
                     <div class="row g-0 p-2 mb-2 align-items-center">
+                        <h6>Основная информация</h6>
                         <label class="col-3">Наименование проекта</label>
                         <input class="col form-control" type="text" th:value="${project.projectName}" placeholder="Наименование проекта" name="projectName">
                     </div>

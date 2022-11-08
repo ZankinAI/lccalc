@@ -1,9 +1,6 @@
 package com.cpp.lccalc.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Risk {
@@ -23,6 +20,10 @@ public class Risk {
     private String consequenceTitle;
 
     private String color;
+
+    @ManyToOne
+    @JoinColumn(name="project_id", nullable=true)
+    private Project project;
 
     public Long getRiskId() {
         return riskId;
@@ -78,6 +79,14 @@ public class Risk {
 
     public void setConsequenceTitle(String consequenceTitle) {
         this.consequenceTitle = consequenceTitle;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
     }
 
     public Risk(){

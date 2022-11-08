@@ -41,6 +41,9 @@ public class Project {
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL )
     private Set<Task> tasks;
 
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL )
+    private Set<Risk> risks;
+
 
     public Project() {
     }
@@ -146,6 +149,14 @@ public class Project {
 
     public void setTasks(Set<Task> tasks) {
         this.tasks = tasks;
+    }
+
+    public Set<Risk> getRisks() {
+        return risks;
+    }
+
+    public void setRisks(Set<Risk> risks) {
+        this.risks = risks;
     }
 
     public void sortTasks(){
