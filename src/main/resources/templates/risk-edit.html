@@ -43,8 +43,8 @@
           </div>
 
             <div class="row g-0 p-2 mb-2 align-items-center">
-              <label class="col-3">Вероятность возникновения риска:
-                <output id="num" >0</output></label>
+              <label class="col-3">Вероятность реализации риска:
+                <output id="num" th:text="${risk.likelihood} + '%'"></output></label>
               <input class="form-control col" type="range" value="0" max="100" oninput="num.value = this.value + '%'" th:value="${risk.likelihood}" name="likelihood">
             </div>
 
@@ -73,18 +73,19 @@
                       <th scope="col">Вероятность избежания риска</th>
                       <th scope="col">Затраты</th>
                       <th scope="col">Процент снижения риска</th>
-                      <th scope="col">Действие</th>
+                      <th scope="col">Мат. ожидание потерь</th>
                     </tr>
                     </thead>
 
                     <tbody>
-                    <div th:each="el:${riskSolution}">
+                    <div th:each="el:${risk.riskSolutions}">
                       <tr>
                         <td scope="row"></td>
                         <td th:text="${el.name}"/>
-                        <td th:text="${el.probability}"></td>
+                        <td th:text="${el.probability} + '%'"></td>
                         <td th:text="${el.cost}"></td>
-                        <td th:text="${el.reduction}"></td>
+                        <td th:text="${el.reduction} + '%'"></td>
+                        <td th:text="${el.expected}"></td>
                         <td><!--
 
                           <a th:href="'/subtask/'+ ${el.subTaskId}+ '/edit'" class="btn btn-round">

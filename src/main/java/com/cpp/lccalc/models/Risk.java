@@ -1,6 +1,7 @@
 package com.cpp.lccalc.models;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class Risk {
@@ -15,11 +16,14 @@ public class Risk {
 
     private String likelihoodTitle;
 
-    private int consequence;
+    private double consequence;
 
     private String consequenceTitle;
 
     private String color;
+
+    @OneToMany(mappedBy = "risk", cascade = CascadeType.ALL )
+    private Set<RiskSolution> riskSolutions;
 
     @ManyToOne
     @JoinColumn(name="project_id", nullable=true)
@@ -49,11 +53,11 @@ public class Risk {
         this.likelihood = likelihood;
     }
 
-    public int getConsequence() {
+    public double getConsequence() {
         return consequence;
     }
 
-    public void setConsequence(int consequence) {
+    public void setConsequence(double consequence) {
         this.consequence = consequence;
     }
 
@@ -81,12 +85,22 @@ public class Risk {
         this.consequenceTitle = consequenceTitle;
     }
 
+    public Set<RiskSolution> getRiskSolutions() {
+        return riskSolutions;
+    }
+
+    public void setRiskSolutions(Set<RiskSolution> riskSolutions) {
+        this.riskSolutions = riskSolutions;
+    }
+
     public Project getProject() {
         return project;
     }
 
     public void setProject(Project project) {
         this.project = project;
+        this.consequenceTitle = consequenceToTitle(consequence);
+        this.color = getColor(likelihood,consequence);
     }
 
     public Risk(){
@@ -97,9 +111,7 @@ public class Risk {
         this.name = name;
         this.likelihood = likelihood;
         this.consequence = consequence;
-        this.color = getColor(likelihood,consequence);
         this.likelihoodTitle = likelihoodToTitle(likelihood);
-        this.consequenceTitle = consequenceToTitle(consequence);
     }
 
     public String likelihoodToTitle(int likelihood) {
@@ -111,99 +123,86 @@ public class Risk {
         return null;
     }
 
-    public String consequenceToTitle(int consequence){
-        switch (consequence){
-            case (1):
-                return "Пренебрежимое";
-            case (2):
-                return "Небольшое";
-            case (3):
-                return "Умеренное";
-            case (4):
-                return "Значительное";
-            case (5):
-                return "Существенное";
-        }
-        return null;
+    public String consequenceToTitle(double consequence){
+        double riskCost = consequence / getProject().getBudget();
+        if (riskCost < 0.01)
+            return "Пренебрежимое";
+        else if (riskCost < 0.05)
+            return "Небольшое";
+        else if (riskCost < 0.1)
+            return "Умеренное";
+        else if (riskCost < 0.2)
+            return "Значительное";
+        else
+            return "Существенное";
     }
 
-    public String getColor(int likelihood, int consequence){
+    public String getColor(int likelihood, double consequence){
+
+        double riskCost = consequence / getProject().getBudget();
 
         if (likelihood < 20) {
-
-            switch (consequence) {
-                case (1):
-                    return "background-color:#00B050";
-                case (2):
-                    return "background-color:#00B050";
-                case (3):
-                    return "background-color:#92D050";
-                case (4):
-                    return "background-color:yellow";
-                case (5):
-                    return "background-color:yellow";
-            }
+            if (riskCost < 0.01)
+                return "background-color:#00B050";
+            else if (riskCost < 0.05)
+                return "background-color:#00B050";
+            else if (riskCost < 0.1)
+                return "background-color:#92D050";
+            else if (riskCost < 0.2)
+                return "background-color:yellow";
+            else
+                return "background-color:yellow";
         }
         else if (likelihood < 40) {
-
-            switch (consequence) {
-                case (1):
-                    return "background-color:#00B050";
-                case (2):
-                    return "background-color:#92D050";
-                case (3):
-                    return "background-color:#92D050";
-                case (4):
-                    return "background-color:yellow";
-                case (5):
-                    return "background-color:#FFC000";
-            }
+            if (riskCost < 0.01)
+                return "background-color:#00B050";
+            else if (riskCost < 0.05)
+                return "background-color:#92D050";
+            else if (riskCost < 0.1)
+                return "background-color:#92D050";
+            else if (riskCost < 0.2)
+                return "background-color:yellow";
+            else
+                return "background-color:#FFC000";
         }
         else if (likelihood < 60) {
-
-            switch (consequence) {
-                case (1):
-                    return "background-color:#00B050";
-                case (2):
-                    return "background-color:#92D050";
-                case (3):
-                    return "background-color:yellow";
-                case (4):
-                    return "background-color:#FFC000";
-                case (5):
-                    return "background-color:#FFC000";
-            }
+            if (riskCost < 0.01)
+                return "background-color:#00B050";
+            else if (riskCost < 0.05)
+                return "background-color:#92D050";
+            else if (riskCost < 0.1)
+                return "background-color:yellow";
+            else if (riskCost < 0.2)
+                return "background-color:#FFC000";
+            else
+                return "background-color:#FFC000";
         }
         else if (likelihood < 80) {
-
-            switch (consequence) {
-                case (1):
-                    return "background-color:#00B050";
-                case (2):
-                    return "background-color:#92D050";
-                case (3):
-                    return "background-color:yellow";
-                case (4):
-                    return "background-color:#FFC000";
-                case (5):
-                    return "background-color:red";
-            }
+            if (riskCost < 0.01)
+                return "background-color:#00B050";
+            else if (riskCost < 0.05)
+                return "background-color:#92D050";
+            else if (riskCost < 0.1)
+                return "background-color:yellow";
+            else if (riskCost < 0.2)
+                return "background-color:#FFC000";
+            else
+                return "background-color:red";
 
         }
         else if (likelihood <= 100) {
 
-            switch (consequence) {
-                case (1):
-                    return "background-color:#92D050";
-                case (2):
-                    return "background-color:yellow";
-                case (3):
-                    return "background-color:#FFC000";
-                case (4):
-                    return "background-color:red";
-                case (5):
-                    return "background-color:red";
-            }
+            if (riskCost < 0.01)
+                return "background-color:#92D050";
+            else if (riskCost < 0.05)
+                return "background-color:yellow";
+            else if (riskCost < 0.1)
+                return "background-color:#FFC000";
+            else if (riskCost < 0.2)
+                return "background-color:red";
+            else
+                return "background-color:red";
+
         }
         return null;
     }

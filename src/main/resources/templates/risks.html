@@ -120,7 +120,7 @@
                 <td th:text="${risk.name}"></td>
                 <td th:text="${risk.likelihoodTitle}"></td>
                 <td th:text="${risk.consequenceTitle}"></td>
-                <td th:text="${risk.likelihood}"></td>
+                <td th:text="${risk.likelihood} + '%'"></td>
                 <td th:text="${risk.consequence}"></td>
                 <td>
                   <a th:href="'/risk/'+ ${risk.riskId}+'/edit'" class="btn btn-round">
@@ -186,8 +186,8 @@
           </div>
 
           <div class="form-group row mb-2 align-items-center">
-            <label class="col-3">Вероятность избежания риска:
-              <output id="num">0</output></label>
+            <label class="col-3">Вероятность реализации риска:
+              <output id="num"></output></label>
             <input class="form-control col" type="range" value="0" max="100" oninput="num.value = this.value + '%'" name="likelihood">
           </div>
 

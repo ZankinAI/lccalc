@@ -392,10 +392,13 @@ public class TaskController {
     //Добавление обработки риска
     @PostMapping("/risk/{id}/add_solution")
     public String AddSolution (@PathVariable(value = "id") Long id, Model model, @RequestParam String name, @RequestParam int probability, @RequestParam Long cost, @RequestParam int reduction){
+        Risk risk = riskRepository.findById(id).orElseThrow();
+
         RiskSolution riskSolution = new RiskSolution(name, probability, cost, reduction);
+        riskSolution.setRisk(risk);
         riskSolutionRepository.save(riskSolution);
 
-        Risk risk = riskRepository.findById(id).orElseThrow();
+        risk = riskRepository.findById(id).orElseThrow();
         model.addAttribute("risk", risk);
         Iterable<RiskSolution> riskSolution1 = riskSolutionRepository.findAll();
         model.addAttribute("riskSolution", riskSolution1);

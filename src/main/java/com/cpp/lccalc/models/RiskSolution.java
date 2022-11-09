@@ -1,9 +1,6 @@
 package com.cpp.lccalc.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class RiskSolution {
@@ -14,11 +11,17 @@ public class RiskSolution {
 
     private String name;
 
-    private int probability;
+    private double probability;
 
     private Long cost;
 
-    private int reduction;
+    private double reduction;
+
+    private double expected;
+
+    @ManyToOne
+    @JoinColumn(name="risk_id", nullable=true)
+    private Risk risk;
 
     public Long getRiskSolutionId() {
         return riskSolutionId;
@@ -36,11 +39,11 @@ public class RiskSolution {
         this.name = name;
     }
 
-    public int getProbability() {
+    public double getProbability() {
         return probability;
     }
 
-    public void setProbability(int probability) {
+    public void setProbability(double probability) {
         this.probability = probability;
     }
 
@@ -52,12 +55,30 @@ public class RiskSolution {
         this.cost = cost;
     }
 
-    public int getReduction() {
+    public double getReduction() {
         return reduction;
     }
 
-    public void setReduction(int reduction) {
+    public void setReduction(double reduction) {
         this.reduction = reduction;
+    }
+
+    public double getExpected() {
+        return expected;
+    }
+
+    public void setExpected(double expected) {
+        this.expected = expected;
+    }
+
+    public Risk getRisk() {
+        return risk;
+    }
+
+    public void setRisk(Risk risk) {
+        this.risk = risk;
+        double consequence = this.risk.getConsequence();
+        this.expected = this.probability / 100 * (this.cost + consequence * (100 - this.reduction) / 100) + (100 - this.probability) / 100 * (consequence + this.cost);
     }
 
     public RiskSolution(){
