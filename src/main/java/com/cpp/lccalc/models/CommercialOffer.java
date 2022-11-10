@@ -2,6 +2,7 @@ package com.cpp.lccalc.models;
 
 import com.cpp.lccalc.repo.TaskRepository;
 
+
 import javax.persistence.*;
 @Entity
 public class CommercialOffer {

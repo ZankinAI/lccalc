@@ -44,6 +44,9 @@ public class Project {
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL )
     private Set<Risk> risks;
 
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL )
+    private Set<BreakEven> breakEvens;
+
 
     public Project() {
     }
@@ -55,6 +58,14 @@ public class Project {
         this.status = status;
         this.startDateFormat = startDateFormat;
         this.finishDateFormat = finishDateFormat;
+    }
+
+    public Set<BreakEven> getBreakEvens() {
+        return breakEvens;
+    }
+
+    public void setBreakEvens(Set<BreakEven> breakEvens) {
+        this.breakEvens = breakEvens;
     }
 
     public Customer getCustomer() {
@@ -173,6 +184,13 @@ public class Project {
                 this.budget += task.getBudget();
             }
         }
+    }
+
+    public BreakEven getFirstBreakEven(){
+        BreakEven breakEven = null;
+        breakEven = this.breakEvens.iterator().next();
+
+        return breakEven;
     }
 
 
