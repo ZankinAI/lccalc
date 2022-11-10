@@ -349,6 +349,7 @@ public class TaskController {
     public String risks(@PathVariable(value = "id") Long id, Model model){
 
         Project project = projectRopository.findById(id).orElseThrow();
+        project.sortRisks();
 
         Iterable<Risk> risks = riskRepository.findAll();
         model.addAttribute("risks", risks);
@@ -362,10 +363,48 @@ public class TaskController {
         Risk risk = riskRepository.findById(id).orElseThrow();
         Iterable<RiskSolution> riskSolution = riskSolutionRepository.findAll();
         //Risk risk = new Risk("risk1", 1, 1);
-
+        RiskSolution selectedSolution = new RiskSolution();
+        if (risk.getSelectedRiskSolutionID() != null)
+            if (risk.getSelectedRiskSolutionID() == 0L)
+                risk.setSelectedRiskSolutionID(null);
+            else
+                selectedSolution = riskSolutionRepository.findById(risk.getSelectedRiskSolutionID()).orElseThrow();
+        model.addAttribute("selectedSolution", selectedSolution);
         model.addAttribute("risk", risk);
         model.addAttribute("riskSolution", riskSolution);
         return "risk-edit";
+    }
+
+    //Обновление риска
+    @PostMapping("/risk/{id}/edit" )
+    public String riskEditPost(@PathVariable(value = "id") Long id, Model model,
+                               @RequestParam String name,
+                               @RequestParam double likelihood,
+                               @RequestParam double consequence,
+                               @RequestParam(defaultValue = "0") Long solutionId){
+
+        RiskSolution selectedRiskSolution = new RiskSolution();
+        if (solutionId != 0L)
+            selectedRiskSolution = riskSolutionRepository.findById(solutionId).orElseThrow();
+        else solutionId = null;
+        Risk risk = riskRepository.findById(id).orElseThrow();
+        Project project = risk.getProject();
+        project.sortRisks();
+        risk.setName(name);
+        risk.setLikelihood(likelihood);
+        risk.setConsequence(consequence);
+        risk.update();
+        risk.setSelectedRiskSolutionID(solutionId);
+        riskRepository.save(risk);
+
+        Iterable<RiskSolution> riskSolution = riskSolutionRepository.findAll();
+
+        Iterable<Risk> risks = riskRepository.findAll();
+        model.addAttribute("risks", risks);
+        model.addAttribute("project", project);
+        model.addAttribute("risk", risk);
+        model.addAttribute("riskSolution", riskSolution);
+        return "risks";
     }
 
 
@@ -382,9 +421,17 @@ public class TaskController {
         risk.setProject(project);
         riskRepository.save(risk);
         project = projectRopository.findById(id).orElseThrow();
+        project.sortRisks();
+
+
+        RiskSolution selectedSolution = new RiskSolution();
+        if (risk.getSelectedRiskSolutionID() != null)
+            selectedSolution = riskSolutionRepository.findById(risk.getSelectedRiskSolutionID()).orElseThrow();
 
         //Iterable<Risk> risks = riskRepository.findAll();
         //model.addAttribute("risks", risks);
+
+        model.addAttribute("selectedSolution", selectedSolution);
         model.addAttribute("project", project);
         return "/risks";
     }
@@ -400,6 +447,11 @@ public class TaskController {
 
         risk = riskRepository.findById(id).orElseThrow();
         model.addAttribute("risk", risk);
+
+        RiskSolution selectedSolution = new RiskSolution();
+        if (risk.getSelectedRiskSolutionID() != null)
+            selectedSolution = riskSolutionRepository.findById(risk.getSelectedRiskSolutionID()).orElseThrow();
+        model.addAttribute("selectedSolution", selectedSolution);
         Iterable<RiskSolution> riskSolution1 = riskSolutionRepository.findAll();
         model.addAttribute("riskSolution", riskSolution1);
         return "risk-edit";

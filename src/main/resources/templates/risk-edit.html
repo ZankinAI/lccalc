@@ -30,7 +30,7 @@
 
   <section class="bg-light text-dark p-3">
     <!--Форма-окно для редактирования задачи-->
-    <form form id="risk-edit" th:action="'/risk/'+ ${risk.name} +'/edit'" name="riskEdit" method="post">
+    <form form id="risk-edit" th:action="'/risk/'+ ${risk.riskId} +'/edit'" name="riskEdit" method="post">
       <div class="container">
         <h2 class="text-left">Редактирование риска</h2>
 
@@ -59,9 +59,20 @@
             <div class="row g-0">
               <div class="col-md-4">
                 <h6 class="card-title mb-1">Обработка рисков</h6>
-                <button type="button" class="mt-3 btn btn-success btn-sm" data-toggle="modal" data-target="#add-risk-solution">Добавить способ снижения риска</button>
               </div>
-
+            </div>
+            <label class="mt-3 col-3">Выберите способ снижения риска:</label>
+            <select class="mt-3 form-select form-select-lg" aria-label=".form-select-lg" name="solutionId">
+              <option disabled>Выберите способ снижения риска</option>
+              <div th:if="${selectedSolution.riskSolutionId != null}"><option th:value="${selectedSolution.riskSolutionId}" th:text="${selectedSolution.name} + ' , Мат. ожидание потерь: ' + ${selectedSolution.expected}" selected></option></div>
+              <option th:value = "0" >Не обрабатывать риск</option>
+              <div th:each="el:${risk.riskSolutions}">
+                <option th:value="${el.riskSolutionId}" th:text="${el.name} + ' , Мат. ожидание потерь: ' + ${el.expected}"></option>
+              </div>
+            </select>
+            <div class="col-md-4">
+            <button type="button" class="mt-3 btn btn-success btn-sm" data-toggle="modal" data-target="#add-risk-solution">Добавить способ снижения риска</button>
+            </div>
 
               <!--Список способов снижения рисков -->
                 <div class="mt-1 table-responsive">
@@ -105,7 +116,7 @@
                 </div>
             </div>
 
-          </div>
+
 
           <button type="submit" class="btn btn-success">Обновить риск</button>
 

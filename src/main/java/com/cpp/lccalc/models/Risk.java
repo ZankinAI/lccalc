@@ -1,7 +1,7 @@
 package com.cpp.lccalc.models;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 public class Risk {
@@ -12,7 +12,7 @@ public class Risk {
 
     private String name;
 
-    private int likelihood;
+    private double likelihood;
 
     private String likelihoodTitle;
 
@@ -21,6 +21,12 @@ public class Risk {
     private String consequenceTitle;
 
     private String color;
+
+    public short colorNumber;
+
+    private double expected;
+
+    private Long selectedRiskSolutionID;
 
     @OneToMany(mappedBy = "risk", cascade = CascadeType.ALL )
     private Set<RiskSolution> riskSolutions;
@@ -45,11 +51,11 @@ public class Risk {
         this.name = name;
     }
 
-    public int getLikelihood() {
+    public double getLikelihood() {
         return likelihood;
     }
 
-    public void setLikelihood(int likelihood) {
+    public void setLikelihood(double likelihood) {
         this.likelihood = likelihood;
     }
 
@@ -85,12 +91,36 @@ public class Risk {
         this.consequenceTitle = consequenceTitle;
     }
 
+    public double getExpected() {
+        return expected;
+    }
+
+    public void setExpected(double expected) {
+        this.expected = expected;
+    }
+
+    public Long getSelectedRiskSolutionID() {
+        return selectedRiskSolutionID;
+    }
+
+    public void setSelectedRiskSolutionID(Long selectedRiskSolutionID) {
+        this.selectedRiskSolutionID = selectedRiskSolutionID;
+    }
+
     public Set<RiskSolution> getRiskSolutions() {
         return riskSolutions;
     }
 
     public void setRiskSolutions(Set<RiskSolution> riskSolutions) {
         this.riskSolutions = riskSolutions;
+    }
+
+    public short getColorNumber() {
+        return colorNumber;
+    }
+
+    public void setColorNumber(short colorNumber) {
+        this.colorNumber = colorNumber;
     }
 
     public Project getProject() {
@@ -107,14 +137,22 @@ public class Risk {
 
     }
 
-    public Risk(String name, int likelihood, int consequence) {
+    public Risk(String name, double likelihood, double consequence) {
         this.name = name;
         this.likelihood = likelihood;
         this.consequence = consequence;
+        this.expected = likelihood / 100 * consequence;
         this.likelihoodTitle = likelihoodToTitle(likelihood);
     }
 
-    public String likelihoodToTitle(int likelihood) {
+    public void update(){
+        expected = likelihood / 100 * consequence;
+        likelihoodTitle = likelihoodToTitle(likelihood);
+        consequenceTitle = consequenceToTitle(consequence);
+        color = getColor(likelihood,consequence);
+    }
+
+    public String likelihoodToTitle(double likelihood) {
         if (likelihood < 20) return "Крайне маловероятно";
         else if (likelihood < 40) return "Маловероятно";
         else if (likelihood < 60) return "Возможно";
@@ -137,73 +175,90 @@ public class Risk {
             return "Существенное";
     }
 
-    public String getColor(int likelihood, double consequence){
+    public String getColor(double likelihood, double consequence){
 
         double riskCost = consequence / getProject().getBudget();
 
         if (likelihood < 20) {
             if (riskCost < 0.01)
-                return "background-color:#00B050";
+                { this.colorNumber = 1; return "color:#00B050";}
             else if (riskCost < 0.05)
-                return "background-color:#00B050";
+                { this.colorNumber = 1; return "color:#00B050";}
             else if (riskCost < 0.1)
-                return "background-color:#92D050";
+                { this.colorNumber = 2; return "color:#92D050";}
             else if (riskCost < 0.2)
-                return "background-color:yellow";
+                { this.colorNumber = 3; return "color:yellow";}
             else
-                return "background-color:yellow";
+                { this.colorNumber = 3; return "color:yellow";}
         }
         else if (likelihood < 40) {
             if (riskCost < 0.01)
-                return "background-color:#00B050";
+                { this.colorNumber = 1; return "color:#00B050";}
             else if (riskCost < 0.05)
-                return "background-color:#92D050";
+                { this.colorNumber = 2; return "color:#92D050";}
             else if (riskCost < 0.1)
-                return "background-color:#92D050";
+                { this.colorNumber = 2; return "color:#92D050";}
             else if (riskCost < 0.2)
-                return "background-color:yellow";
+                { this.colorNumber = 3; return "color:yellow";}
             else
-                return "background-color:#FFC000";
+                { this.colorNumber = 4; return "color:#FFC000";}
         }
         else if (likelihood < 60) {
             if (riskCost < 0.01)
-                return "background-color:#00B050";
+                { this.colorNumber = 1; return "color:#00B050";}
             else if (riskCost < 0.05)
-                return "background-color:#92D050";
+                { this.colorNumber = 2; return "color:#92D050";}
             else if (riskCost < 0.1)
-                return "background-color:yellow";
+                { this.colorNumber = 3; return "color:yellow";}
             else if (riskCost < 0.2)
-                return "background-color:#FFC000";
+                { this.colorNumber = 4; return "color:#FFC000";}
             else
-                return "background-color:#FFC000";
+                { this.colorNumber = 4; return "color:#FFC000";}
         }
         else if (likelihood < 80) {
             if (riskCost < 0.01)
-                return "background-color:#00B050";
+            { this.colorNumber = 1; return "color:#00B050";}
             else if (riskCost < 0.05)
-                return "background-color:#92D050";
+                { this.colorNumber = 2; return "color:#92D050";}
             else if (riskCost < 0.1)
-                return "background-color:yellow";
+                { this.colorNumber = 3; return "color:yellow";}
             else if (riskCost < 0.2)
-                return "background-color:#FFC000";
+                { this.colorNumber = 4; return "color:#FFC000";}
             else
-                return "background-color:red";
+                { this.colorNumber = 5; return "color:red";}
 
         }
         else if (likelihood <= 100) {
 
             if (riskCost < 0.01)
-                return "background-color:#92D050";
+                { this.colorNumber = 2; return "color:#92D050";}
             else if (riskCost < 0.05)
-                return "background-color:yellow";
+                { this.colorNumber = 3; return "color:yellow";}
             else if (riskCost < 0.1)
-                return "background-color:#FFC000";
+                { this.colorNumber = 4; return "color:#FFC000";}
             else if (riskCost < 0.2)
-                return "background-color:red";
+                { this.colorNumber = 5; return "color:red";}
             else
-                return "background-color:red";
+                { this.colorNumber = 5; return "color:red";}
 
         }
         return null;
     }
+
+    public static Comparator RiskComparator = new Comparator<Risk>(){
+        @Override
+        public int compare(Risk o1, Risk o2) {
+            Short riskColor1 = o1.getColorNumber();
+            Short riskColor2 = o2.getColorNumber();
+            int c1 = riskColor2.compareTo(riskColor1);
+            if (c1 != 0){
+                return  c1;
+            }
+            else {
+                Long riskID1 = o1.getRiskId();
+                Long riskID2 = o2.getRiskId();
+                return riskID1.compareTo(riskID2);
+            }
+        }
+    };
 }

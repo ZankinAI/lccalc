@@ -103,25 +103,27 @@
           <table class="table table-striped table-hover">
             <thead>
             <tr>
-              <th scope="col">#</th>
+              <th scope="col">⚫</th>
               <th scope="col">Наименование</th>
               <th scope="col">Вероятность</th>
               <th scope="col">Степень влияния</th>
-              <th scope="col">Вероятность, %</th>
+              <th scope="col">Вероятность</th>
               <th scope="col">Финансовые потери</th>
+              <th scope="col">Мат. ожидание потерь</th>
               <th scope="col">Действие</th>
             </tr>
             </thead>
 
             <tbody>
             <div th:each="risk : ${project.risks}">
-              <tr th:style="${risk.color}">
-                <td scope="row"></td>
+              <tr>
+                <td th:style="${risk.color}" scope="row">⚫</td>
                 <td th:text="${risk.name}"></td>
                 <td th:text="${risk.likelihoodTitle}"></td>
                 <td th:text="${risk.consequenceTitle}"></td>
                 <td th:text="${risk.likelihood} + '%'"></td>
-                <td th:text="${risk.consequence}"></td>
+                <td th:text="${risk.consequence} + ' руб.'"></td>
+                <td th:text="${risk.expected} + ' руб.'"></td>
                 <td>
                   <a th:href="'/risk/'+ ${risk.riskId}+'/edit'" class="btn btn-round">
                     <i class="material-icons">edit</i>

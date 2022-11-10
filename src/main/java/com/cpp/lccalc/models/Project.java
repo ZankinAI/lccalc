@@ -176,4 +176,12 @@ public class Project {
     }
 
 
+    public void sortRisks(){
+        List<Risk> riskList = new ArrayList<Risk>(this.risks);
+        Collections.sort(riskList, Risk.RiskComparator);
+        this.risks = new LinkedHashSet<Risk>(riskList);
+    }
+
+
+
 }
