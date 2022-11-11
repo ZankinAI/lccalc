@@ -134,16 +134,19 @@
                             <div th:each="characteristic, itemStat : *{characteristics}">
                                 <tr>
                                     <td scope="row"></td>
-                                    <td th:field="*{characteristicsList[__${itemStat.index}__].name}"></td>
-                                    <td ><input  class="form-control col" th:field="*{characteristicsList[__${itemStat.index}__].weight}"></td>
-                                    <div th:each="grade, itemStat2 : *{characteristicsList[__${itemStat.index}__].grades}">
-                                        <td><input class="form-control col" th:field="*{characteristicsList[__${itemStat.index}__].grades[__${itemStat2.index}__]}"></td>
+                                    <td><input class="form-control col" th:field="*{characteristics[__${itemStat.index}__].name}"></td>
+                                    <td><input  class="form-control col" th:field="*{characteristics[__${itemStat.index}__].weight}"></td>
+                                    <div th:each="grade, itemStat2 : *{characteristics[__${itemStat.index}__].grades}">
+                                        <td><input class="form-control col" th:field="*{characteristics[__${itemStat.index}__].grades[__${itemStat2.index}__]}"></td>
                                     </div>
                                 </tr>
                             </div>
                             </tbody>
                         </table>
                     </div>
+                    <button role="button" class="btn btn-primary" type="submit">
+                        Принять изменения
+                    </button>
                 </form>
 
             </div>
@@ -192,6 +195,45 @@
                 <div class="modal-footer">
                     <button role="button" class="btn btn-primary" type="submit">
                         Добавить расчет
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <form class="modal fade" th:action="'/project/'+${project?.projectId}+'/add_characteristic'" id="add-characteristic"  tabindex="-1" style="display:none;" aria-hidden="true" method="post">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content p-2">
+                <div class="modal-header">
+                    <h5 class="modal-title">Новая характеристика</h5>
+                    <button type="button" class="close btn btn-round" data-dismiss="modal" aria-label="Close">
+                        <i class="material-icons">close</i>
+                    </button>
+                </div>
+                <!--end of modal head-->
+                <div class="modal-body">
+
+                    <div class="row align-items-center">
+                        <label class="col-3">Название:</label>
+                        <input class="col form-control" type="text" name="name" placeholder="Наименование">
+                    </div>
+
+                    <div class="row align-items-center">
+                        <label class="col-3">Вес:</label>
+                        <input class="col form-control"  type="number" min="0" max="1" step="0.01" name="weight" placeholder="Вес">
+                    </div>
+
+                    <div class="row align-items-center">
+                        <label class="col-3">Оценка проекта:</label>
+                        <input class="col form-control"  type="number" min="0" max="5" step="1" name="grade" placeholder="Оценка проекта">
+                    </div>
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <button role="button" class="btn btn-primary" type="submit">
+                        Добавить характеристику проекта
                     </button>
                 </div>
             </div>

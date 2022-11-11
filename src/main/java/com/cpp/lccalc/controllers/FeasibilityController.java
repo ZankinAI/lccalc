@@ -3,6 +3,7 @@ package com.cpp.lccalc.controllers;
 import com.cpp.lccalc.classes.CharacteristicDTO;
 import com.cpp.lccalc.classes.CharacteristicsListDTO;
 import com.cpp.lccalc.classes.FeasibilityCalculation;
+import com.cpp.lccalc.classes.HumanResourcesListDTO;
 import com.cpp.lccalc.models.BreakEven;
 import com.cpp.lccalc.models.Characteristic;
 import com.cpp.lccalc.models.Project;
@@ -10,10 +11,7 @@ import com.cpp.lccalc.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -95,6 +93,94 @@ public class FeasibilityController {
             model.addAttribute("dataImplementationCosts", feasibilityCalculation.getDataImplementationCosts());
             model.addAttribute("dataBreakEvenPoint", feasibilityCalculation.getDataBreakEvenPoint());
         }
+
+        model.addAttribute("feasibilityCalculation", feasibilityCalculation);
+
+        model.addAttribute("breakEven", breakEven);
+        model.addAttribute("project", project);
+        model.addAttribute("projects", projects);
+
+        Set<Characteristic> characteristics = project.getCharacteristics();
+        CharacteristicsListDTO characteristicsListDTO = new CharacteristicsListDTO();
+
+        for (Characteristic characteristic: characteristics) {
+            characteristicsListDTO.addCharacteristicDTO(new CharacteristicDTO(characteristic));
+        }
+
+        model.addAttribute("characteristicsList", characteristicsListDTO);
+
+        return "feasibility-assessment";
+    }
+
+    //Выбор проекта на странице оценки целесообразности
+    @PostMapping("/project/{projectId}/add_characteristic")
+    public String addCharacteristic(@PathVariable(value = "projectId") long id,
+                                    @RequestParam String name, @RequestParam double weight,
+                                    @RequestParam int grade,  Model model) {
+        Project project = projectRopository.findById(id).orElseThrow();
+        Iterable<Project> projects = projectRopository.findAll();
+        BreakEven breakEven = null;
+        if (!project.getBreakEvens().isEmpty()){
+            breakEven = project.getFirstBreakEven();
+        }
+
+        FeasibilityCalculation feasibilityCalculation = null;
+
+        if (breakEven!=null){
+            feasibilityCalculation = new FeasibilityCalculation(breakEven, project.getBudget());
+        }
+
+
+        if (feasibilityCalculation!=null){
+            model.addAttribute("dataVolumeOfSales", feasibilityCalculation.getDataVolumeOfSales());
+            model.addAttribute("dataImplementationCosts", feasibilityCalculation.getDataImplementationCosts());
+            model.addAttribute("dataBreakEvenPoint", feasibilityCalculation.getDataBreakEvenPoint());
+        }
+        Characteristic newCharacteristic = new Characteristic(name, weight, grade, project);
+        characteristicRepository.save(newCharacteristic);
+
+        model.addAttribute("feasibilityCalculation", feasibilityCalculation);
+
+        model.addAttribute("breakEven", breakEven);
+        model.addAttribute("project", project);
+        model.addAttribute("projects", projects);
+
+        Set<Characteristic> characteristics = project.getCharacteristics();
+        CharacteristicsListDTO characteristicsListDTO = new CharacteristicsListDTO();
+
+        for (Characteristic characteristic: characteristics) {
+            characteristicsListDTO.addCharacteristicDTO(new CharacteristicDTO(characteristic));
+        }
+
+        model.addAttribute("characteristicsList", characteristicsListDTO);
+
+        return "feasibility-assessment";
+    }
+
+    //Обновление характеристик
+    @PostMapping("/feasibility/{projectId}/edit_characteristics")
+    public String editCharacteristic(@PathVariable(value = "projectId") long id,
+                                     @ModelAttribute CharacteristicsListDTO characteristicsListDTOfromform,  Model model) {
+        Project project = projectRopository.findById(id).orElseThrow();
+        Iterable<Project> projects = projectRopository.findAll();
+        BreakEven breakEven = null;
+        if (!project.getBreakEvens().isEmpty()){
+            breakEven = project.getFirstBreakEven();
+        }
+
+        FeasibilityCalculation feasibilityCalculation = null;
+
+        if (breakEven!=null){
+            feasibilityCalculation = new FeasibilityCalculation(breakEven, project.getBudget());
+        }
+
+
+        if (feasibilityCalculation!=null){
+            model.addAttribute("dataVolumeOfSales", feasibilityCalculation.getDataVolumeOfSales());
+            model.addAttribute("dataImplementationCosts", feasibilityCalculation.getDataImplementationCosts());
+            model.addAttribute("dataBreakEvenPoint", feasibilityCalculation.getDataBreakEvenPoint());
+        }
+
 
         model.addAttribute("feasibilityCalculation", feasibilityCalculation);
 
