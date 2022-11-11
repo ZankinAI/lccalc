@@ -26,7 +26,24 @@
         <nav th:insert = "blocks/sideBar::side-bar"></nav>
     </div>
 </div>
-<div id="container" style="width: 1500px; height: 700px;"></div>
+
+<section class="bg-light text-dark p-3">
+    <form form action="project" name="projectChange" method="post">
+        <div class="container">
+            <h2 class="text-left">Проект</h2>
+            <select class="form-select form-select-lg mt-1" aria-label=".form-select-lg" name="projectId" onchange="document.forms.projectChange.submit()">
+                <option disabled>Выберите проект</option>
+                <option th:value="${project.projectId}" th:text="${project.projectName}" selected></option>
+                <div th:each="el:${projects}">
+                    <option th:value="${el.projectId}" th:text="${el.projectName}"></option>
+                </div>
+            </select>
+        </div>
+
+    </form>
+</section>
+
+<div id="container" class="container-fluid" style="height: 900px;"></div>
 <script>
       anychart.onDocumentReady(function () {
           anychart.format.inputLocale('ru-ru');

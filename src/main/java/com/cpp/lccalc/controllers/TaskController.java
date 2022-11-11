@@ -349,11 +349,39 @@ public class TaskController {
     public String risks(@PathVariable(value = "id") Long id, Model model){
 
         Project project = projectRopository.findById(id).orElseThrow();
+        Iterable<Project> projects = projectRopository.findAll();
+
         project.sortRisks();
 
         Iterable<Risk> risks = riskRepository.findAll();
         model.addAttribute("risks", risks);
         model.addAttribute("project", project);
+        model.addAttribute("projects", projects);
+        return "risks";
+    }
+
+    @GetMapping(value = "/project/0/risks")
+    public String risks(Model model){
+
+        Project project = new Project();
+        Iterable<Project> projects = projectRopository.findAll();
+        model.addAttribute("project", project);
+        model.addAttribute("projects", projects);
+        return "risks";
+    }
+
+    //Выбор проекта на сранице с рисками
+    @PostMapping(path = "/project/{id}/risks", params = "projectId")
+    public String projectPostSelectRisks(@RequestParam String projectId,  Model model){
+
+        Project project = projectRopository.findById(Long.valueOf(projectId)).orElseThrow();
+        Iterable<Project> projects = projectRopository.findAll();
+        project.sortRisks();
+
+        Iterable<Risk> risks = riskRepository.findAll();
+        model.addAttribute("risks", risks);
+        model.addAttribute("project", project);
+        model.addAttribute("projects", projects);
         return "risks";
     }
 
@@ -467,8 +495,29 @@ public class TaskController {
     @GetMapping(value = "/gantt_project/{id}")
     public String getGanttProject(@PathVariable(value = "id") long id,Model model){
         model.addAttribute("id", id);
+        Project project = projectRopository.findById(id).orElseThrow();
+        Iterable <Project> projects = projectRopository.findAll();
+        model.addAttribute("project", project);
+        model.addAttribute("projects", projects);
         return "gantt-project";
     }
 
-
+    @GetMapping(value = "/gantt_project/0")
+    public String getGanttProject(Model model){
+        Iterable <Project> projects = projectRopository.findAll();
+        Project project = new Project();
+        model.addAttribute("projects", projects);
+        model.addAttribute("project", project);
+        return "gantt-project";
+    }
+    //Выбор проекта на сранице с план-графиком
+    @PostMapping(path = "/gantt_project/{id}", params = "projectId")
+    public String projectPostSelectGantt(@RequestParam String projectId,  Model model){
+        Project project = projectRopository.findById(Long.valueOf(projectId)).orElseThrow();
+        Iterable<Project> projects = projectRopository.findAll();
+        model.addAttribute("id", projectId);
+        model.addAttribute("project", project);
+        model.addAttribute("projects", projects);
+        return "gantt-project";
+    }
 }

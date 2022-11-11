@@ -36,7 +36,7 @@
 
                 <section class="bg-light text-dark p-3">
                     <div class="container d-flex justify-content-evenly">
-                        <button type="button" class="btn btn-outline-secondary">Назначение исполнителей</button>
+                        <!--<button type="button" class="btn btn-outline-secondary">Назначение исполнителей</button>-->
                         <a th:href="'/gantt_project/'+ ${project.projectId}" ><button type="button" class="btn btn-outline-secondary">План-графики</button></a>
                         <button type="button" class="btn btn-outline-secondary">Оценка целесообразности</button>
                         <a th:href="'/project/'+ ${project.projectId} + '/risks'" ><button type="button" class="btn btn-outline-secondary">Оценка и анализ рисков</button></a>
@@ -48,6 +48,21 @@
                         <h6>Основная информация</h6>
                         <label class="col-3">Наименование проекта</label>
                         <input class="col form-control" type="text" th:value="${project.projectName}" placeholder="Наименование проекта" name="projectName">
+                    </div>
+
+                    <div class="form-group row g-0 p-2 mb-2 align-items-center">
+                        <label class="col-3">Статус проекта</label>
+                        <select class="form-select form-select-lg col" aria-label=".form-select-lg" name="status">
+                            <option disabled>Выберите статус проекта</option>
+                            <div th:switch="${project.status}">
+                                <option th:case="1" th:value="${project.status}" th:text="'На оформлении'" selected></option>
+                                <option th:case="2" th:value="${project.status}" th:text="'В разработке'" selected></option>
+                                <option th:case="3" th:value="${project.status}" th:text="'Завершенные'" selected></option>
+                            </div>
+                            <option th:value="1" th:text="'На оформлении'"></option>
+                            <option th:value="2" th:text="'В разработке'"></option>
+                            <option th:value="3" th:text="'Завершенные'"></option>
+                        </select>
                     </div>
 
                     <div class="row g-0 p-2 mb-2">

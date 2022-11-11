@@ -66,7 +66,11 @@ public class ProjectController {
     @GetMapping("/projects")
     public String projects(Model model) {
         Iterable<Project> projectsStatus1 = projectRopository.findByStatus(1);
+        Iterable<Project> projectsStatus2 = projectRopository.findByStatus(2);
+        Iterable<Project> projectsStatus3 = projectRopository.findByStatus(3);
         model.addAttribute("projects1", projectsStatus1);
+        model.addAttribute("projects2", projectsStatus2);
+        model.addAttribute("projects3", projectsStatus3);
 
         return "projects";
     }
@@ -248,7 +252,7 @@ public class ProjectController {
     public String projectEdit(@PathVariable(value = "id") long id, @RequestParam String projectName,  @RequestParam String description,
                                     @RequestParam double budget,  @RequestParam String startDate,
                                     @RequestParam String finishDate, @RequestParam Long customerId,
-                                    @RequestParam Long pmId, Model model){
+                                    @RequestParam Long pmId, Model model, @RequestParam int status){
 
 
         LocalDate localStartDate = LocalDate.parse(startDate);
@@ -263,7 +267,8 @@ public class ProjectController {
         projectEdit.setDescription(description);
         projectEdit.setBudget(budget);
         projectEdit.setStartDateFormat(localStartDate);
-        projectEdit.setFinishDateFormat(localFinishDate);;
+        projectEdit.setFinishDateFormat(localFinishDate);
+        projectEdit.setStatus(status);
 
         Optional<Customer> customerOptional =  customerRepository.findById(customerId);
         ArrayList<Customer> customerRes = new ArrayList<>();

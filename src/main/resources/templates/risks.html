@@ -88,10 +88,24 @@
         </table>
       </div>
 
+      <section class="bg-light text-dark mt-3">
+        <form form action="risks" name="projectChangeRisks" method="post">
+            <h2 class="text-left">Проект</h2>
+            <select class="form-select form-select-lg mt-3" aria-label=".form-select-lg" name="projectId" onchange="document.forms.projectChangeRisks.submit()">
+              <option disabled>Выберите проект</option>
+              <option th:value="${project.projectId}" th:text="${project.projectName}" selected></option>
+              <div th:each="el:${projects}">
+                <option th:value="${el.projectId}" th:text="${el.projectName}"></option>
+              </div>
+            </select>
+
+        </form>
+      </section>
+
 
 
       <!-- Список рисков -->
-      <div class="card g-0 p-2 mt-5">
+      <div class="card g-0 p-2 mt-3">
 
         <div class="col-md-4">
           <h6 class="card-title mb-1">Список рисков</h6>
