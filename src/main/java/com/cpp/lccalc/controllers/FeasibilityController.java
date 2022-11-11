@@ -1,7 +1,10 @@
 package com.cpp.lccalc.controllers;
 
+import com.cpp.lccalc.classes.CharacteristicDTO;
+import com.cpp.lccalc.classes.CharacteristicsListDTO;
 import com.cpp.lccalc.classes.FeasibilityCalculation;
 import com.cpp.lccalc.models.BreakEven;
+import com.cpp.lccalc.models.Characteristic;
 import com.cpp.lccalc.models.Project;
 import com.cpp.lccalc.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 @Controller
 public class FeasibilityController {
@@ -50,6 +54,9 @@ public class FeasibilityController {
     @Autowired
     private BreakEvenRepository breakEvenRepository;
 
+    @Autowired
+    CharacteristicRepository characteristicRepository;
+
 
     //Открытие страницы оценки целесообразности
     @GetMapping("/feasibility_assessment")
@@ -59,6 +66,11 @@ public class FeasibilityController {
         Iterable<Project> projects = projectRopository.findAll();
         //model.addAttribute("project", project);
         model.addAttribute("projects", projects);
+
+        CharacteristicsListDTO characteristicsListDTO = new CharacteristicsListDTO();
+
+        model.addAttribute("characteristicsList", characteristicsListDTO);
+
         return "feasibility-assessment";
     }
     //Выбор проекта на странице оценки целесообразности
@@ -90,6 +102,14 @@ public class FeasibilityController {
         model.addAttribute("project", project);
         model.addAttribute("projects", projects);
 
+        Set<Characteristic> characteristics = project.getCharacteristics();
+        CharacteristicsListDTO characteristicsListDTO = new CharacteristicsListDTO();
+
+        for (Characteristic characteristic: characteristics) {
+            characteristicsListDTO.addCharacteristicDTO(new CharacteristicDTO(characteristic));
+        }
+
+        model.addAttribute("characteristicsList", characteristicsListDTO);
 
         return "feasibility-assessment";
     }

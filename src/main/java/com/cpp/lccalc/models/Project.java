@@ -47,6 +47,9 @@ public class Project {
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL )
     private Set<BreakEven> breakEvens;
 
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL )
+    private Set<Characteristic> characteristics;
+
 
     public Project() {
     }
@@ -164,6 +167,14 @@ public class Project {
 
     public Set<Risk> getRisks() {
         return risks;
+    }
+
+    public Set<Characteristic> getCharacteristics() {
+        return characteristics;
+    }
+
+    public void setCharacteristics(Set<Characteristic> characteristics) {
+        this.characteristics = characteristics;
     }
 
     public void setRisks(Set<Risk> risks) {

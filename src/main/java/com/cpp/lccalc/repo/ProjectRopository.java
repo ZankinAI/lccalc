@@ -9,4 +9,6 @@ import java.util.Optional;
 public interface ProjectRopository extends CrudRepository<Project, Long> {
 
    List<Project> findByStatus(int status);
+
+
 }
