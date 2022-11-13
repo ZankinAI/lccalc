@@ -1,12 +1,7 @@
 package com.cpp.lccalc.controllers;
 
-import com.cpp.lccalc.classes.CharacteristicDTO;
-import com.cpp.lccalc.classes.CharacteristicsListDTO;
-import com.cpp.lccalc.classes.FeasibilityCalculation;
-import com.cpp.lccalc.classes.HumanResourcesListDTO;
-import com.cpp.lccalc.models.BreakEven;
-import com.cpp.lccalc.models.Characteristic;
-import com.cpp.lccalc.models.Project;
+import com.cpp.lccalc.classes.*;
+import com.cpp.lccalc.models.*;
 import com.cpp.lccalc.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -55,6 +50,12 @@ public class FeasibilityController {
     @Autowired
     CharacteristicRepository characteristicRepository;
 
+    @Autowired
+    AnalogRepository analogRepository;
+
+    @Autowired
+    AnalogCharacteristicRepository analogCharacteristicRepository;
+
 
     //Открытие страницы оценки целесообразности
     @GetMapping("/feasibility_assessment")
@@ -68,6 +69,9 @@ public class FeasibilityController {
         CharacteristicsListDTO characteristicsListDTO = new CharacteristicsListDTO();
 
         model.addAttribute("characteristicsList", characteristicsListDTO);
+
+        AnalogDTO analogDTO = new AnalogDTO();
+        model.addAttribute("analog", analogDTO);
 
         return "feasibility-assessment";
     }
@@ -102,17 +106,21 @@ public class FeasibilityController {
 
         Set<Characteristic> characteristics = project.getCharacteristics();
         CharacteristicsListDTO characteristicsListDTO = new CharacteristicsListDTO();
-
+        AnalogDTO analogDTO = new AnalogDTO();
         for (Characteristic characteristic: characteristics) {
             characteristicsListDTO.addCharacteristicDTO(new CharacteristicDTO(characteristic));
+            analogDTO.addAnalogCharacteristic(characteristic.getCharacteristicId(), characteristic.getName());
         }
-
         model.addAttribute("characteristicsList", characteristicsListDTO);
+        model.addAttribute("analog", analogDTO);
+
+
+
 
         return "feasibility-assessment";
     }
 
-    //Выбор проекта на странице оценки целесообразности
+    //Добавление характеристики
     @PostMapping("/project/{projectId}/add_characteristic")
     public String addCharacteristic(@PathVariable(value = "projectId") long id,
                                     @RequestParam String name, @RequestParam double weight,
@@ -147,12 +155,13 @@ public class FeasibilityController {
 
         Set<Characteristic> characteristics = project.getCharacteristics();
         CharacteristicsListDTO characteristicsListDTO = new CharacteristicsListDTO();
-
+        AnalogDTO analogDTO = new AnalogDTO();
         for (Characteristic characteristic: characteristics) {
             characteristicsListDTO.addCharacteristicDTO(new CharacteristicDTO(characteristic));
+            analogDTO.addAnalogCharacteristic(characteristic.getCharacteristicId(), characteristic.getName());
         }
-
         model.addAttribute("characteristicsList", characteristicsListDTO);
+        model.addAttribute("analog", analogDTO);
 
         return "feasibility-assessment";
     }
@@ -160,9 +169,25 @@ public class FeasibilityController {
     //Обновление характеристик
     @PostMapping("/feasibility/{projectId}/edit_characteristics")
     public String editCharacteristic(@PathVariable(value = "projectId") long id,
-                                     @ModelAttribute CharacteristicsListDTO characteristicsListDTOfromform,  Model model) {
-        Project project = projectRopository.findById(id).orElseThrow();
+                                     @ModelAttribute CharacteristicsListDTO characteristicsListDTOUpdate,  Model model) {
+
+        Characteristic characteristicUpdate = null;
+        for (CharacteristicDTO characteristicDTOUpdate:characteristicsListDTOUpdate.getCharacteristics()) {
+            characteristicUpdate = characteristicRepository.findById(characteristicDTOUpdate.getId()).orElseThrow();
+            characteristicUpdate.setName(characteristicDTOUpdate.getName());
+            characteristicUpdate.setWeight(characteristicDTOUpdate.getWeight());
+            characteristicUpdate.setGrade(characteristicDTOUpdate.getGrades()[0]);
+            characteristicRepository.save(characteristicUpdate);
+
+            for (AnalogCharacteristic analogCharacteristic:characteristicUpdate.getAnalogCharacteristics()) {
+                analogCharacteristic.setGrade(characteristicDTOUpdate.getGrades()[characteristicDTOUpdate.getIndexOfAnalog(analogCharacteristic.getAnalog().getAnalogId())]);
+                analogCharacteristicRepository.save(analogCharacteristic);
+            }
+
+
+        }
         Iterable<Project> projects = projectRopository.findAll();
+        Project project = projectRopository.findById(id).orElseThrow();
         BreakEven breakEven = null;
         if (!project.getBreakEvens().isEmpty()){
             breakEven = project.getFirstBreakEven();
@@ -190,12 +215,66 @@ public class FeasibilityController {
 
         Set<Characteristic> characteristics = project.getCharacteristics();
         CharacteristicsListDTO characteristicsListDTO = new CharacteristicsListDTO();
-
+        AnalogDTO analogDTO = new AnalogDTO();
         for (Characteristic characteristic: characteristics) {
             characteristicsListDTO.addCharacteristicDTO(new CharacteristicDTO(characteristic));
+            analogDTO.addAnalogCharacteristic(characteristic.getCharacteristicId(), characteristic.getName());
+        }
+        model.addAttribute("characteristicsList", characteristicsListDTO);
+        model.addAttribute("analog", analogDTO);
+
+        return "feasibility-assessment";
+    }
+
+    //Добавление аналога
+    @PostMapping("/project/{projectId}/add_analog")
+    public String addAnalog(@PathVariable(value = "projectId") long id,
+                            @ModelAttribute AnalogDTO analogAdd,  Model model) {
+        Project project = projectRopository.findById(id).orElseThrow();
+        AnalogCharacteristic analogCharacteristic = null;
+        Analog analog = new Analog();
+        analog.setName(analogAdd.getName());
+        analogRepository.save(analog);
+        for (AnalogCharacteristicsDTO analogCharacteristicsDTO:analogAdd.getAnalogCharacteristicsDTOList()) {
+            analogCharacteristic = new AnalogCharacteristic(analogCharacteristicsDTO.getAnalogGrade(),
+                    analog, characteristicRepository.findById(analogCharacteristicsDTO.getCharacteristicId()).orElseThrow());
+            analogCharacteristicRepository.save(analogCharacteristic);
         }
 
+
+        Iterable<Project> projects = projectRopository.findAll();
+        BreakEven breakEven = null;
+        if (!project.getBreakEvens().isEmpty()){
+            breakEven = project.getFirstBreakEven();
+        }
+
+        FeasibilityCalculation feasibilityCalculation = null;
+
+        if (breakEven!=null){
+            feasibilityCalculation = new FeasibilityCalculation(breakEven, project.getBudget());
+        }
+
+
+        if (feasibilityCalculation!=null){
+            model.addAttribute("dataVolumeOfSales", feasibilityCalculation.getDataVolumeOfSales());
+            model.addAttribute("dataImplementationCosts", feasibilityCalculation.getDataImplementationCosts());
+            model.addAttribute("dataBreakEvenPoint", feasibilityCalculation.getDataBreakEvenPoint());
+        }
+
+        model.addAttribute("feasibilityCalculation", feasibilityCalculation);
+        model.addAttribute("breakEven", breakEven);
+        model.addAttribute("project", project);
+        model.addAttribute("projects", projects);
+
+        Set<Characteristic> characteristics = project.getCharacteristics();
+        CharacteristicsListDTO characteristicsListDTO = new CharacteristicsListDTO();
+        AnalogDTO analogDTO = new AnalogDTO();
+        for (Characteristic characteristic: characteristics) {
+            characteristicsListDTO.addCharacteristicDTO(new CharacteristicDTO(characteristic));
+            analogDTO.addAnalogCharacteristic(characteristic.getCharacteristicId(), characteristic.getName());
+        }
         model.addAttribute("characteristicsList", characteristicsListDTO);
+        model.addAttribute("analog", analogDTO);
 
         return "feasibility-assessment";
     }
@@ -220,6 +299,18 @@ public class FeasibilityController {
         model.addAttribute("dataVolumeOfSales", feasibilityCalculation.getDataVolumeOfSales());
         model.addAttribute("dataImplementationCosts", feasibilityCalculation.getDataImplementationCosts());
         model.addAttribute("dataBreakEvenPoint", feasibilityCalculation.getDataBreakEvenPoint());
+
+        Set<Characteristic> characteristics = project.getCharacteristics();
+        CharacteristicsListDTO characteristicsListDTO = new CharacteristicsListDTO();
+        AnalogDTO analogDTO = new AnalogDTO();
+        for (Characteristic characteristic: characteristics) {
+            characteristicsListDTO.addCharacteristicDTO(new CharacteristicDTO(characteristic));
+            analogDTO.addAnalogCharacteristic(characteristic.getCharacteristicId(), characteristic.getName());
+        }
+        model.addAttribute("characteristicsList", characteristicsListDTO);
+        model.addAttribute("analog", analogDTO);
+
+        model.addAttribute("characteristicsList", characteristicsListDTO);
 
         return "feasibility-assessment";
     }
@@ -249,6 +340,18 @@ public class FeasibilityController {
         model.addAttribute("dataImplementationCosts", feasibilityCalculation.getDataImplementationCosts());
         model.addAttribute("dataBreakEvenPoint", feasibilityCalculation.getDataBreakEvenPoint());
 
+        Set<Characteristic> characteristics = project.getCharacteristics();
+        CharacteristicsListDTO characteristicsListDTO = new CharacteristicsListDTO();
+        AnalogDTO analogDTO = new AnalogDTO();
+        for (Characteristic characteristic: characteristics) {
+            characteristicsListDTO.addCharacteristicDTO(new CharacteristicDTO(characteristic));
+            analogDTO.addAnalogCharacteristic(characteristic.getCharacteristicId(), characteristic.getName());
+        }
+        model.addAttribute("characteristicsList", characteristicsListDTO);
+        model.addAttribute("analog", analogDTO);
+
+
+
         return "feasibility-assessment";
     }
 
@@ -277,6 +380,16 @@ public class FeasibilityController {
         model.addAttribute("dataVolumeOfSales", feasibilityCalculation.getDataVolumeOfSales());
         model.addAttribute("dataImplementationCosts", feasibilityCalculation.getDataImplementationCosts());
         model.addAttribute("dataBreakEvenPoint", feasibilityCalculation.getDataBreakEvenPoint());
+
+        Set<Characteristic> characteristics = project.getCharacteristics();
+        CharacteristicsListDTO characteristicsListDTO = new CharacteristicsListDTO();
+        AnalogDTO analogDTO = new AnalogDTO();
+        for (Characteristic characteristic: characteristics) {
+            characteristicsListDTO.addCharacteristicDTO(new CharacteristicDTO(characteristic));
+            analogDTO.addAnalogCharacteristic(characteristic.getCharacteristicId(), characteristic.getName());
+        }
+        model.addAttribute("characteristicsList", characteristicsListDTO);
+        model.addAttribute("analog", analogDTO);
 
         return "feasibility-assessment";
     }

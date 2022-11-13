@@ -1,5 +1,6 @@
 package com.cpp.lccalc.classes;
 
+import com.cpp.lccalc.models.AnalogCharacteristic;
 import com.cpp.lccalc.models.Characteristic;
 
 import java.lang.reflect.Array;
@@ -11,14 +12,26 @@ public class CharacteristicDTO {
     String[] analogNames;
     int[] grades;
 
+    Long[] analogId;
+
     public CharacteristicDTO(Characteristic characteristic){
         this.id = characteristic.getCharacteristicId();
         this.name = characteristic.getName();
         this.weight = characteristic.getWeight();
-        this.analogNames = new String[2];
+        this.analogNames = new String[characteristic.getAnalogCharacteristics().size() + 1];
+        this.analogId = new Long[characteristic.getAnalogCharacteristics().size() + 1];
+        this.grades = new int[characteristic.getAnalogCharacteristics().size() + 1];
         this.analogNames[0] = "Проект";
-        this.analogNames[1] = "Аналог";
-        this.grades = new int[2];
+        int i = 1;
+        characteristic.sortAnalogCharacteristic();
+        for (AnalogCharacteristic analogCharacteristic:characteristic.getAnalogCharacteristics()) {
+            this.analogNames[i] = analogCharacteristic.getAnalog().getName();
+            this.analogId[i] = analogCharacteristic.getAnalog().getAnalogId();
+            this.grades[i] = analogCharacteristic.getGrade();
+            i++;
+        }
+
+        this.analogId[0] = characteristic.getProject().getProjectId();
         this.grades[0] = characteristic.getGrade();
 
     }
@@ -64,5 +77,21 @@ public class CharacteristicDTO {
 
     public void setGrades(int[] grades) {
         this.grades = grades;
+    }
+
+    public Long[] getAnalogId() {
+        return analogId;
+    }
+
+    public void setAnalogId(Long[] analogId) {
+        this.analogId = analogId;
+    }
+
+    public int getIndexOfAnalog(Long analogId){
+        int k = 0;
+        for(int i = 1; i<this.analogId.length; i++){
+            if (this.analogId[i].equals(analogId)) return i;
+        }
+        return k;
     }
 }

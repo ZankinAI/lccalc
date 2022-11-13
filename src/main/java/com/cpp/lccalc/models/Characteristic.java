@@ -1,6 +1,7 @@
 package com.cpp.lccalc.models;
 
 import javax.persistence.*;
+import java.util.*;
 
 @Entity
 public class Characteristic {
@@ -19,6 +20,10 @@ public class Characteristic {
     @JoinColumn(name="project_id", nullable=true)
     private Project project;
 
+    @OneToMany(mappedBy = "characteristic", cascade = CascadeType.ALL )
+    private Set<AnalogCharacteristic> analogCharacteristics;
+
+
     public Characteristic() {
     }
 
@@ -27,6 +32,14 @@ public class Characteristic {
         this.weight = weight;
         this.grade = grade;
         this.project = project;
+    }
+
+    public Set<AnalogCharacteristic> getAnalogCharacteristics() {
+        return analogCharacteristics;
+    }
+
+    public void setAnalogCharacteristics(Set<AnalogCharacteristic> analogCharacteristics) {
+        this.analogCharacteristics = analogCharacteristics;
     }
 
     public Long getCharacteristicId() {
@@ -68,4 +81,20 @@ public class Characteristic {
     public void setProject(Project project) {
         this.project = project;
     }
+
+    public static Comparator CharacteristicIdComparator = new Comparator<Characteristic>() {
+        @Override
+        public int compare(Characteristic characteristic1, Characteristic characteristic2) {
+            Long characteristicId1 = characteristic1.getCharacteristicId();
+            Long characteristicId2 = characteristic2.getCharacteristicId();
+            return characteristicId1.compareTo(characteristicId2);
+        }
+    };
+
+    public void sortAnalogCharacteristic(){
+        List<AnalogCharacteristic> acList = new ArrayList<AnalogCharacteristic>(this.analogCharacteristics);
+        Collections.sort(acList, AnalogCharacteristic.CharacteristicAnalogIdComparator);
+        this.analogCharacteristics = new LinkedHashSet<AnalogCharacteristic>(acList);
+    }
+
 }
