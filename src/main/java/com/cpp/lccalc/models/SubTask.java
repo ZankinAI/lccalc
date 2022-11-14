@@ -46,6 +46,7 @@ public class SubTask {
     private Set<MaterialResourcesSubTask> materialResourcesSubTasks;
 
     public SubTask() {
+
     }
 
     public SubTask(String subTaskIndex, String name, String progress, Long laboriousness, String previousIndex, LocalDate startDate, Task task/*, Long laboriousness*/) {
@@ -188,6 +189,14 @@ public class SubTask {
     public void findDuration(){
 
         int amountSum = 0;
+
+        if (this.laboriousness == null) {
+            this.laboriousness = 0L;
+            this.duration = 0L;
+            return;
+
+        }
+
         if (this.humanResourcesSubTasks==null) {this.duration = this.laboriousness / 8L; return;}
         for (HumanResourcesSubTask humanResourcesSubTask: this.humanResourcesSubTasks) {
             amountSum+=humanResourcesSubTask.getAmount();

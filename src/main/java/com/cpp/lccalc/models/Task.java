@@ -29,7 +29,7 @@ public class Task{
 
     private double budget;
 
-    private int progress;
+    private double progress;
 
     private Long duration;
 
@@ -70,11 +70,11 @@ public class Task{
         this.performerName = performerName;
     }
 
-    public int getProgress() {
+    public double getProgress() {
         return progress;
     }
 
-    public void setProgress(int progress) {
+    public void setProgress(double progress) {
         this.progress = progress;
     }
 

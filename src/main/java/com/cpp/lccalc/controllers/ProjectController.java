@@ -43,6 +43,7 @@ public class ProjectController {
 
 
         Iterable<Project> projects = projectRopository.findAll();
+        project.sortTasks();
 
         model.addAttribute("project", project);
         model.addAttribute("projects", projects);

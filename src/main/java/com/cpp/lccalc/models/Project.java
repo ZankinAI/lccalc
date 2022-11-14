@@ -16,6 +16,8 @@ public class Project {
     private Long projectId;
     private String projectName, description;
     private double  budget;
+
+    private double progress, earnedBudget, percentEarnedBudget;
     private int status;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate startDateFormat;
@@ -25,8 +27,6 @@ public class Project {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate createDate;
-
-
 
 
     @ManyToOne
@@ -61,6 +61,30 @@ public class Project {
         this.status = status;
         this.startDateFormat = startDateFormat;
         this.finishDateFormat = finishDateFormat;
+    }
+
+    public double getProgress() {
+        return progress;
+    }
+
+    public void setProgress(double progress) {
+        this.progress = progress;
+    }
+
+    public double getEarnedBudget() {
+        return earnedBudget;
+    }
+
+    public void setEarnedBudget(double earnedBudget) {
+        this.earnedBudget = earnedBudget;
+    }
+
+    public double getPercentEarnedBudget() {
+        return percentEarnedBudget;
+    }
+
+    public void setPercentEarnedBudget(double percentEarnedBudget) {
+        this.percentEarnedBudget = percentEarnedBudget;
     }
 
     public Set<BreakEven> getBreakEvens() {
@@ -189,12 +213,30 @@ public class Project {
 
     public void findBudget(){
         this.budget = 0;
+        this.earnedBudget = 0;
+        this.progress = 0;
+        this.percentEarnedBudget = 0;
+
+        double duration = 0;
+        double durationComplete = 0;
+
         if (this.tasks!=null){
             for (Task task:
                  this.tasks) {
                 this.budget += task.getBudget();
+                this.earnedBudget += task.getBudget() * (task.getProgress() / 100.0);
+                duration+=task.getDuration();
+                durationComplete += task.getDuration() * task.getProgress() / 100.0;
             }
         }
+        else return;
+        double scale = Math.pow(10, 2);
+
+        this.progress = durationComplete / duration * 100;
+        this.progress = Math.ceil(this.progress * scale) / scale;
+        this.percentEarnedBudget = this.earnedBudget / this.budget * 100;
+
+
     }
 
     public BreakEven getFirstBreakEven(){
@@ -210,6 +252,8 @@ public class Project {
         Collections.sort(riskList, Risk.RiskComparator);
         this.risks = new LinkedHashSet<Risk>(riskList);
     }
+
+
 
 
 

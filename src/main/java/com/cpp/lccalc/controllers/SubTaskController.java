@@ -32,7 +32,8 @@ public class SubTaskController {
     @Autowired
     private CommercialOfferRepository commercialOfferRepository;
 
-    @Autowired SubTaskRepository subTaskRepository;
+    @Autowired
+    SubTaskRepository subTaskRepository;
 
     @Autowired
     private HumanResourceRepository humanResourceRepository;
@@ -58,7 +59,7 @@ public class SubTaskController {
 
         Iterable<MaterialResources> materialResources = materialResourcesRepository.findAll();
 
-        for(MaterialResources materialResource: materialResources){
+        for (MaterialResources materialResource : materialResources) {
             materialResourcesList.addResource(new MaterialResourcesDTO(materialResource));
         }
 
@@ -67,7 +68,7 @@ public class SubTaskController {
         Iterable<HumanResources> humanResources = humanResourceRepository.findAll();
         HumanResourcesListDTO humanResourcesList = new HumanResourcesListDTO();
 
-        for (HumanResources humanResource: humanResources) {
+        for (HumanResources humanResource : humanResources) {
             humanResourcesList.addResource(new HumanResourcesDTO(humanResource));
         }
         model.addAttribute("humanResourcesList", humanResourcesList);
@@ -80,8 +81,8 @@ public class SubTaskController {
     public String subTaskUpdate(@PathVariable(value = "id") long id,
                                 @RequestParam String name,
                                 @RequestParam String subTaskIndex,
-                                @RequestParam(defaultValue="0") Long laboriousness,
-                                @RequestParam(defaultValue="") String previousIndex,
+                                @RequestParam(defaultValue = "0") Long laboriousness,
+                                @RequestParam(defaultValue = "") String previousIndex,
                                 @RequestParam String progress,
                                 Model model) {
         SubTask subTask = subTaskRepository.findById(id).orElseThrow();
@@ -92,20 +93,36 @@ public class SubTaskController {
         subTask.setLaboriousness(laboriousness);
         subTask.setPreviousIndex(previousIndex);
         subTask.setProgress(progress);
+        subTask.findDuration();
+        subTask.findBudget();
+
+        subTaskRepository.save(subTask);
 
         model.addAttribute("subtask", subTask);
 
         task.sortSubTasks();
 
         CommercialOffer selectedCommercialOffer = null;
-        for (CommercialOffer co:task.getCommercialOffers()) {
+        for (CommercialOffer co : task.getCommercialOffers()) {
             if (co.getStatus().equals("В работе")) selectedCommercialOffer = co;
 
         }
 
         TaskCalculation taskCalculation = new TaskCalculation(task);
 
-        model.addAttribute("selectedCo",selectedCommercialOffer );
+        if (task.getPerformerName().equals("Своя компания")){
+            task.setProgress(Double.valueOf(taskCalculation.getProgressValue()));
+        }
+        else if (task.getPerformerName()!=null){
+            if (task.getState().equals("Завершена")){
+                task.setProgress(100.0);
+            }
+            else task.setProgress(0.0);
+        }
+        else task.setProgress(0.0);
+        taskRepository.save(task);
+
+        model.addAttribute("selectedCo", selectedCommercialOffer);
 
         model.addAttribute("task", task);
         Iterable<Performer> performers = performerRepository.findAll();
@@ -114,7 +131,7 @@ public class SubTaskController {
 
         Iterable<MaterialResources> materialResources = materialResourcesRepository.findAll();
 
-        for(MaterialResources materialResource: materialResources){
+        for (MaterialResources materialResource : materialResources) {
             materialResourcesList.addResource(new MaterialResourcesDTO(materialResource));
         }
 
@@ -123,7 +140,64 @@ public class SubTaskController {
         Iterable<HumanResources> humanResources = humanResourceRepository.findAll();
         HumanResourcesListDTO humanResourcesList = new HumanResourcesListDTO();
 
-        for (HumanResources humanResource: humanResources) {
+        for (HumanResources humanResource : humanResources) {
+            humanResourcesList.addResource(new HumanResourcesDTO(humanResource));
+        }
+        model.addAttribute("humanResourcesList", humanResourcesList);
+
+        return "task-edit";
+    }
+
+    @GetMapping("/subtask/{id}/remove")
+    public String subTaskDelete(@PathVariable(value = "id") long id,
+                                Model model) {
+        SubTask subTask = subTaskRepository.findById(id).orElseThrow();
+        Task task = subTask.getTask();
+
+
+        subTaskRepository.delete(subTask);
+
+        task.sortSubTasks();
+
+        CommercialOffer selectedCommercialOffer = null;
+        for (CommercialOffer co : task.getCommercialOffers()) {
+            if (co.getStatus().equals("В работе")) selectedCommercialOffer = co;
+
+        }
+
+        TaskCalculation taskCalculation = new TaskCalculation(task);
+
+        if (task.getPerformerName().equals("Своя компания")){
+            task.setProgress(Double.valueOf(taskCalculation.getProgressValue()));
+        }
+        else if (task.getPerformerName()!=null){
+            if (task.getState().equals("Завершена")){
+                task.setProgress(100.0);
+            }
+            else task.setProgress(0.0);
+        }
+        else task.setProgress(0.0);
+        taskRepository.save(task);
+
+        model.addAttribute("selectedCo", selectedCommercialOffer);
+
+        model.addAttribute("task", task);
+        Iterable<Performer> performers = performerRepository.findAll();
+        model.addAttribute("performers", performers);
+        MaterialResourcesListDTO materialResourcesList = new MaterialResourcesListDTO();
+
+        Iterable<MaterialResources> materialResources = materialResourcesRepository.findAll();
+
+        for (MaterialResources materialResource : materialResources) {
+            materialResourcesList.addResource(new MaterialResourcesDTO(materialResource));
+        }
+
+        model.addAttribute("materialResourcesList", materialResourcesList);
+
+        Iterable<HumanResources> humanResources = humanResourceRepository.findAll();
+        HumanResourcesListDTO humanResourcesList = new HumanResourcesListDTO();
+
+        for (HumanResources humanResource : humanResources) {
             humanResourcesList.addResource(new HumanResourcesDTO(humanResource));
         }
         model.addAttribute("humanResourcesList", humanResourcesList);
@@ -134,17 +208,16 @@ public class SubTaskController {
     }
 
 
-
     //Добавление подзадачи из страницы редактирвоания задачи
     @PostMapping("/task/{id}/add_subtask")
     public String AddSubTaskFromTask(@PathVariable(value = "id") long id,
                                      //Параметры для исполнителя
                                      @RequestParam String name,
-                                     @RequestParam String subTaskIndex, @RequestParam(defaultValue="2022-05-20") String startDate,
-                                     @RequestParam(defaultValue="0") Long duration, @RequestParam String progress,
-                                     @RequestParam(defaultValue="0") Long laboriousness,
-                                     @RequestParam(defaultValue="") String previousIndex,
-                                     Model model){
+                                     @RequestParam String subTaskIndex, @RequestParam(defaultValue = "2022-05-20") String startDate,
+                                     @RequestParam(defaultValue = "0") Long duration, @RequestParam String progress,
+                                     @RequestParam(defaultValue = "0") Long laboriousness,
+                                     @RequestParam(defaultValue = "") String previousIndex,
+                                     Model model) {
 
         Task task = taskRepository.findById(id).orElseThrow();
 
@@ -158,14 +231,26 @@ public class SubTaskController {
         task.sortSubTasks();
 
         CommercialOffer selectedCommercialOffer = null;
-        for (CommercialOffer co:task.getCommercialOffers()) {
+        for (CommercialOffer co : task.getCommercialOffers()) {
             if (co.getStatus().equals("В работе")) selectedCommercialOffer = co;
 
         }
 
         TaskCalculation taskCalculation = new TaskCalculation(task);
 
-        model.addAttribute("selectedCo",selectedCommercialOffer );
+        if (task.getPerformerName().equals("Своя компания")){
+            task.setProgress(Double.valueOf(taskCalculation.getProgressValue()));
+        }
+        else if (task.getPerformerName()!=null){
+            if (task.getState().equals("Завершена")){
+                task.setProgress(100.0);
+            }
+            else task.setProgress(0.0);
+        }
+        else task.setProgress(0.0);
+        taskRepository.save(task);
+
+        model.addAttribute("selectedCo", selectedCommercialOffer);
 
         model.addAttribute("task", task);
         Iterable<Performer> performers = performerRepository.findAll();
@@ -174,7 +259,7 @@ public class SubTaskController {
 
         Iterable<MaterialResources> materialResources = materialResourcesRepository.findAll();
 
-        for(MaterialResources materialResource: materialResources){
+        for (MaterialResources materialResource : materialResources) {
             materialResourcesList.addResource(new MaterialResourcesDTO(materialResource));
         }
 
@@ -183,7 +268,7 @@ public class SubTaskController {
         Iterable<HumanResources> humanResources = humanResourceRepository.findAll();
         HumanResourcesListDTO humanResourcesList = new HumanResourcesListDTO();
 
-        for (HumanResources humanResource: humanResources) {
+        for (HumanResources humanResource : humanResources) {
             humanResourcesList.addResource(new HumanResourcesDTO(humanResource));
         }
         model.addAttribute("humanResourcesList", humanResourcesList);

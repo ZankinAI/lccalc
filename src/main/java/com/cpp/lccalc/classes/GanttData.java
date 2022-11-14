@@ -102,7 +102,7 @@ public class GanttData {
         if (task.getDuration()==null) this.actualEnd = task.getStartDate();
         else this.actualEnd = task.getStartDate().plusDays(task.getDuration());
         this.children = new ArrayList<>();
-        this.progressValue = "1";
+        this.progressValue = String.valueOf(task.getProgress()/100.0);
 
         task.sortSubTasks();
 
@@ -137,7 +137,7 @@ public class GanttData {
         if (subTask.getDuration()==null) this.actualEnd = subTask.getStartDate();
         else this.actualEnd = subTask.getStartDate().plusDays(subTask.getDuration());
         this.children = new ArrayList<>();
-        this.progressValue = subTask.getProgress();
+        this.progressValue = String.valueOf(Double.valueOf(subTask.getProgress())/100.0);
 
         for (SubTask subTaskFromList: subTasks) {
            if (subTaskFromList.getSubTaskIndex().matches(subTask.getSubTaskIndex()+"(\\.\\d){1}"))

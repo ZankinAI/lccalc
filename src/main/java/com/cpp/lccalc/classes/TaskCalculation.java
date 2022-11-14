@@ -26,7 +26,6 @@ public class TaskCalculation {
     private LocalDate startDate;
 
 
-
     private List<TaskCalculation> children;
 
     public String getPrevIndex() {
@@ -101,8 +100,7 @@ public class TaskCalculation {
         this.startDate = startDate;
     }
 
-    public TaskCalculation(Task task)
-    {
+    public TaskCalculation(Task task) {
         this.id = task.getTaskIndex();
         this.name = task.getName();
         this.duration = task.getDuration();
@@ -112,46 +110,55 @@ public class TaskCalculation {
 
         this.startDate = task.getStartDate();
 
-        for (SubTask subtask: subTasks) {
-            if (subtask.getSubTaskIndex().matches(task.getTaskIndex()+"(\\.\\d){1}"))
-            {
+        for (SubTask subtask : subTasks) {
+            if (subtask.getSubTaskIndex().matches(task.getTaskIndex() + "(\\.\\d){1}")) {
                 this.addChild(new TaskCalculation(subtask));
             }
         }
-        for (int i=0; i < this.children.size(); i++){
+        for (int i = 0; i < this.children.size(); i++) {
             this.children.get(i).setEarlyStart(this.children.get(i).findEarlyStart(this.children));
         }
         Long duration = 0L;
 
-        for (int i=0; i < this.children.size(); i++){
-           if ((this.children.get(i).getDuration() + this.children.get(i).getEarlyStart())>duration) {
-               duration = this.children.get(i).getDuration() + this.children.get(i).getEarlyStart();
-           }
+        for (int i = 0; i < this.children.size(); i++) {
+            if ((this.children.get(i).getDuration() + this.children.get(i).getEarlyStart()) > duration) {
+                duration = this.children.get(i).getDuration() + this.children.get(i).getEarlyStart();
+            }
         }
 
         this.duration = duration;
 
-        if (this.getStartDate()!=null){
-            for (int i=0; i < this.children.size(); i++){
+        if (this.getStartDate() != null) {
+            for (int i = 0; i < this.children.size(); i++) {
                 this.children.get(i).setStartDate(this.children.get(i).findStartDate(this.children, this.startDate));
             }
         }
 
+        double sumDuration = 0;
+        double sumProgressDuration = 0;
+
+        for (int i = 0; i < this.children.size(); i++) {
+            sumDuration += this.children.get(i).getDuration();
+            sumProgressDuration += this.children.get(i).getDuration() * Double.valueOf(this.children.get(i).getProgressValue())/100.0;
+        }
+
+
+
+        this.progressValue = String.valueOf((int)(sumProgressDuration / sumDuration * 100.0));
 
 
 
         //this.findDuration(this.children);
     }
 
-    public TaskCalculation findChildById(String id){
+    public TaskCalculation findChildById(String id) {
 
-        for (TaskCalculation taskCalculationChild: this.children) {
+        for (TaskCalculation taskCalculationChild : this.children) {
             if (taskCalculationChild.getId().equals(id)) return taskCalculationChild;
         }
 
         return null;
     }
-
 
 
     public TaskCalculation(SubTask subTask) {
@@ -164,12 +171,13 @@ public class TaskCalculation {
 
     }
 
-    public void findDuration(List<TaskCalculation> taskOneRang){
+    public void findDuration(List<TaskCalculation> taskOneRang) {
 
-        for (TaskCalculation taskCalculation:taskOneRang) {
-            for (TaskCalculation prevTaskCalc:taskOneRang) {
-                if (taskCalculation.getPrevIndex().equals(prevTaskCalc.getId())){
-                    if (prevTaskCalc.getEarlyStart()!=null) this.setEarlyStart(prevTaskCalc.getEarlyStart() + prevTaskCalc.getDuration());
+        for (TaskCalculation taskCalculation : taskOneRang) {
+            for (TaskCalculation prevTaskCalc : taskOneRang) {
+                if (taskCalculation.getPrevIndex().equals(prevTaskCalc.getId())) {
+                    if (prevTaskCalc.getEarlyStart() != null)
+                        this.setEarlyStart(prevTaskCalc.getEarlyStart() + prevTaskCalc.getDuration());
                     else this.setEarlyStart(prevTaskCalc.getDuration() + prevTaskCalc.findEarlyStart(taskOneRang));
                 }
 
@@ -179,12 +187,13 @@ public class TaskCalculation {
 
     }
 
-    public Long findEarlyStart(List<TaskCalculation> taskOneRang){
+    public Long findEarlyStart(List<TaskCalculation> taskOneRang) {
         Long earlyStart = 0L;
 
-        for (TaskCalculation taskCalculation:taskOneRang) {
+        for (TaskCalculation taskCalculation : taskOneRang) {
             if ((taskCalculation.getId().equals(this.prevIndex)))
-                if (taskCalculation.getEarlyStart()!=null) earlyStart = taskCalculation.getEarlyStart() + taskCalculation.getDuration();
+                if (taskCalculation.getEarlyStart() != null)
+                    earlyStart = taskCalculation.getEarlyStart() + taskCalculation.getDuration();
                 else {
                     earlyStart = taskCalculation.findEarlyStart(taskOneRang) + taskCalculation.getDuration();
                     return earlyStart;
@@ -193,12 +202,13 @@ public class TaskCalculation {
         return earlyStart;
     }
 
-    public LocalDate findStartDate(List<TaskCalculation> tasksOneRang, LocalDate taskStartDate){
+    public LocalDate findStartDate(List<TaskCalculation> tasksOneRang, LocalDate taskStartDate) {
         LocalDate startDate = taskStartDate;
 
-        for (TaskCalculation taskCalculation:tasksOneRang) {
+        for (TaskCalculation taskCalculation : tasksOneRang) {
             if ((taskCalculation.getId().equals(this.prevIndex)))
-                if (taskCalculation.getStartDate()!=null) startDate = taskCalculation.getStartDate().plusDays(taskCalculation.getDuration());
+                if (taskCalculation.getStartDate() != null)
+                    startDate = taskCalculation.getStartDate().plusDays(taskCalculation.getDuration());
                 else {
                     startDate = taskCalculation.findStartDate(tasksOneRang, taskStartDate).plusDays(taskCalculation.getDuration());
                     return startDate;
@@ -209,12 +219,10 @@ public class TaskCalculation {
     }
 
 
-
-    public void addChild(TaskCalculation taskCalculation){
+    public void addChild(TaskCalculation taskCalculation) {
         if (this.children.isEmpty()) {
             this.children = new ArrayList<>();
             this.children.add(taskCalculation);
-        }
-        else this.children.add(taskCalculation);
+        } else this.children.add(taskCalculation);
     }
 }

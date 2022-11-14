@@ -60,6 +60,7 @@ public class TaskController {
         Task task = taskRepository.findById(id).orElseThrow();
         Iterable<Project> projects = projectRopository.findAll();
 
+        task.sortSubTasks();
         model.addAttribute("project", task.getProject());
         model.addAttribute("projects", projects);
         model.addAttribute("task", task);
@@ -91,6 +92,19 @@ public class TaskController {
         }*/
 
         //taskRepository.save(task);
+
+        if (task.getPerformerName().equals("Своя компания")){
+            task.setProgress(Double.valueOf(taskCalculation.getProgressValue()));
+        }
+        else if (task.getPerformerName()!=null){
+            if (task.getState().equals("Завершена")){
+                task.setProgress(100.0);
+            }
+            else task.setProgress(0.0);
+        }
+        else task.setProgress(0.0);
+
+        taskRepository.save(task);
         task.sortSubTasks();
         model.addAttribute("task", task);
         Iterable<Performer> performers = performerRepository.findAll();
@@ -117,7 +131,7 @@ public class TaskController {
                                @RequestParam String name,
                                @RequestParam String description, @RequestParam String taskIndex,
                                @RequestParam(defaultValue = "0") Long coId,
-                               @RequestParam String startDate, Model model) {
+                               @RequestParam String startDate, @RequestParam String status, Model model) {
 
         Task task = taskRepository.findById(id).orElseThrow();
 
@@ -125,6 +139,7 @@ public class TaskController {
         task.setName(name);
         task.setDescription(description);
         task.setTaskIndex(taskIndex);
+        task.setState(status);
 
         TaskCalculation taskCalculation = new TaskCalculation(task);
 
@@ -176,6 +191,17 @@ public class TaskController {
             task.setDuration(selectedCommercialOffer.getDuration());
             task.setPerformerName(selectedCommercialOffer.getPerformer().getName());
         }
+
+        if (task.getPerformerName().equals("Своя компания")){
+            task.setProgress(Double.valueOf(taskCalculation.getProgressValue()));
+        }
+        else if (task.getPerformerName()!=null){
+            if (task.getState().equals("Завершена")){
+                task.setProgress(100.0);
+            }
+            else task.setProgress(0.0);
+        }
+        else task.setProgress(0.0);
 
         taskRepository.save(task);
         model.addAttribute("selectedCo",selectedCommercialOffer );
