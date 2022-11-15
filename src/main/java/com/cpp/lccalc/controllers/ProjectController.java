@@ -130,8 +130,16 @@ public class ProjectController {
                                     @RequestParam Long pmId, Model model){
 
 
-        LocalDate localStartDate = LocalDate.parse(startDate);
-        LocalDate localFinishDate = LocalDate.parse(finishDate);
+        LocalDate localStartDate;
+        LocalDate localFinishDate;
+
+        if (startDate.isEmpty())
+            localStartDate = LocalDate.now();
+        else localStartDate = LocalDate.parse(startDate);
+        if (finishDate.isEmpty())
+            localFinishDate = LocalDate.now().plusDays(200);
+        else localFinishDate = LocalDate.parse(finishDate);
+
         Project addProject = new Project(projectName, description, budget, 1, localStartDate, localFinishDate);
 
         Customer customer = customerRepository.findById(customerId).orElseThrow();
@@ -143,8 +151,13 @@ public class ProjectController {
         addProject.setCreateDate(LocalDate.now());
         projectRopository.save(addProject);
 
+
         Iterable<Project> projectsStatus1 = projectRopository.findByStatus(1);
+        Iterable<Project> projectsStatus2 = projectRopository.findByStatus(2);
+        Iterable<Project> projectsStatus3 = projectRopository.findByStatus(3);
         model.addAttribute("projects1", projectsStatus1);
+        model.addAttribute("projects2", projectsStatus2);
+        model.addAttribute("projects3", projectsStatus3);
         return "redirect:/projects";
     }
 
@@ -236,8 +249,10 @@ public class ProjectController {
         task.setState("Не начата");
         task.setBudget(0L);
         task.setTaskIndex(index);
+        task.setDuration(0L);
         taskRepository.save(task);
         project = projectRopository.findById(id).orElseThrow();
+        project.sortTasks();
 
         model.addAttribute("project", project);
         Iterable<Customer> customers = customerRepository.findAll();

@@ -110,17 +110,22 @@ public class SubTaskController {
 
         TaskCalculation taskCalculation = new TaskCalculation(task);
 
-        if (task.getPerformerName().equals("Своя компания")){
-            task.setProgress(Double.valueOf(taskCalculation.getProgressValue()));
-        }
-        else if (task.getPerformerName()!=null){
-            if (task.getState().equals("Завершена")){
-                task.setProgress(100.0);
+        if (task.getPerformerName()!=null){
+            if (task.getPerformerName().equals("Своя компания")){
+                task.setProgress(Double.valueOf(taskCalculation.getProgressValue()));
+            }
+            else if (task.getPerformerName()!=null){
+                if (task.getState().equals("Завершена")){
+                    task.setProgress(100.0);
+                }
+                else task.setProgress(0.0);
             }
             else task.setProgress(0.0);
         }
-        else task.setProgress(0.0);
+
+
         taskRepository.save(task);
+        task.sortSubTasks();
 
         model.addAttribute("selectedCo", selectedCommercialOffer);
 
@@ -167,16 +172,18 @@ public class SubTaskController {
 
         TaskCalculation taskCalculation = new TaskCalculation(task);
 
-        if (task.getPerformerName().equals("Своя компания")){
-            task.setProgress(Double.valueOf(taskCalculation.getProgressValue()));
-        }
-        else if (task.getPerformerName()!=null){
-            if (task.getState().equals("Завершена")){
-                task.setProgress(100.0);
+        if (task.getPerformerName()!=null){
+            if (task.getPerformerName().equals("Своя компания")){
+                task.setProgress(Double.valueOf(taskCalculation.getProgressValue()));
+            }
+            else if (task.getPerformerName()!=null){
+                if (task.getState().equals("Завершена")){
+                    task.setProgress(100.0);
+                }
+                else task.setProgress(0.0);
             }
             else task.setProgress(0.0);
         }
-        else task.setProgress(0.0);
         taskRepository.save(task);
 
         model.addAttribute("selectedCo", selectedCommercialOffer);
@@ -238,16 +245,18 @@ public class SubTaskController {
 
         TaskCalculation taskCalculation = new TaskCalculation(task);
 
-        if (task.getPerformerName().equals("Своя компания")){
-            task.setProgress(Double.valueOf(taskCalculation.getProgressValue()));
-        }
-        else if (task.getPerformerName()!=null){
-            if (task.getState().equals("Завершена")){
-                task.setProgress(100.0);
+        if (task.getPerformerName()!=null){
+            if (task.getPerformerName().equals("Своя компания")){
+                task.setProgress(Double.valueOf(taskCalculation.getProgressValue()));
+            }
+            else if (task.getPerformerName()!=null){
+                if (task.getState().equals("Завершена")){
+                    task.setProgress(100.0);
+                }
+                else task.setProgress(0.0);
             }
             else task.setProgress(0.0);
         }
-        else task.setProgress(0.0);
         taskRepository.save(task);
 
         model.addAttribute("selectedCo", selectedCommercialOffer);

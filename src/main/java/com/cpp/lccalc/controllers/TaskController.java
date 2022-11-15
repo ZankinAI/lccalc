@@ -93,16 +93,20 @@ public class TaskController {
 
         //taskRepository.save(task);
 
-        if (task.getPerformerName().equals("Своя компания")){
-            task.setProgress(Double.valueOf(taskCalculation.getProgressValue()));
-        }
-        else if (task.getPerformerName()!=null){
-            if (task.getState().equals("Завершена")){
-                task.setProgress(100.0);
+        if (task.getPerformerName()!=null){
+            if (task.getPerformerName().equals("Своя компания")){
+                task.setProgress(Double.valueOf(taskCalculation.getProgressValue()));
+            }
+            else if (task.getPerformerName()!=null){
+                if (task.getState().equals("Завершена")){
+                    task.setProgress(100.0);
+                }
+                else task.setProgress(0.0);
             }
             else task.setProgress(0.0);
         }
-        else task.setProgress(0.0);
+
+
 
         taskRepository.save(task);
         task.sortSubTasks();
@@ -172,6 +176,7 @@ public class TaskController {
 
         if (!startDate.isEmpty()){
             task.setStartDate(LocalDate.parse(startDate));
+            taskCalculation = new TaskCalculation(task);
             for (SubTask subTask: task.getSubTasks()) {
                 subTask.setStartDate(taskCalculation.findChildById(subTask.getSubTaskIndex()).getStartDate());
                 subTaskRepository.save(subTask);
@@ -192,16 +197,18 @@ public class TaskController {
             task.setPerformerName(selectedCommercialOffer.getPerformer().getName());
         }
 
-        if (task.getPerformerName().equals("Своя компания")){
-            task.setProgress(Double.valueOf(taskCalculation.getProgressValue()));
-        }
-        else if (task.getPerformerName()!=null){
-            if (task.getState().equals("Завершена")){
-                task.setProgress(100.0);
+        if (task.getPerformerName()!=null){
+            if (task.getPerformerName().equals("Своя компания")){
+                task.setProgress(Double.valueOf(taskCalculation.getProgressValue()));
+            }
+            else if (task.getPerformerName()!=null){
+                if (task.getState().equals("Завершена")){
+                    task.setProgress(100.0);
+                }
+                else task.setProgress(0.0);
             }
             else task.setProgress(0.0);
         }
-        else task.setProgress(0.0);
 
         taskRepository.save(task);
         model.addAttribute("selectedCo",selectedCommercialOffer );
@@ -301,12 +308,14 @@ public class TaskController {
         Long idOptimalCO = Utils.getOptimalCommercialOfferId(task.getCommercialOffers());
 
         for (CommercialOffer co:task.getCommercialOffers()) {
-            if (co.getCoId().equals(idOptimalCO))
+            if (co.getCoId().equals(idOptimalCO)){
                 if (!co.isOptimal())
                 {
                     co.setOptimal(true);
                     commercialOfferRepository.save(co);
                 }
+            }
+
             else if (co.isOptimal()){
                     co.setOptimal(false);
                     commercialOfferRepository.save(co);

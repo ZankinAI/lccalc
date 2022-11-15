@@ -53,7 +53,7 @@
           </div>
 
           <div class="row g-0 p-2 mb-2  align-items-center">
-            <label class="col-3">Трудоемкость</label>
+            <label class="col-3">Трудоемкость, чел.*ч.</label>
             <input class="form-control col" type="text" th:value="${subtask.laboriousness}" placeholder="Трудоемкость задачи (в человеко-часах)" name="laboriousness">
           </div>
 
@@ -93,7 +93,7 @@
                 <tr>
                   <th scope="col">#</th>
                   <th scope="col">Наименование</th>
-                  <th scope="col">Количество</th>
+                  <th scope="col">Количество, шт.</th>
                 </tr>
                 </thead>
 
@@ -177,7 +177,7 @@
               Ресурс
             </div>
             <div class="col">
-              Общее количество
+              Общее количество, шт
             </div>
           </div>
           <div th:each="materialResource, itemStat : *{materialResources}" class="form-group row mb-2 align-items-center">
@@ -225,10 +225,10 @@
               Должность
             </div>
             <div class="col">
-              Тарифная ставка
+              Тарифная ставка, руб./ч.
             </div>
             <div class="col">
-              Общее количество
+              Общее количество, шт.
             </div>
           </div>
           <div th:each="humanResource, itemStat : *{humanResources}" class="form-group row gap-5 mb-2 align-items-center">

@@ -18,18 +18,28 @@ public class CharacteristicDTO {
         this.id = characteristic.getCharacteristicId();
         this.name = characteristic.getName();
         this.weight = characteristic.getWeight();
-        this.analogNames = new String[characteristic.getAnalogCharacteristics().size() + 1];
-        this.analogId = new Long[characteristic.getAnalogCharacteristics().size() + 1];
-        this.grades = new int[characteristic.getAnalogCharacteristics().size() + 1];
-        this.analogNames[0] = "Проект";
-        int i = 1;
-        characteristic.sortAnalogCharacteristic();
-        for (AnalogCharacteristic analogCharacteristic:characteristic.getAnalogCharacteristics()) {
-            this.analogNames[i] = analogCharacteristic.getAnalog().getName();
-            this.analogId[i] = analogCharacteristic.getAnalog().getAnalogId();
-            this.grades[i] = analogCharacteristic.getGrade();
-            i++;
+        if (characteristic.getAnalogCharacteristics()==null){
+            this.analogNames = new String[1];
+            this.analogId = new Long[1];
+            this.grades = new int[1];
         }
+        else{
+            this.analogNames = new String[characteristic.getAnalogCharacteristics().size() + 1];
+            this.analogId = new Long[characteristic.getAnalogCharacteristics().size() + 1];
+            this.grades = new int[characteristic.getAnalogCharacteristics().size() + 1];
+            characteristic.sortAnalogCharacteristic();
+            int i = 1;
+            for (AnalogCharacteristic analogCharacteristic:characteristic.getAnalogCharacteristics()) {
+                this.analogNames[i] = analogCharacteristic.getAnalog().getName();
+                this.analogId[i] = analogCharacteristic.getAnalog().getAnalogId();
+                this.grades[i] = analogCharacteristic.getGrade();
+                i++;
+            }
+        }
+
+        this.analogNames[0] = "Проект";
+
+
 
         this.analogId[0] = characteristic.getProject().getProjectId();
         this.grades[0] = characteristic.getGrade();

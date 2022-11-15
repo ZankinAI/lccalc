@@ -92,9 +92,12 @@ public class Characteristic {
     };
 
     public void sortAnalogCharacteristic(){
-        List<AnalogCharacteristic> acList = new ArrayList<AnalogCharacteristic>(this.analogCharacteristics);
-        Collections.sort(acList, AnalogCharacteristic.CharacteristicAnalogIdComparator);
-        this.analogCharacteristics = new LinkedHashSet<AnalogCharacteristic>(acList);
+        if (this.analogCharacteristics!=null){
+            List<AnalogCharacteristic> acList = new ArrayList<AnalogCharacteristic>(this.analogCharacteristics);
+            Collections.sort(acList, AnalogCharacteristic.CharacteristicAnalogIdComparator);
+            this.analogCharacteristics = new LinkedHashSet<AnalogCharacteristic>(acList);
+        }
+
     }
 
 }

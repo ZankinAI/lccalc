@@ -225,8 +225,11 @@ public class Project {
                  this.tasks) {
                 this.budget += task.getBudget();
                 this.earnedBudget += task.getBudget() * (task.getProgress() / 100.0);
-                duration+=task.getDuration();
-                durationComplete += task.getDuration() * task.getProgress() / 100.0;
+                if (task.getDuration()!=null){
+                    duration+=task.getDuration();
+                    durationComplete += task.getDuration() * task.getProgress() / 100.0;
+                }
+
             }
         }
         else return;

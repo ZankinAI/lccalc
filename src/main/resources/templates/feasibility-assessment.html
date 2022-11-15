@@ -381,13 +381,14 @@ function validate_form()
      console.log("x1", x);
     }
 
-if (sum==1) {
+if (((1-sum)<0.0001)&&((1-sum)>=0)) {
 console.log("success", sum);
 return valid;
 }
 else {
-window.alert("Сумма весов должна быть равна 1!");
 console.log("no success", sum);
+window.alert("Сумма весов должна быть равна 1!");
+
 return false;
 }
 

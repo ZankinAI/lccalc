@@ -28,7 +28,7 @@
             <form form action="project" name="projectChange" method="post">
                 <div class="container">
                     <h2 class="text-left">Проект</h2>
-                    <select class="form-select form-select-lg mt-5" aria-label=".form-select-lg" name="projectId" onchange="document.forms.projectChange.submit()">
+                    <select style="font-size: 14pt" class="form-select form-select-lg mt-5" aria-label=".form-select-lg" name="projectId" onchange="document.forms.projectChange.submit()">
                         <option disabled>Выберите проект</option>
                         <option th:value="${project.projectId}" th:text="${project.projectName}" selected></option>
                         <div th:each="el:${projects}">

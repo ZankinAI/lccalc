@@ -69,7 +69,7 @@
                     <button type="button" class="btn btn-success btn-sm ms-3" data-toggle="modal" data-target="#customer-add-modal">Добавить нового</button>
                   </div>
                 </div>
-                <select class="form-select form-select-lg" aria-label=".form-select-lg" name="customerId">
+                <select style="font-size: 12pt" class="form-select form-select-lg" aria-label=".form-select-lg" name="customerId">
                   <option disabled>Выберите заказчика</option>
                   <div th:each="el:${customers}">
                     <option th:value="${el.customerId}" th:text="${el.customerName}"></option>
@@ -86,7 +86,7 @@
                   <button type="button" class="btn btn-success btn-sm ms-3" data-toggle="modal" data-target="#manager-add-modal">Добавить нового</button>
                 </div>
               </div>
-              <select class="form-select form-select-lg" aria-label=".form-select-lg" name="pmId">
+              <select style="font-size: 12pt" class="form-select form-select-lg" aria-label=".form-select-lg" name="pmId">
                 <option disabled>Выберите руководителя</option>
 
                 <div th:each="el:${projectManagers}">
