@@ -84,16 +84,14 @@
                         <label class="col-3">Дата завершения</label>
                         <input class="form-control col flatpickr" type="date"  th:value="${project.finishDateFormat}" placeholder="Выберите дату окончания" name="finishDate">
                     </div>
+                </div>
 
                     <div class="card g-0 p-2 mt-2">
-                        <div class="row g-0">
-                            <div class="col-md-4">
-                                <h6 class="card-title mb-">Выберите заказчика:</h6>
+                        <div class="d-flex justify-content-between">
+                                <h6 class="card-title mb-2">Выберите заказчика:</h6>
+                                <button type="button" class="btn btn-success btn-sm mb-2" data-toggle="modal" data-target="#customer-add-modal">Добавить нового</button>
                             </div>
-                            <div class="col-md-3">
-                                <button type="button" class="btn btn-success btn-sm ms-3" data-toggle="modal" data-target="#customer-add-modal">Добавить нового</button>
-                            </div>
-                        </div>
+
                         <select class="form-select form-select-lg" aria-label=".form-select-lg" name="customerId">
                             <option disabled>Выберите заказчика</option>
                             <div th:each="el:${customers}">
@@ -103,34 +101,26 @@
                     </div>
 
                     <div class="card g-0 p-2 mt-2">
-                        <div class="row g-0">
-                            <div class="col-md-4">
-                                <h6 class="card-title mb-1">Выберите руководителя:</h6>
-                            </div>
-                            <div class="col-md-3">
-                                <button type="button" class="btn btn-success btn-sm ms-3" data-toggle="modal" data-target="#manager-add-modal">Добавить нового</button>
-                            </div>
+                        <div class="d-flex justify-content-between">
+                            <h6 class="card-title mb-2">Выберите руководителя:</h6>
+                            <button type="button" class="btn btn-success btn-sm mb-2" data-toggle="modal" data-target="#manager-add-modal">Добавить нового</button>
                         </div>
-                        <select class="form-select form-select-lg" aria-label=".form-select-lg" name="pmId">
-                            <option disabled>Выберите руководителя</option>
-
-                            <div th:each="el:${projectManagers}">
-                                <option th:value="${el.pmId}" th:text="${el.fio}"></option>
-                            </div>
-                        </select>
-                    </div>
-
+                        <div class="row g-0">
+                            <select class="form-select form-select-lg" aria-label=".form-select-lg" name="pmId">
+                                <option disabled>Выберите руководителя</option>
+                                <div th:each="el:${projectManagers}">
+                                    <option th:value="${el.pmId}" th:text="${el.fio}"></option>
+                                </div>
+                            </select>
+                        </div>
+                </div>
                     <!--Добавление задач проекта-->
                     <div class="card g-0 p-2 mt-2">
-                        <div class="row g-0">
-                            <div class="col-md-4">
+                        <div class="d-flex justify-content-between">
                                 <h6 class="card-title mb-1">Задачи проекта</h6>
-                            </div>
-                            <div class="col-md-3">
                                 <button type="button" class="btn btn-success btn-sm ms-3" data-toggle="modal" data-target="#task-add-modal">Добавить задачу</button>
                             </div>
-                        </div>
-                        <div class="mt-5 table-responsive">
+                        <div class="mt-2 table-responsive">
                             <table class="table table-striped table-hover table_sort">
                                 <thead>
                                 <tr>
@@ -209,7 +199,6 @@
 
                     </div>
                     <button type="submit" class="btn btn-success">Обновить проект</button>
-                </div>
             </div>
 
         </form>
@@ -273,7 +262,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button role="button" class="btn btn-primary" type="submit">
+                    <button role="button" class="btn btn-success" type="submit">
                         Создать заказчика
                     </button>
                 </div>
@@ -319,7 +308,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button role="button" class="btn btn-primary" type="submit">
+                    <button role="button" class="btn btn-success" type="submit">
                         Добавить ответственного
                     </button>
                 </div>
@@ -356,7 +345,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button role="button" class="btn btn-primary" type="submit">
+                    <button role="button" class="btn btn-success" type="submit">
                         Добавить задачу
                     </button>
                 </div>
