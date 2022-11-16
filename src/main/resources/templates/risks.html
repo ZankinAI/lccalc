@@ -130,7 +130,7 @@
 
             <tbody>
             <div th:each="risk : ${project.risks}">
-              <tr>
+              <tr data-toggle="collapse" th:data-target="'#'+${risk.riskId}" class="accordion-toggle">
                 <td th:style="${risk.color}" scope="row">⚫</td>
                 <td th:text="${risk.name}"></td>
                 <td th:text="${risk.likelihoodTitle}"></td>
@@ -147,6 +147,50 @@
                       <i class="material-icons">delete</i>
                     </button>
                   </form>-->
+                </td>
+              </tr>
+              <tr>
+                <td colspan="12" class="hiddenRow">
+                  <div class="accordion-body collapse" th:id="${risk.riskId}">
+                    <table class="table">
+                      <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Наименование</th>
+                        <th scope="col">Вероятность избежания риска</th>
+                        <th scope="col">Затраты</th>
+                        <th scope="col">Процент снижения риска</th>
+                        <th scope="col">Мат. ожидание потерь</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <div th:each="solution:${risk.riskSolutions}">
+                        <div th:if="${solution.riskSolutionId == risk.selectedRiskSolutionID}">
+                          <tr class="bg-success">
+                            <td scope="row"></td>
+                            <td th:text="${solution.name}"></td>
+                            <td th:text="${solution.probability}"></td>
+                            <td th:text="${solution.cost}"></td>
+                            <td th:text="${solution.reduction}"></td>
+                            <td th:text="${solution.expected}"></td>
+                          </tr>
+                        </div>
+                        <div th:unless="${solution.riskSolutionId == risk.selectedRiskSolutionID}">
+                          <tr>
+                            <td scope="row"></td>
+                            <td th:text="${solution.name}"></td>
+                            <td th:text="${solution.probability}"></td>
+                            <td th:text="${solution.cost}"></td>
+                            <td th:text="${solution.reduction}"></td>
+                            <td th:text="${solution.expected}"></td>
+                          </tr>
+                        </div>
+                      </div>
+
+                      </tbody>
+
+                    </table>
+                  </div>
                 </td>
               </tr>
             </div>
