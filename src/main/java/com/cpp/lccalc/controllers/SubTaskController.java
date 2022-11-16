@@ -73,6 +73,7 @@ public class SubTaskController {
         }
         model.addAttribute("humanResourcesList", humanResourcesList);
 
+        model.addAttribute("isCorrectEditSubTask", true);
         return "subtask-edit";
     }
 
@@ -87,6 +88,41 @@ public class SubTaskController {
                                 Model model) {
         SubTask subTask = subTaskRepository.findById(id).orElseThrow();
         Task task = subTask.getTask();
+        String prevIndex = previousIndex;
+        int k=0;
+        while(prevIndex!=null){
+
+            if (prevIndex.equals(subTaskIndex)){
+
+                model.addAttribute("task", task);
+                model.addAttribute("subtask", subTask);
+
+                MaterialResourcesListDTO materialResourcesList = new MaterialResourcesListDTO();
+
+                Iterable<MaterialResources> materialResources = materialResourcesRepository.findAll();
+
+                for (MaterialResources materialResource : materialResources) {
+                    materialResourcesList.addResource(new MaterialResourcesDTO(materialResource));
+                }
+
+                model.addAttribute("materialResourcesList", materialResourcesList);
+
+                Iterable<HumanResources> humanResources = humanResourceRepository.findAll();
+                HumanResourcesListDTO humanResourcesList = new HumanResourcesListDTO();
+
+                for (HumanResources humanResource : humanResources) {
+                    humanResourcesList.addResource(new HumanResourcesDTO(humanResource));
+                }
+                model.addAttribute("humanResourcesList", humanResourcesList);
+                model.addAttribute("isCorrectEditSubTask", false);
+                return "subtask-edit";
+            }
+
+            prevIndex = task.findPrevIndexOfSubtask(prevIndex);
+            if (prevIndex==null) break;
+
+
+        };
 
         subTask.setName(name);
         subTask.setSubTaskIndex(subTaskIndex);

@@ -197,6 +197,16 @@ public class Task{
 
     }
 
+    public String findPrevIndexOfSubtask(String subtaskIndex){
+
+        for (SubTask subtask: this.subTasks) {
+            if (subtask.getSubTaskIndex().equals(subtaskIndex))
+                return subtask.getPreviousIndex();
+        }
+        return null;
+
+    }
+
 
 
 }

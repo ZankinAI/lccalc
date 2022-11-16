@@ -30,7 +30,7 @@
 
   <section class="bg-light text-dark p-3">
     <!--Форма-окно для редактирования задачи-->
-    <form form id="subtask-edit" th:action="'/subtask/'+ ${subtask.subTaskId} + '/edit'" name="subTaskEdit" method="post">
+    <form form id="subtask-edit" th:action="'/subtask/'+ ${subtask.subTaskId} + '/edit'" name="subTaskEdit"  method="post">
       <div class="container">
         <h2 class="text-left">Редактирование подзадачи</h2>
 
@@ -65,7 +65,7 @@
 
           <div class="row g-0 p-2 mb-2  align-items-center">
             <label class="col-3 mb-2">Предшественник:</label>
-            <select class="form-select form-select-lg" aria-label=".form-select-lg" name="previousIndex">
+            <select id="selectPrevious" class="form-select form-select-lg" aria-label=".form-select-lg" name="previousIndex">
               <option disabled>Выберите предшествующую задачу</option>
               <div th:each="el:${task.subTasks}">
                 <div th:if="${el.subTaskIndex == subtask.previousIndex}">
@@ -275,6 +275,15 @@
       </div>
     </div>
   </form>
+<script th:inline="javascript">
+var isCorrect = true;
+console.log("isCorrect", isCorrect);
+isCorrect = [[${isCorrectEditSubTask}]];
+if (!isCorrect){
+  console.log("isCorrect", isCorrect);
+  window.alert("Обнаружено зацикливание задач!");
+}
+</script>
 
   <script
           src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
