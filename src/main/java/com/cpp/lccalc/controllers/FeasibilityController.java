@@ -61,9 +61,9 @@ public class FeasibilityController {
     @GetMapping("/feasibility_assessment")
     public String feasibilityAssessment(Model model) {
 
-        //Project project = projectRopository.findById(id).orElseThrow();
+        Project project = new Project();
         Iterable<Project> projects = projectRopository.findAll();
-        //model.addAttribute("project", project);
+        model.addAttribute("project", project);
         model.addAttribute("projects", projects);
 
         CharacteristicsListDTO characteristicsListDTO = new CharacteristicsListDTO();

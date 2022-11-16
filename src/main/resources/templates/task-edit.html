@@ -62,9 +62,9 @@
               <select class="form-select form-select-lg col" aria-label=".form-select-lg" name="status">
                 <option disabled>Выберите статус задачи</option>
                 <option  th:value="${task.state}" th:text="${task.state}" selected></option>
-                <option th:value="'Не начата'" th:text="'Не начата'"></option>
-                <option th:value="'В работе'" th:text="'В работе'"></option>
-                <option th:value="'Завершена'" th:text="'Завершена'"></option>
+                <div th:if="${task.state != 'Не начата'}"><option th:value="'Не начата'" th:text="'Не начата'"></option></div>
+                <div th:if="${task.state != 'В работе'}"><option th:value="'В работе'" th:text="'В работе'"></option></option></div>
+                <div th:if="${task.state != 'Завершена'}"><option th:value="'Завершена'" th:text="'Завершена'"></option></option></div>
               </select>
             </div>
 

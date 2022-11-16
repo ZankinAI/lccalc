@@ -59,10 +59,10 @@
                                 <option th:case="2" th:value="${project.status}" th:text="'В разработке'" selected></option>
                                 <option th:case="3" th:value="${project.status}" th:text="'Завершенные'" selected></option>
                             </div>
-                            <option th:value="1" th:text="'На оформлении'"></option>
-                            <option th:value="2" th:text="'В разработке'"></option>
-                            <option th:value="3" th:text="'Завершенные'"></option>
-                        </select>
+                            <div th:if="${project.status != 1}"><option th:value="1" th:text="'На оформлении'"></option></option></div>
+                            <div th:if="${project.status != 2}"><option th:value="2" th:text="'В разработке'"></option></option></option></div>
+                            <div th:if="${project.status != 3}"><option th:value="3" th:text="'Завершенные'"></option></option></option></div>
+                            </select>
                     </div>
 
                     <div class="row g-0 p-2 mb-2">
