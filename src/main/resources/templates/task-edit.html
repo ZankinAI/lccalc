@@ -158,7 +158,9 @@
                 <option th:value="${selectedCo?.coId}" th:text="'Исполнитель: ' + ${selectedCo?.performer?.name} + ', Стоимость: ' + ${selectedCo?.budget}" selected></option>
                 <option th:value = "0" >Выполнить своими силами, Стоимость:</option>
                 <div th:each="el:${task.commercialOffers}">
-                  <option th:value="${el.coId}" th:text="'Исполнитель: ' + ${el.performer.name} + ', Стоимость: ' + ${el.budget}"></option>
+                  <div th:if="${el.coId!=selectedCo.coId}">
+                    <option th:value="${el.coId}" th:text="'Исполнитель: ' + ${el.performer.name} + ', Стоимость: ' + ${el.budget}"></option>
+                  </div>
                 </div>
               </select>
 
