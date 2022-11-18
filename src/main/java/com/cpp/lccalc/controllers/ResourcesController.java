@@ -88,7 +88,7 @@ public class ResourcesController {
 
     @PostMapping("/subtask/{id}/add_material_resources")
     public String addMaterialResourceInSubTask(@PathVariable(value = "id") long id, @ModelAttribute MaterialResourcesListDTO resourcesList, Model model){
-        SubTask subTask = subTaskRepository.findById(id).orElseThrow();
+        SubTask subTask = subTaskRepository.findById(id).get();
 
         MaterialResourcesSubTask materialResourcesSubTask = null;
         for (MaterialResourcesDTO materialesourcesDTO: resourcesList.getMaterialResources()) {
@@ -97,14 +97,14 @@ public class ResourcesController {
                 materialResourcesSubTask = subTask.findMaterialResourceById(materialesourcesDTO.getId());
                 if (materialResourcesSubTask == null){
                     if (materialesourcesDTO.getAmount()>0){
-                        MaterialResourcesSubTask materialResourcesSubTask1 = new MaterialResourcesSubTask(materialesourcesDTO.getAmount(), materialResourcesRepository.findById(materialesourcesDTO.getId()).orElseThrow(), subTask);
+                        MaterialResourcesSubTask materialResourcesSubTask1 = new MaterialResourcesSubTask(materialesourcesDTO.getAmount(), materialResourcesRepository.findById(materialesourcesDTO.getId()).get(), subTask);
                         materialResourcesSubTaskRepository.save(materialResourcesSubTask1);
                         subTask.addMaterialResource(materialResourcesSubTask1);
                     }
 
                 }
                 else {
-                    MaterialResourcesSubTask materialResourcesSubTaskEdit = materialResourcesSubTaskRepository.findById(materialResourcesSubTask.getMaterialResourceSubTaskId()).orElseThrow();
+                    MaterialResourcesSubTask materialResourcesSubTaskEdit = materialResourcesSubTaskRepository.findById(materialResourcesSubTask.getMaterialResourceSubTaskId()).get();
                     materialResourcesSubTaskEdit.setAmount(materialesourcesDTO.getAmount());
                     if (materialesourcesDTO.getAmount().equals(0L)){
                         materialResourcesSubTaskRepository.deleteById(materialResourcesSubTaskEdit.getMaterialResourceSubTaskId());
@@ -117,7 +117,7 @@ public class ResourcesController {
 
         }
 
-        subTask = subTaskRepository.findById(id).orElseThrow();
+        subTask = subTaskRepository.findById(id).get();
         subTask.findDuration();
         subTask.findBudget();
         subTaskRepository.save(subTask);
@@ -154,7 +154,7 @@ public class ResourcesController {
     //Обновление человеческих ресурсов в подзадаче
     @PostMapping("/subtask/{id}/add_human_resources")
     public String addHumanResourceInSubtask(@PathVariable(value = "id") long id, @ModelAttribute HumanResourcesListDTO resourcesList, Model model){
-        SubTask subTask = subTaskRepository.findById(id).orElseThrow();
+        SubTask subTask = subTaskRepository.findById(id).get();
 
         HumanResourcesSubTask humanResourcesSubTask = null;
         for (HumanResourcesDTO humanresourcesDTO: resourcesList.getHumanResources()) {
@@ -163,14 +163,14 @@ public class ResourcesController {
                 humanResourcesSubTask = subTask.findResourceById(humanresourcesDTO.getId());
                 if (humanResourcesSubTask == null){
                     if (humanresourcesDTO.getAmount()>0){
-                        HumanResourcesSubTask humanResourcesSubTask1 = new HumanResourcesSubTask(humanresourcesDTO.getAmount(), humanResourceRepository.findById(humanresourcesDTO.getId()).orElseThrow(), subTask);
+                        HumanResourcesSubTask humanResourcesSubTask1 = new HumanResourcesSubTask(humanresourcesDTO.getAmount(), humanResourceRepository.findById(humanresourcesDTO.getId()).get(), subTask);
                         humanResourceSubTaskRepository.save(humanResourcesSubTask1);
                         subTask.addHumanResource(humanResourcesSubTask1);
                     }
 
                 }
                 else {
-                    HumanResourcesSubTask humanResourcesSubTaskEdit = humanResourceSubTaskRepository.findById(humanResourcesSubTask.getHumanResourceSubTaskId()).orElseThrow();
+                    HumanResourcesSubTask humanResourcesSubTaskEdit = humanResourceSubTaskRepository.findById(humanResourcesSubTask.getHumanResourceSubTaskId()).get();
                     humanResourcesSubTaskEdit.setAmount(humanresourcesDTO.getAmount());
                     if (humanresourcesDTO.getAmount().equals(0L)){
                         humanResourceSubTaskRepository.deleteById(humanResourcesSubTaskEdit.getHumanResourceSubTaskId());
@@ -183,7 +183,7 @@ public class ResourcesController {
 
         }
 
-        subTask = subTaskRepository.findById(id).orElseThrow();
+        subTask = subTaskRepository.findById(id).get();
         subTask.findDuration();
         subTask.findBudget();
         subTaskRepository.save(subTask);

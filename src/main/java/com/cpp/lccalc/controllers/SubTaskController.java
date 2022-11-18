@@ -50,7 +50,7 @@ public class SubTaskController {
     //Страница редактирования подзадачи
     @GetMapping("/subtask/{id}/edit")
     public String subTaskEdit(@PathVariable(value = "id") long id, Model model) {
-        SubTask subTask = subTaskRepository.findById(id).orElseThrow();
+        SubTask subTask = subTaskRepository.findById(id).get();
         Task task = subTask.getTask();
         model.addAttribute("task", task);
         model.addAttribute("subtask", subTask);
@@ -86,7 +86,7 @@ public class SubTaskController {
                                 @RequestParam(defaultValue = "") String previousIndex,
                                 @RequestParam String progress,
                                 Model model) {
-        SubTask subTask = subTaskRepository.findById(id).orElseThrow();
+        SubTask subTask = subTaskRepository.findById(id).get();
         Task task = subTask.getTask();
         String prevIndex = previousIndex;
         int k=0;
@@ -192,7 +192,7 @@ public class SubTaskController {
     @GetMapping("/subtask/{id}/remove")
     public String subTaskDelete(@PathVariable(value = "id") long id,
                                 Model model) {
-        SubTask subTask = subTaskRepository.findById(id).orElseThrow();
+        SubTask subTask = subTaskRepository.findById(id).get();
         Task task = subTask.getTask();
 
 
@@ -262,7 +262,7 @@ public class SubTaskController {
                                      @RequestParam(defaultValue = "") String previousIndex,
                                      Model model) {
 
-        Task task = taskRepository.findById(id).orElseThrow();
+        Task task = taskRepository.findById(id).get();
 
         SubTask subTask = new SubTask(subTaskIndex, name, progress, laboriousness, previousIndex, LocalDate.parse(startDate), task);
 
@@ -270,7 +270,7 @@ public class SubTaskController {
 
         subTaskRepository.save(subTask);
 
-        task = taskRepository.findById(id).orElseThrow();
+        task = taskRepository.findById(id).get();
         task.sortSubTasks();
 
         CommercialOffer selectedCommercialOffer = null;

@@ -28,7 +28,7 @@ public class JsonResponseController {
     @ResponseBody
     public List<GanttData> getGanttData(@PathVariable(value = "id") long id){
 
-        Project project = projectRopository.findById(id).orElseThrow();
+        Project project = projectRopository.findById(id).get();
         project.sortTasks();
         List<GanttData> ganttDatas = new ArrayList<>();
 

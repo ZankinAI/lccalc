@@ -1,9 +1,9 @@
 package com.cpp.lccalc.controllers;
 
-import com.cpp.lccalc.classes.MaterialResourcesDTO;
-import com.cpp.lccalc.classes.MaterialResourcesListDTO;
-import com.cpp.lccalc.classes.TaskCalculation;
-import com.cpp.lccalc.models.*;
+import com.cpp.lccalc.models.Customer;
+import com.cpp.lccalc.models.Project;
+import com.cpp.lccalc.models.ProjectManager;
+import com.cpp.lccalc.models.Task;
 import com.cpp.lccalc.repo.CustomerRepository;
 import com.cpp.lccalc.repo.ProjectManagerRepository;
 import com.cpp.lccalc.repo.ProjectRopository;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -39,7 +38,8 @@ public class ProjectController {
     @GetMapping("/project/{id}")
     public String project(@PathVariable(value = "id") long id,  Model model) {
 
-        Project project = projectRopository.findById(id).orElseThrow();
+        Project project = projectRopository.findById(id).get();
+
 
 
         Iterable<Project> projects = projectRopository.findAll();
@@ -55,7 +55,7 @@ public class ProjectController {
     @PostMapping(path = "/project/{id}", params = "projectId")
     public String projectPostSelect(@RequestParam String projectId,  Model model){
 
-        Project project = projectRopository.findById(Long.valueOf(projectId)).orElseThrow();
+        Project project = projectRopository.findById(Long.valueOf(projectId)).get();
         Iterable<Project> projects = projectRopository.findAll();
         model.addAttribute("project", project);
         model.addAttribute("projects", projects);
@@ -142,10 +142,10 @@ public class ProjectController {
 
         Project addProject = new Project(projectName, description, budget, 1, localStartDate, localFinishDate);
 
-        Customer customer = customerRepository.findById(customerId).orElseThrow();
+        Customer customer = customerRepository.findById(customerId).get();
         addProject.setCustomer(customer);
 
-        ProjectManager projectManager = projectManagerRepository.findById(pmId).orElseThrow();
+        ProjectManager projectManager = projectManagerRepository.findById(pmId).get();
         addProject.setProjectManager(projectManager);
 
         addProject.setCreateDate(LocalDate.now());
@@ -243,7 +243,7 @@ public class ProjectController {
                           @RequestParam String description, @RequestParam String index, Model model) {
 
 
-        Project project = projectRopository.findById(id).orElseThrow();
+        Project project = projectRopository.findById(id).get();
         Task task = new Task(name, description);
         task.setProject(project);
         task.setState("Не начата");
@@ -251,7 +251,7 @@ public class ProjectController {
         task.setTaskIndex(index);
         task.setDuration(0L);
         taskRepository.save(task);
-        project = projectRopository.findById(id).orElseThrow();
+        project = projectRopository.findById(id).get();
         project.sortTasks();
 
         model.addAttribute("project", project);
@@ -310,7 +310,7 @@ public class ProjectController {
     @PostMapping(path = "/project/{id}/remove")
     public String projectRemove(@PathVariable(value = "id") long id, Model model){
 
-        Project project = projectRopository.findById(id).orElseThrow();
+        Project project = projectRopository.findById(id).get();
         projectRopository.delete(project);
 
         return "redirect:/projects";

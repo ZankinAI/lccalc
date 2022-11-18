@@ -78,7 +78,7 @@ public class FeasibilityController {
     //Выбор проекта на странице оценки целесообразности
     @PostMapping("/feasibility_assessment")
     public String feasibilityAssessmentId(@RequestParam Long projectId, Model model) {
-        Project project = projectRopository.findById(projectId).orElseThrow();
+        Project project = projectRopository.findById(projectId).get();
         Iterable<Project> projects = projectRopository.findAll();
         BreakEven breakEven = null;
         if (!project.getBreakEvens().isEmpty()){
@@ -125,7 +125,7 @@ public class FeasibilityController {
     public String addCharacteristic(@PathVariable(value = "projectId") long id,
                                     @RequestParam String name, @RequestParam double weight,
                                     @RequestParam int grade,  Model model) {
-        Project project = projectRopository.findById(id).orElseThrow();
+        Project project = projectRopository.findById(id).get();
         Iterable<Project> projects = projectRopository.findAll();
         BreakEven breakEven = null;
         if (!project.getBreakEvens().isEmpty()){
@@ -173,7 +173,7 @@ public class FeasibilityController {
 
         Characteristic characteristicUpdate = null;
         for (CharacteristicDTO characteristicDTOUpdate:characteristicsListDTOUpdate.getCharacteristics()) {
-            characteristicUpdate = characteristicRepository.findById(characteristicDTOUpdate.getId()).orElseThrow();
+            characteristicUpdate = characteristicRepository.findById(characteristicDTOUpdate.getId()).get();
             characteristicUpdate.setName(characteristicDTOUpdate.getName());
             characteristicUpdate.setWeight(characteristicDTOUpdate.getWeight());
             characteristicUpdate.setGrade(characteristicDTOUpdate.getGrades()[0]);
@@ -187,7 +187,7 @@ public class FeasibilityController {
 
         }
         Iterable<Project> projects = projectRopository.findAll();
-        Project project = projectRopository.findById(id).orElseThrow();
+        Project project = projectRopository.findById(id).get();
         BreakEven breakEven = null;
         if (!project.getBreakEvens().isEmpty()){
             breakEven = project.getFirstBreakEven();
@@ -230,14 +230,14 @@ public class FeasibilityController {
     @PostMapping("/project/{projectId}/add_analog")
     public String addAnalog(@PathVariable(value = "projectId") long id,
                             @ModelAttribute AnalogDTO analogAdd,  Model model) {
-        Project project = projectRopository.findById(id).orElseThrow();
+        Project project = projectRopository.findById(id).get();
         AnalogCharacteristic analogCharacteristic = null;
         Analog analog = new Analog();
         analog.setName(analogAdd.getName());
         analogRepository.save(analog);
         for (AnalogCharacteristicsDTO analogCharacteristicsDTO:analogAdd.getAnalogCharacteristicsDTOList()) {
             analogCharacteristic = new AnalogCharacteristic(analogCharacteristicsDTO.getAnalogGrade(),
-                    analog, characteristicRepository.findById(analogCharacteristicsDTO.getCharacteristicId()).orElseThrow());
+                    analog, characteristicRepository.findById(analogCharacteristicsDTO.getCharacteristicId()).get());
             analogCharacteristicRepository.save(analogCharacteristic);
         }
 
@@ -281,7 +281,7 @@ public class FeasibilityController {
 
     @PostMapping("/feasibility_assessment/change")
     public String feasibilityAssessmentChange(@RequestParam Long breakEvenId, Model model) {
-        BreakEven breakEven = breakEvenRepository.findById(breakEvenId).orElseThrow();
+        BreakEven breakEven = breakEvenRepository.findById(breakEvenId).get();
         Project project = breakEven.getProject();
         Iterable<Project> projects = projectRopository.findAll();
 
@@ -320,7 +320,7 @@ public class FeasibilityController {
                                            @RequestParam double price, @RequestParam double other,
                                            @RequestParam double expectedProfit, @RequestParam boolean idChecked, Model model) {
 
-        BreakEven breakEven = breakEvenRepository.findById(id).orElseThrow();
+        BreakEven breakEven = breakEvenRepository.findById(id).get();
         breakEven.setOther(other);
         breakEven.setPrice(price);
         breakEven.setExpectedProfit(expectedProfit);
@@ -364,7 +364,7 @@ public class FeasibilityController {
         breakEven.setOther(other);
         breakEven.setPrice(price);
         breakEven.setExpectedProfit(expectedProfit);
-        Project project = projectRopository.findById(id).orElseThrow();
+        Project project = projectRopository.findById(id).get();
         breakEven.setProject(project);
         breakEvenRepository.save(breakEven);
 

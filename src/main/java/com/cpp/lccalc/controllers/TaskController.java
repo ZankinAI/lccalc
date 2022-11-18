@@ -57,7 +57,7 @@ public class TaskController {
     @GetMapping("/task/{id}")
     public String task(@PathVariable(value = "id") long id,  Model model) {
 
-        Task task = taskRepository.findById(id).orElseThrow();
+        Task task = taskRepository.findById(id).get();
         Iterable<Project> projects = projectRopository.findAll();
 
         task.sortSubTasks();
@@ -73,7 +73,7 @@ public class TaskController {
     @GetMapping("/task/{id}/edit")
     public String taskEdit(@PathVariable(value = "id") long id,  Model model) {
 
-        Task task = taskRepository.findById(id).orElseThrow();
+        Task task = taskRepository.findById(id).get();
         CommercialOffer selectedCommercialOffer = new CommercialOffer();
         for (CommercialOffer co:task.getCommercialOffers()) {
             if (co.getStatus().equals("В работе")) selectedCommercialOffer = co;
@@ -137,7 +137,7 @@ public class TaskController {
                                @RequestParam(defaultValue = "0") Long coId,
                                @RequestParam String startDate, @RequestParam String status, Model model) {
 
-        Task task = taskRepository.findById(id).orElseThrow();
+        Task task = taskRepository.findById(id).get();
 
 
         task.setName(name);
@@ -185,7 +185,7 @@ public class TaskController {
         taskRepository.save(task);
 
 
-        task = taskRepository.findById(id).orElseThrow();
+        task = taskRepository.findById(id).get();
         CommercialOffer selectedCommercialOffer = null;
         for (CommercialOffer co:task.getCommercialOffers()) {
             if (co.getStatus().equals("В работе")) selectedCommercialOffer = co;
@@ -239,7 +239,7 @@ public class TaskController {
     @GetMapping(path = "/task/{id}/remove")
     public String taskRemove(@PathVariable(value = "id") long id, Model model){
 
-        Task task = taskRepository.findById(id).orElseThrow();
+        Task task = taskRepository.findById(id).get();
 
 
         Iterable<Performer> performers = performerRepository.findAll();
@@ -288,10 +288,10 @@ public class TaskController {
         model.addAttribute("humanResourcesList", humanResourcesList);
 
         Performer performer;
-        Task task = taskRepository.findById(id).orElseThrow();
+        Task task = taskRepository.findById(id).get();
         if (performerId!=0)
         {
-            performer = performerRepository.findById(performerId).orElseThrow();
+            performer = performerRepository.findById(performerId).get();
         }
         else  if (!name.isEmpty()){
             performer = new Performer(name,description,industry,telephone,site,address,director);
@@ -303,7 +303,7 @@ public class TaskController {
         commercialOffer.setPerformer(performer);
         commercialOffer.setTask(task);
         commercialOfferRepository.save(commercialOffer);
-        task = taskRepository.findById(id).orElseThrow();
+        task = taskRepository.findById(id).get();
 
         Long idOptimalCO = Utils.getOptimalCommercialOfferId(task.getCommercialOffers());
 
@@ -321,7 +321,7 @@ public class TaskController {
                     commercialOfferRepository.save(co);
                 }
         }
-        task = taskRepository.findById(id).orElseThrow();
+        task = taskRepository.findById(id).get();
 
         CommercialOffer selectedCommercialOffer = new CommercialOffer();
         for (CommercialOffer co:task.getCommercialOffers()) {
@@ -383,7 +383,7 @@ public class TaskController {
     @GetMapping(value = "/project/{id}/risks")
     public String risks(@PathVariable(value = "id") Long id, Model model){
 
-        Project project = projectRopository.findById(id).orElseThrow();
+        Project project = projectRopository.findById(id).get();
         Iterable<Project> projects = projectRopository.findAll();
 
         project.sortRisks();
@@ -409,7 +409,7 @@ public class TaskController {
     @PostMapping(path = "/project/{id}/risks", params = "projectId")
     public String projectPostSelectRisks(@RequestParam String projectId,  Model model){
 
-        Project project = projectRopository.findById(Long.valueOf(projectId)).orElseThrow();
+        Project project = projectRopository.findById(Long.valueOf(projectId)).get();
         Iterable<Project> projects = projectRopository.findAll();
         project.sortRisks();
 
@@ -423,7 +423,7 @@ public class TaskController {
     //Страница редактирования риска
     @GetMapping("/risk/{id}/edit")
     public String riskEdit(@PathVariable(value = "id") Long id,  Model model) {
-        Risk risk = riskRepository.findById(id).orElseThrow();
+        Risk risk = riskRepository.findById(id).get();
         Iterable<RiskSolution> riskSolution = riskSolutionRepository.findAll();
         //Risk risk = new Risk("risk1", 1, 1);
         RiskSolution selectedSolution = new RiskSolution();
@@ -431,7 +431,7 @@ public class TaskController {
             if (risk.getSelectedRiskSolutionID() == 0L)
                 risk.setSelectedRiskSolutionID(null);
             else
-                selectedSolution = riskSolutionRepository.findById(risk.getSelectedRiskSolutionID()).orElseThrow();
+                selectedSolution = riskSolutionRepository.findById(risk.getSelectedRiskSolutionID()).get();
         model.addAttribute("selectedSolution", selectedSolution);
         model.addAttribute("risk", risk);
         model.addAttribute("riskSolution", riskSolution);
@@ -448,9 +448,9 @@ public class TaskController {
 
         RiskSolution selectedRiskSolution = new RiskSolution();
         if (solutionId != 0L)
-            selectedRiskSolution = riskSolutionRepository.findById(solutionId).orElseThrow();
+            selectedRiskSolution = riskSolutionRepository.findById(solutionId).get();
         else solutionId = null;
-        Risk risk = riskRepository.findById(id).orElseThrow();
+        Risk risk = riskRepository.findById(id).get();
         Project project = risk.getProject();
         project.sortRisks();
         risk.setName(name);
@@ -478,18 +478,18 @@ public class TaskController {
                                      @RequestParam int likelihood,
                                      @RequestParam int consequence,
                                      Model model){
-        Project project = projectRopository.findById(id).orElseThrow();
+        Project project = projectRopository.findById(id).get();
 
         Risk risk = new Risk(name,likelihood,consequence);
         risk.setProject(project);
         riskRepository.save(risk);
-        project = projectRopository.findById(id).orElseThrow();
+        project = projectRopository.findById(id).get();
         project.sortRisks();
 
 
         RiskSolution selectedSolution = new RiskSolution();
         if (risk.getSelectedRiskSolutionID() != null)
-            selectedSolution = riskSolutionRepository.findById(risk.getSelectedRiskSolutionID()).orElseThrow();
+            selectedSolution = riskSolutionRepository.findById(risk.getSelectedRiskSolutionID()).get();
 
         //Iterable<Risk> risks = riskRepository.findAll();
         //model.addAttribute("risks", risks);
@@ -502,18 +502,18 @@ public class TaskController {
     //Добавление обработки риска
     @PostMapping("/risk/{id}/add_solution")
     public String AddSolution (@PathVariable(value = "id") Long id, Model model, @RequestParam String name, @RequestParam int probability, @RequestParam Long cost, @RequestParam int reduction){
-        Risk risk = riskRepository.findById(id).orElseThrow();
+        Risk risk = riskRepository.findById(id).get();
 
         RiskSolution riskSolution = new RiskSolution(name, probability, cost, reduction);
         riskSolution.setRisk(risk);
         riskSolutionRepository.save(riskSolution);
 
-        risk = riskRepository.findById(id).orElseThrow();
+        risk = riskRepository.findById(id).get();
         model.addAttribute("risk", risk);
 
         RiskSolution selectedSolution = new RiskSolution();
         if (risk.getSelectedRiskSolutionID() != null)
-            selectedSolution = riskSolutionRepository.findById(risk.getSelectedRiskSolutionID()).orElseThrow();
+            selectedSolution = riskSolutionRepository.findById(risk.getSelectedRiskSolutionID()).get();
         model.addAttribute("selectedSolution", selectedSolution);
         Iterable<RiskSolution> riskSolution1 = riskSolutionRepository.findAll();
         model.addAttribute("riskSolution", riskSolution1);
@@ -530,7 +530,7 @@ public class TaskController {
     @GetMapping(value = "/gantt_project/{id}")
     public String getGanttProject(@PathVariable(value = "id") long id,Model model){
         model.addAttribute("id", id);
-        Project project = projectRopository.findById(id).orElseThrow();
+        Project project = projectRopository.findById(id).get();
         Iterable <Project> projects = projectRopository.findAll();
         model.addAttribute("project", project);
         model.addAttribute("projects", projects);
@@ -548,7 +548,7 @@ public class TaskController {
     //Выбор проекта на сранице с план-графиком
     @PostMapping(path = "/gantt_project/{id}", params = "projectId")
     public String projectPostSelectGantt(@RequestParam String projectId,  Model model){
-        Project project = projectRopository.findById(Long.valueOf(projectId)).orElseThrow();
+        Project project = projectRopository.findById(Long.valueOf(projectId)).get();
         Iterable<Project> projects = projectRopository.findAll();
         model.addAttribute("id", projectId);
         model.addAttribute("project", project);
