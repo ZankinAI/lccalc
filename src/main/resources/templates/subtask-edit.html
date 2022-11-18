@@ -67,6 +67,7 @@
             <label class="col-3 mb-2">Предшественник:</label>
             <select id="selectPrevious" class="form-select form-select-lg" aria-label=".form-select-lg" name="previousIndex">
               <option disabled>Выберите предшествующую задачу</option>
+              <option></option>
               <div th:each="el:${task.subTasks}">
                 <div th:if="${el.subTaskIndex == subtask.previousIndex}">
                   <option th:value="${el.subTaskIndex}" th:text="${el.subTaskIndex}+'  '+${el.name}" selected></option>
