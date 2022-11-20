@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 
 @Controller
@@ -185,7 +186,9 @@ public class SubTaskController {
             humanResourcesList.addResource(new HumanResourcesDTO(humanResource));
         }
         model.addAttribute("humanResourcesList", humanResourcesList);
-
+        int newSubTaskSubIndex = Utils.getIndex(task.findLastIndexOfSubTasks());
+        String newSubTaskIndex = task.getTaskIndex() + "."+ String.valueOf(newSubTaskSubIndex+1);
+        model.addAttribute("newSubTaskIndex",newSubTaskIndex);
         return "task-edit";
     }
 
@@ -193,10 +196,21 @@ public class SubTaskController {
     public String subTaskDelete(@PathVariable(value = "id") long id,
                                 Model model) {
         SubTask subTask = subTaskRepository.findById(id).get();
-        Task task = subTask.getTask();
+
 
 
         subTaskRepository.delete(subTask);
+
+        Task task = subTask.getTask();
+        for (SubTask subTaskChangeIndex: task.getSubTasks()) {
+            if (Utils.getIndex(subTaskChangeIndex.getSubTaskIndex())>Utils.getIndex(subTask.getSubTaskIndex())){
+                subTaskChangeIndex.setSubTaskIndex(
+                        task.getTaskIndex() +"." + String.valueOf(Utils.getIndex(subTaskChangeIndex.getSubTaskIndex())-1)
+                );
+
+            }
+        }
+
 
         task.sortSubTasks();
 
@@ -244,7 +258,9 @@ public class SubTaskController {
             humanResourcesList.addResource(new HumanResourcesDTO(humanResource));
         }
         model.addAttribute("humanResourcesList", humanResourcesList);
-
+        int newSubTaskSubIndex = Utils.getIndex(task.findLastIndexOfSubTasks());
+        String newSubTaskIndex = task.getTaskIndex() + "."+ String.valueOf(newSubTaskSubIndex+1);
+        model.addAttribute("newSubTaskIndex",newSubTaskIndex);
         return "task-edit";
 
 
@@ -317,7 +333,9 @@ public class SubTaskController {
             humanResourcesList.addResource(new HumanResourcesDTO(humanResource));
         }
         model.addAttribute("humanResourcesList", humanResourcesList);
-
+        int newSubTaskSubIndex = Utils.getIndex(task.findLastIndexOfSubTasks());
+        String newSubTaskIndex = task.getTaskIndex() + "."+ String.valueOf(newSubTaskSubIndex+1);
+        model.addAttribute("newSubTaskIndex",newSubTaskIndex);
         return "task-edit";
     }
 

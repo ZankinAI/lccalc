@@ -1,5 +1,6 @@
 package com.cpp.lccalc.models;
 
+import com.cpp.lccalc.classes.Utils;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.lang.Nullable;
 
@@ -206,6 +207,25 @@ public class Task{
         return null;
 
     }
+
+    public String findLastIndexOfSubTasks(){
+
+        if (this.subTasks==null) return this.getTaskIndex()+".0";
+        if (this.subTasks.isEmpty()) return this.getTaskIndex()+".0";
+        String lastIndex = null;
+        this.sortSubTasks();
+        final Iterator<SubTask> itr = this.subTasks.iterator();
+        SubTask lastTask = null;
+        while(itr.hasNext()){
+            lastTask = itr.next();
+        }
+        assert lastTask != null;
+
+
+        return lastTask.getSubTaskIndex();
+    }
+
+
 
 
 

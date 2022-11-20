@@ -1,5 +1,6 @@
 package com.cpp.lccalc.models;
 
+import com.cpp.lccalc.classes.Utils;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.annotations.Cascade;
 
@@ -160,9 +161,9 @@ public class SubTask {
     public static Comparator SubTaskIndexComparator = new Comparator<SubTask>() {
         @Override
         public int compare(SubTask subTask1, SubTask subTask2) {
-            String subTaskIndex1 = subTask1.getSubTaskIndex();
-            String subTaskIndex2 = subTask2.getSubTaskIndex();
-            return subTaskIndex1.compareTo(subTaskIndex2);
+            int subTaskIndex1 = Utils.getIndex(subTask1.getSubTaskIndex());
+            int subTaskIndex2 = Utils.getIndex(subTask2.getSubTaskIndex());
+            return subTaskIndex1 - subTaskIndex2;
         }
     };
 

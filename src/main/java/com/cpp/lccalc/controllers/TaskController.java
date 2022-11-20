@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -124,6 +125,10 @@ public class TaskController {
         }
         model.addAttribute("humanResourcesList", humanResourcesList);
 
+        int newSubTaskSubIndex = Utils.getIndex(task.findLastIndexOfSubTasks());
+        String newSubTaskIndex = task.getTaskIndex() + "."+ String.valueOf(newSubTaskSubIndex+1);
+        model.addAttribute("newSubTaskIndex",newSubTaskIndex);
+
         return "task-edit";
     }
 
@@ -232,6 +237,9 @@ public class TaskController {
         model.addAttribute("customers", customers);
         model.addAttribute("projectManagers", projectManagers);
 
+        String newTaskIndex = String.valueOf(Long.valueOf(project.findLastIndexOfTasks()) + 1);
+        model.addAttribute("newTaskIndex",newTaskIndex);
+
         return "project-edit";
     }
 
@@ -245,14 +253,30 @@ public class TaskController {
         Iterable<Performer> performers = performerRepository.findAll();
         model.addAttribute("performers", performers);
 
+
+
         taskRepository.delete(task);
+
         Project project = task.getProject();
+
+
+        for (Task taskChangeIndex: project.getTasks()) {
+            if (Long.valueOf(taskChangeIndex.getTaskIndex())>Long.valueOf(task.getTaskIndex())){
+                taskChangeIndex.setTaskIndex(
+                        String.valueOf(Long.valueOf(taskChangeIndex.getTaskIndex())-1)
+                );
+
+            }
+        }
+        projectRopository.save(project);
+
         project.sortTasks();
         for (Task taskOfProject: project.getTasks()) {
             taskOfProject.sortSubTasks();
         }
         project.findBudget();
         projectRopository.save(project);
+
 
         model.addAttribute("project", project);
 
@@ -261,6 +285,9 @@ public class TaskController {
 
         model.addAttribute("customers", customers);
         model.addAttribute("projectManagers", projectManagers);
+
+        String newTaskIndex = String.valueOf(Long.valueOf(project.findLastIndexOfTasks()) + 1);
+        model.addAttribute("newTaskIndex",newTaskIndex);
         return "project-edit";
     }
 
@@ -341,6 +368,9 @@ public class TaskController {
         resourcesList.addResource(new MaterialResourcesDTO(true, 1L, "name 5"));
         model.addAttribute("resourcesList", resourcesList);
 
+        int newSubTaskSubIndex = Utils.getIndex(task.findLastIndexOfSubTasks());
+        String newSubTaskIndex = task.getTaskIndex() + "."+ String.valueOf(newSubTaskSubIndex+1);
+        model.addAttribute("newSubTaskIndex",newSubTaskIndex);
 
         return "task-edit";
     }

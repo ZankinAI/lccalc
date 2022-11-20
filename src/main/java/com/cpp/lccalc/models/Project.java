@@ -234,10 +234,16 @@ public class Project {
         }
         else return;
         double scale = Math.pow(10, 2);
-
-        this.progress = durationComplete / duration * 100;
+        if (duration==0.0) {
+            this.progress = 0;
+        } else this.progress = durationComplete / duration * 100;
         this.progress = Math.ceil(this.progress * scale) / scale;
-        this.percentEarnedBudget = this.earnedBudget / this.budget * 100;
+
+        if (this.budget == 0.0){
+            this.percentEarnedBudget = 0.0;
+        } else this.percentEarnedBudget = this.earnedBudget / this.budget * 100;
+
+
 
 
     }
@@ -254,6 +260,20 @@ public class Project {
         List<Risk> riskList = new ArrayList<Risk>(this.risks);
         Collections.sort(riskList, Risk.RiskComparator);
         this.risks = new LinkedHashSet<Risk>(riskList);
+    }
+
+    public String findLastIndexOfTasks(){
+
+        if (this.tasks==null) return "0";
+        if (this.tasks.isEmpty()) return "0";
+        String lastIndex = null;
+        this.sortTasks();
+        final Iterator<Task> itr = this.tasks.iterator();
+        Task lastTask = null;
+        while(itr.hasNext()){
+            lastTask = itr.next();
+        }
+        return lastTask.getTaskIndex();
     }
 
 

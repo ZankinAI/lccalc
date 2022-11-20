@@ -180,9 +180,13 @@ public class ProjectController {
         Iterable<Customer> customers = customerRepository.findAll();
         Iterable<ProjectManager> projectManagers = projectManagerRepository.findAll();
 
+
+
         model.addAttribute("customers", customers);
         model.addAttribute("projectManagers", projectManagers);
 
+        String newTaskIndex = String.valueOf(Long.valueOf(project.findLastIndexOfTasks()) + 1);
+        model.addAttribute("newTaskIndex",newTaskIndex);
 
         return "project-edit";
     }
@@ -206,6 +210,8 @@ public class ProjectController {
         Project project = projectRes.get(0);
 
         Iterable<Project> projects = projectRopository.findAll();
+        String newTaskIndex = String.valueOf(Long.valueOf(project.findLastIndexOfTasks()) + 1);
+        model.addAttribute("newTaskIndex",newTaskIndex);
 
         model.addAttribute("project", project);
 
@@ -233,6 +239,8 @@ public class ProjectController {
         Iterable<Project> projects = projectRopository.findAll();
 
         model.addAttribute("project", project);
+        String newTaskIndex = String.valueOf(Long.valueOf(project.findLastIndexOfTasks()) + 1);
+        model.addAttribute("newTaskIndex",newTaskIndex);
 
         return "project-edit";
     }
@@ -259,6 +267,9 @@ public class ProjectController {
         Iterable<ProjectManager> projectManagers = projectManagerRepository.findAll();
         model.addAttribute("customers", customers);
         model.addAttribute("projectManagers", projectManagers);
+
+        String newTaskIndex = String.valueOf(Long.valueOf(project.findLastIndexOfTasks()) + 1);
+        model.addAttribute("newTaskIndex",newTaskIndex);
 
         return "project-edit";
     }

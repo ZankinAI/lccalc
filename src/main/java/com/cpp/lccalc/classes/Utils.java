@@ -64,4 +64,11 @@ public class Utils {
 
 
     }
+
+    public static int getIndex(String subTaskIndex){
+        int index = 0;
+        String indexString = subTaskIndex.substring(subTaskIndex.indexOf(".")+1);
+        index = Integer.parseInt(indexString);
+        return index;
+    }
 }
