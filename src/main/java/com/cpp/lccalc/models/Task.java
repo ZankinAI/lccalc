@@ -208,6 +208,23 @@ public class Task{
 
     }
 
+    public String findNextSubTask(String subTaskIndex){
+        for (SubTask subtask: this.subTasks) {
+            if (subtask.getPreviousIndex().equals(subTaskIndex))
+                return subtask.getSubTaskIndex();
+        }
+        return null;
+
+    }
+
+    public SubTask getSubTaskByIndex(String subTaskIndex){
+        for (SubTask subtask: this.subTasks) {
+            if (subtask.getSubTaskIndex().equals(subTaskIndex))
+                return subtask;
+        }
+        return null;
+    }
+
     public String findLastIndexOfSubTasks(){
 
         if (this.subTasks==null) return this.getTaskIndex()+".0";

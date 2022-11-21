@@ -3,6 +3,7 @@ package com.cpp.lccalc.controllers;
 import com.cpp.lccalc.classes.*;
 import com.cpp.lccalc.models.*;
 import com.cpp.lccalc.repo.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -121,8 +122,6 @@ public class SubTaskController {
 
             prevIndex = task.findPrevIndexOfSubtask(prevIndex);
             if (prevIndex==null) break;
-
-
         };
 
         subTask.setName(name);
@@ -197,20 +196,60 @@ public class SubTaskController {
                                 Model model) {
         SubTask subTask = subTaskRepository.findById(id).get();
 
-
+        //String nextSubTaskIndex = subTask.getTask().findNextSubTask(subTask.getSubTaskIndex());
 
         subTaskRepository.delete(subTask);
 
+
         Task task = subTask.getTask();
+        //String nextSubTaskIndex = task.findNextSubTask(subTask.getSubTaskIndex());
+
+        /*SubTask subTaskChangePrevIndex = null;
+
+        subTaskChangePrevIndex = task.getSubTaskByIndex(nextSubTaskIndex);
+        if (subTaskChangePrevIndex!=null)
+        {
+            subTaskChangePrevIndex.setPreviousIndex("");
+            subTaskRepository.save(subTaskChangePrevIndex);
+            nextSubTaskIndex = task.findNextSubTask(nextSubTaskIndex);
+        }
+
+        while (nextSubTaskIndex != null) {
+
+            subTaskChangePrevIndex = task.getSubTaskByIndex(nextSubTaskIndex);
+            if (subTaskChangePrevIndex==null) break;
+            else{
+                subTaskChangePrevIndex.setPreviousIndex(
+                        task.getTaskIndex() +"."+
+                                String.valueOf(Utils.getIndex(subTaskChangePrevIndex.getPreviousIndex())-1)
+                );
+                subTaskRepository.save(subTaskChangePrevIndex);
+            }
+            nextSubTaskIndex = task.findNextSubTask(nextSubTaskIndex);
+            if (nextSubTaskIndex==null) break;
+
+        }*/
+
         for (SubTask subTaskChangeIndex: task.getSubTasks()) {
             if (Utils.getIndex(subTaskChangeIndex.getSubTaskIndex())>Utils.getIndex(subTask.getSubTaskIndex())){
                 subTaskChangeIndex.setSubTaskIndex(
                         task.getTaskIndex() +"." + String.valueOf(Utils.getIndex(subTaskChangeIndex.getSubTaskIndex())-1)
                 );
 
+                if (!subTaskChangeIndex.getPreviousIndex().equals("")){
+                    if (Utils.getIndex(subTaskChangeIndex.getPreviousIndex())==Utils.getIndex(subTask.getSubTaskIndex())){
+                        subTaskChangeIndex.setPreviousIndex("");
+                        continue;
+                    }
+                    if (Utils.getIndex(subTaskChangeIndex.getPreviousIndex())>Utils.getIndex(subTask.getSubTaskIndex())){
+                        subTaskChangeIndex.setPreviousIndex(task.getTaskIndex() +"."
+                                + String.valueOf(Utils.getIndex(subTaskChangeIndex.getPreviousIndex())-1));
+                    }
+                }
+
+
             }
         }
-
 
         task.sortSubTasks();
 
