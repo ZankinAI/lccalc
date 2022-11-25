@@ -38,6 +38,10 @@ public class Project {
     @JoinColumn(name="pm_id", nullable=true)
     private ProjectManager projectManager;
 
+    @ManyToOne
+    @JoinColumn(name="user_id", nullable=true)
+    private User user;
+
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL )
     private Set<Task> tasks;
 
@@ -203,6 +207,14 @@ public class Project {
 
     public void setRisks(Set<Risk> risks) {
         this.risks = risks;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public void sortTasks(){

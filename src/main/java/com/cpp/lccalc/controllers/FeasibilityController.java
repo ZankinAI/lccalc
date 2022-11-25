@@ -4,6 +4,8 @@ import com.cpp.lccalc.classes.*;
 import com.cpp.lccalc.models.*;
 import com.cpp.lccalc.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -56,13 +58,19 @@ public class FeasibilityController {
     @Autowired
     AnalogCharacteristicRepository analogCharacteristicRepository;
 
+    @Autowired
+    UserRepository userRepository;
 
     //Открытие страницы оценки целесообразности
     @GetMapping("/feasibility_assessment")
     public String feasibilityAssessment(Model model) {
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
+
         Project project = new Project();
-        Iterable<Project> projects = projectRopository.findAll();
+        Iterable<Project> projects = projectRopository.findByUserId(user.getId());
         model.addAttribute("project", project);
         model.addAttribute("projects", projects);
 
@@ -78,8 +86,13 @@ public class FeasibilityController {
     //Выбор проекта на странице оценки целесообразности
     @PostMapping("/feasibility_assessment")
     public String feasibilityAssessmentId(@RequestParam Long projectId, Model model) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
+
         Project project = projectRopository.findById(projectId).get();
-        Iterable<Project> projects = projectRopository.findAll();
+        Iterable<Project> projects = projectRopository.findByUserId(user.getId());
         BreakEven breakEven = null;
         if (!project.getBreakEvens().isEmpty()){
             breakEven = project.getFirstBreakEven();
@@ -90,7 +103,6 @@ public class FeasibilityController {
         if (breakEven!=null){
             feasibilityCalculation = new FeasibilityCalculation(breakEven, project.getBudget());
         }
-
 
         if (feasibilityCalculation!=null){
             model.addAttribute("dataVolumeOfSales", feasibilityCalculation.getDataVolumeOfSales());
@@ -114,9 +126,6 @@ public class FeasibilityController {
         model.addAttribute("characteristicsList", characteristicsListDTO);
         model.addAttribute("analog", analogDTO);
 
-
-
-
         return "feasibility-assessment";
     }
 
@@ -125,8 +134,12 @@ public class FeasibilityController {
     public String addCharacteristic(@PathVariable(value = "projectId") long id,
                                     @RequestParam String name, @RequestParam double weight,
                                     @RequestParam int grade,  Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
+
         Project project = projectRopository.findById(id).get();
-        Iterable<Project> projects = projectRopository.findAll();
+        Iterable<Project> projects = projectRopository.findByUserId(user.getId());
         BreakEven breakEven = null;
         if (!project.getBreakEvens().isEmpty()){
             breakEven = project.getFirstBreakEven();
@@ -171,6 +184,10 @@ public class FeasibilityController {
     public String editCharacteristic(@PathVariable(value = "projectId") long id,
                                      @ModelAttribute CharacteristicsListDTO characteristicsListDTOUpdate,  Model model) {
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
+
         Characteristic characteristicUpdate = null;
         for (CharacteristicDTO characteristicDTOUpdate:characteristicsListDTOUpdate.getCharacteristics()) {
             characteristicUpdate = characteristicRepository.findById(characteristicDTOUpdate.getId()).get();
@@ -186,7 +203,7 @@ public class FeasibilityController {
 
 
         }
-        Iterable<Project> projects = projectRopository.findAll();
+        Iterable<Project> projects = projectRopository.findByUserId(user.getId());
         Project project = projectRopository.findById(id).get();
         BreakEven breakEven = null;
         if (!project.getBreakEvens().isEmpty()){
@@ -226,10 +243,17 @@ public class FeasibilityController {
         return "feasibility-assessment";
     }
 
+
+
     //Добавление аналога
     @PostMapping("/project/{projectId}/add_analog")
     public String addAnalog(@PathVariable(value = "projectId") long id,
                             @ModelAttribute AnalogDTO analogAdd,  Model model) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
+
         Project project = projectRopository.findById(id).get();
         AnalogCharacteristic analogCharacteristic = null;
         Analog analog = new Analog();
@@ -242,7 +266,7 @@ public class FeasibilityController {
         }
 
 
-        Iterable<Project> projects = projectRopository.findAll();
+        Iterable<Project> projects = projectRopository.findByUserId(user.getId());
         BreakEven breakEven = null;
         if (!project.getBreakEvens().isEmpty()){
             breakEven = project.getFirstBreakEven();
@@ -281,9 +305,14 @@ public class FeasibilityController {
 
     @PostMapping("/feasibility_assessment/change")
     public String feasibilityAssessmentChange(@RequestParam Long breakEvenId, Model model) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
+
         BreakEven breakEven = breakEvenRepository.findById(breakEvenId).get();
         Project project = breakEven.getProject();
-        Iterable<Project> projects = projectRopository.findAll();
+        Iterable<Project> projects = projectRopository.findByUserId(user.getId());
 
         model.addAttribute("breakEven", breakEven);
         model.addAttribute("project", project);
@@ -320,6 +349,10 @@ public class FeasibilityController {
                                            @RequestParam double price, @RequestParam double other,
                                            @RequestParam double expectedProfit, @RequestParam boolean idChecked, Model model) {
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
+
         BreakEven breakEven = breakEvenRepository.findById(id).get();
         breakEven.setOther(other);
         breakEven.setPrice(price);
@@ -329,7 +362,7 @@ public class FeasibilityController {
 
         FeasibilityCalculation feasibilityCalculation = feasibilityCalculation = new FeasibilityCalculation(breakEven, project.getBudget());
 
-        Iterable<Project> projects = projectRopository.findAll();
+        Iterable<Project> projects = projectRopository.findByUserId(user.getId());
 
         model.addAttribute("breakEven", breakEven);
         model.addAttribute("project", project);
@@ -360,6 +393,10 @@ public class FeasibilityController {
                                            @RequestParam double price, @RequestParam double other,
                                            @RequestParam double expectedProfit, Model model) {
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
+
         BreakEven breakEven = new BreakEven();
         breakEven.setOther(other);
         breakEven.setPrice(price);
@@ -370,7 +407,7 @@ public class FeasibilityController {
 
         FeasibilityCalculation feasibilityCalculation = feasibilityCalculation = new FeasibilityCalculation(breakEven, project.getBudget());
 
-        Iterable<Project> projects = projectRopository.findAll();
+        Iterable<Project> projects = projectRopository.findByUserId(user.getId());
 
         model.addAttribute("breakEven", breakEven);
         model.addAttribute("project", project);

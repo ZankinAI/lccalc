@@ -43,8 +43,6 @@ public class FeasibilityCalculation {
 
         this.dataBreakEvenPoint = "[["+ (int)this.breakEven +","+ this.breakEven * breakEven.getPrice() +"]]";
 
-
-
     }
 
     public String getDataVolumeOfSales() {

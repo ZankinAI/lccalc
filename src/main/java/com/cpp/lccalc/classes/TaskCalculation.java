@@ -156,7 +156,6 @@ public class TaskCalculation {
         for (TaskCalculation taskCalculationChild : this.children) {
             if (taskCalculationChild.getId().equals(id)) return taskCalculationChild;
         }
-
         return null;
     }
 

@@ -7,6 +7,8 @@ import com.cpp.lccalc.classes.MaterialResourcesListDTO;
 import com.cpp.lccalc.models.*;
 import com.cpp.lccalc.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -44,9 +46,16 @@ public class ResourcesController {
     @Autowired
     private MaterialResourcesSubTaskRepository materialResourcesSubTaskRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
     //Открыть страницу с ресурсами
     @GetMapping(value = "/resources")
     public String resources(Model model){
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
 
         Iterable<MaterialResources> materialResources = materialResourcesRepository.findAll();
         model.addAttribute("materialResources", materialResources);
@@ -61,6 +70,10 @@ public class ResourcesController {
                                    @RequestParam Long amount,
                                    Model model){
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
+
         HumanResources humanResource = new HumanResources(tariff, amount, name);
         humanResourceRepository.save(humanResource);
         Iterable<HumanResources> humanResources = humanResourceRepository.findAll();
@@ -73,6 +86,10 @@ public class ResourcesController {
     public String addMaterialResource(@RequestParam String name, @RequestParam double rate,
                                       @RequestParam Long amount,
                                       Model model){
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
 
         MaterialResources materialResource = new MaterialResources(amount, rate, name);
         materialResourcesRepository.save(materialResource);
@@ -88,6 +105,11 @@ public class ResourcesController {
 
     @PostMapping("/subtask/{id}/add_material_resources")
     public String addMaterialResourceInSubTask(@PathVariable(value = "id") long id, @ModelAttribute MaterialResourcesListDTO resourcesList, Model model){
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
+
         SubTask subTask = subTaskRepository.findById(id).get();
 
         MaterialResourcesSubTask materialResourcesSubTask = null;
@@ -154,6 +176,11 @@ public class ResourcesController {
     //Обновление человеческих ресурсов в подзадаче
     @PostMapping("/subtask/{id}/add_human_resources")
     public String addHumanResourceInSubtask(@PathVariable(value = "id") long id, @ModelAttribute HumanResourcesListDTO resourcesList, Model model){
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
+
         SubTask subTask = subTaskRepository.findById(id).get();
 
         HumanResourcesSubTask humanResourcesSubTask = null;

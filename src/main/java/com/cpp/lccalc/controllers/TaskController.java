@@ -5,6 +5,8 @@ import com.cpp.lccalc.models.*;
 import com.cpp.lccalc.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -54,12 +56,20 @@ public class TaskController {
     @Autowired
     private RiskSolutionRepository riskSolutionRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
+
     //Открытие страницы с задачей
     @GetMapping("/task/{id}")
     public String task(@PathVariable(value = "id") long id,  Model model) {
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
+
         Task task = taskRepository.findById(id).get();
-        Iterable<Project> projects = projectRopository.findAll();
+        Iterable<Project> projects = projectRopository.findByUserId(user.getId());
 
         task.sortSubTasks();
         model.addAttribute("project", task.getProject());
@@ -73,6 +83,11 @@ public class TaskController {
     //Страница редактирования задачи
     @GetMapping("/task/{id}/edit")
     public String taskEdit(@PathVariable(value = "id") long id,  Model model) {
+
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
 
         Task task = taskRepository.findById(id).get();
         CommercialOffer selectedCommercialOffer = new CommercialOffer();
@@ -141,6 +156,11 @@ public class TaskController {
                                @RequestParam String description, @RequestParam String taskIndex,
                                @RequestParam(defaultValue = "0") Long coId,
                                @RequestParam String startDate, @RequestParam String status, Model model) {
+
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
 
         Task task = taskRepository.findById(id).get();
 
@@ -247,6 +267,10 @@ public class TaskController {
     @GetMapping(path = "/task/{id}/remove")
     public String taskRemove(@PathVariable(value = "id") long id, Model model){
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
+
         Task task = taskRepository.findById(id).get();
 
 
@@ -305,6 +329,10 @@ public class TaskController {
                                 //Параметры для КП
                                 @RequestParam Long duration, @RequestParam Long budget,
                                       Model model){
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
 
         Iterable<HumanResources> humanResources = humanResourceRepository.findAll();
         HumanResourcesListDTO humanResourcesList = new HumanResourcesListDTO();
@@ -413,8 +441,11 @@ public class TaskController {
     @GetMapping(value = "/project/{id}/risks")
     public String risks(@PathVariable(value = "id") Long id, Model model){
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
         Project project = projectRopository.findById(id).get();
-        Iterable<Project> projects = projectRopository.findAll();
+        Iterable<Project> projects = projectRopository.findByUserId(user.getId());
 
         project.sortRisks();
 
@@ -428,8 +459,12 @@ public class TaskController {
     @GetMapping(value = "/project/0/risks")
     public String risks(Model model){
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
+
         Project project = new Project();
-        Iterable<Project> projects = projectRopository.findAll();
+        Iterable<Project> projects = projectRopository.findByUserId(user.getId());
         model.addAttribute("project", project);
         model.addAttribute("projects", projects);
         return "risks";
@@ -439,8 +474,12 @@ public class TaskController {
     @PostMapping(path = "/project/{id}/risks", params = "projectId")
     public String projectPostSelectRisks(@RequestParam String projectId,  Model model){
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
+
         Project project = projectRopository.findById(Long.valueOf(projectId)).get();
-        Iterable<Project> projects = projectRopository.findAll();
+        Iterable<Project> projects = projectRopository.findByUserId(user.getId());
         project.sortRisks();
 
         Iterable<Risk> risks = riskRepository.findAll();
@@ -453,6 +492,11 @@ public class TaskController {
     //Страница редактирования риска
     @GetMapping("/risk/{id}/edit")
     public String riskEdit(@PathVariable(value = "id") Long id,  Model model) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
+
         Risk risk = riskRepository.findById(id).get();
         Iterable<RiskSolution> riskSolution = riskSolutionRepository.findAll();
         //Risk risk = new Risk("risk1", 1, 1);
@@ -475,6 +519,10 @@ public class TaskController {
                                @RequestParam double likelihood,
                                @RequestParam double consequence,
                                @RequestParam(defaultValue = "0") Long solutionId){
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
 
         RiskSolution selectedRiskSolution = new RiskSolution();
         if (solutionId != 0L)
@@ -508,6 +556,11 @@ public class TaskController {
                                      @RequestParam int likelihood,
                                      @RequestParam int consequence,
                                      Model model){
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
+
         Project project = projectRopository.findById(id).get();
 
         Risk risk = new Risk(name,likelihood,consequence);
@@ -532,6 +585,11 @@ public class TaskController {
     //Добавление обработки риска
     @PostMapping("/risk/{id}/add_solution")
     public String AddSolution (@PathVariable(value = "id") Long id, Model model, @RequestParam String name, @RequestParam int probability, @RequestParam Long cost, @RequestParam int reduction){
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
+
         Risk risk = riskRepository.findById(id).get();
 
         RiskSolution riskSolution = new RiskSolution(name, probability, cost, reduction);
@@ -553,15 +611,22 @@ public class TaskController {
 
     @GetMapping(value = "/gantt/{id}")
         public String getGantt(@PathVariable(value = "id") long id,Model model){
+
+
         model.addAttribute("id", id);
         return "/gantt";
     }
 
     @GetMapping(value = "/gantt_project/{id}")
     public String getGanttProject(@PathVariable(value = "id") long id,Model model){
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
+
         model.addAttribute("id", id);
         Project project = projectRopository.findById(id).get();
-        Iterable <Project> projects = projectRopository.findAll();
+        Iterable <Project> projects = projectRopository.findByUserId(user.getId());
         model.addAttribute("project", project);
         model.addAttribute("projects", projects);
         return "gantt-project";
@@ -569,7 +634,11 @@ public class TaskController {
 
     @GetMapping(value = "/gantt_project/0")
     public String getGanttProject(Model model){
-        Iterable <Project> projects = projectRopository.findAll();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
+
+        Iterable <Project> projects = projectRopository.findByUserId(user.getId());
         Project project = new Project();
         model.addAttribute("projects", projects);
         model.addAttribute("project", project);
@@ -578,8 +647,13 @@ public class TaskController {
     //Выбор проекта на сранице с план-графиком
     @PostMapping(path = "/gantt_project/{id}", params = "projectId")
     public String projectPostSelectGantt(@RequestParam String projectId,  Model model){
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
+
         Project project = projectRopository.findById(Long.valueOf(projectId)).get();
-        Iterable<Project> projects = projectRopository.findAll();
+        Iterable<Project> projects = projectRopository.findByUserId(user.getId());
         model.addAttribute("id", projectId);
         model.addAttribute("project", project);
         model.addAttribute("projects", projects);

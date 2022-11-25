@@ -1,14 +1,10 @@
 package com.cpp.lccalc.controllers;
 
-import com.cpp.lccalc.models.Customer;
-import com.cpp.lccalc.models.Project;
-import com.cpp.lccalc.models.ProjectManager;
-import com.cpp.lccalc.models.Task;
-import com.cpp.lccalc.repo.CustomerRepository;
-import com.cpp.lccalc.repo.ProjectManagerRepository;
-import com.cpp.lccalc.repo.ProjectRopository;
-import com.cpp.lccalc.repo.TaskRepository;
+import com.cpp.lccalc.models.*;
+import com.cpp.lccalc.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Optional;
 
 @Controller
@@ -33,16 +31,22 @@ public class ProjectController {
     @Autowired
     private TaskRepository taskRepository;
 
+    @Autowired
+    UserRepository userRepository;
 
     //Открытие страницы с проектом
     @GetMapping("/project/{id}")
     public String project(@PathVariable(value = "id") long id,  Model model) {
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
+
         Project project = projectRopository.findById(id).get();
 
 
 
-        Iterable<Project> projects = projectRopository.findAll();
+        Iterable<Project> projects = projectRopository.findByUserId(user.getId());
         project.sortTasks();
 
         model.addAttribute("project", project);
@@ -55,8 +59,12 @@ public class ProjectController {
     @PostMapping(path = "/project/{id}", params = "projectId")
     public String projectPostSelect(@RequestParam String projectId,  Model model){
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
+
         Project project = projectRopository.findById(Long.valueOf(projectId)).get();
-        Iterable<Project> projects = projectRopository.findAll();
+        Iterable<Project> projects = projectRopository.findByUserId(user.getId());
         model.addAttribute("project", project);
         model.addAttribute("projects", projects);
         return "project";
@@ -66,12 +74,17 @@ public class ProjectController {
     //Открытие сраницы с пректами
     @GetMapping("/projects")
     public String projects(Model model) {
-        Iterable<Project> projectsStatus1 = projectRopository.findByStatus(1);
-        Iterable<Project> projectsStatus2 = projectRopository.findByStatus(2);
-        Iterable<Project> projectsStatus3 = projectRopository.findByStatus(3);
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
+       Iterable<Project> projectsStatus1 = projectRopository.findByStatusAndUserId(1, user.getId());
+        Iterable<Project> projectsStatus2 = projectRopository.findByStatusAndUserId(2, user.getId());
+        Iterable<Project> projectsStatus3 = projectRopository.findByStatusAndUserId(3, user.getId());
         model.addAttribute("projects1", projectsStatus1);
         model.addAttribute("projects2", projectsStatus2);
         model.addAttribute("projects3", projectsStatus3);
+
 
         return "projects";
     }
@@ -81,6 +94,10 @@ public class ProjectController {
     //Отекрытие страницы создания проекта
     @GetMapping("/project/add")
     public String projectAdd(Model model) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
 
         Iterable<Customer> customers = customerRepository.findAll();
         Iterable<ProjectManager> projectManagers = projectManagerRepository.findAll();
@@ -96,6 +113,11 @@ public class ProjectController {
                                      @RequestParam String industry,  @RequestParam String telephone,
                                      @RequestParam String site, @RequestParam String address,
                                      Model model){
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
+
         Customer addCustomer = new Customer(customerName, industry, telephone, site, address, director);
         customerRepository.save(addCustomer);
         Iterable<Customer> customers = customerRepository.findAll();
@@ -111,6 +133,10 @@ public class ProjectController {
     public String projectAddManager(@RequestParam String fio,  @RequestParam String post,
                                     @RequestParam String telephone, @RequestParam String email,
                                      Model model){
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
 
         ProjectManager addPm = new ProjectManager(fio, telephone, email, post);
         projectManagerRepository.save(addPm);
@@ -128,6 +154,10 @@ public class ProjectController {
                                     @RequestParam(defaultValue = "0") Long budget,  @RequestParam String startDate,
                                     @RequestParam String finishDate, @RequestParam Long customerId,
                                     @RequestParam Long pmId, Model model){
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
 
 
         LocalDate localStartDate;
@@ -149,12 +179,14 @@ public class ProjectController {
         addProject.setProjectManager(projectManager);
 
         addProject.setCreateDate(LocalDate.now());
+
+        addProject.setUser(user);
         projectRopository.save(addProject);
 
 
-        Iterable<Project> projectsStatus1 = projectRopository.findByStatus(1);
-        Iterable<Project> projectsStatus2 = projectRopository.findByStatus(2);
-        Iterable<Project> projectsStatus3 = projectRopository.findByStatus(3);
+        Iterable<Project> projectsStatus1 = projectRopository.findByStatusAndUserId(1, user.getId());
+        Iterable<Project> projectsStatus2 = projectRopository.findByStatusAndUserId(2, user.getId());
+        Iterable<Project> projectsStatus3 = projectRopository.findByStatusAndUserId(3, user.getId());
         model.addAttribute("projects1", projectsStatus1);
         model.addAttribute("projects2", projectsStatus2);
         model.addAttribute("projects3", projectsStatus3);
@@ -165,6 +197,11 @@ public class ProjectController {
     //Открытие страницы редактирования проекта
     @GetMapping("/project/{id}/edit")
     public String projectEdit(@PathVariable(value = "id") long id,  Model model) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
+
         Optional<Project> projectOptional =  projectRopository.findById(id);
         ArrayList<Project> projectRes = new ArrayList<>();
         projectOptional.ifPresent(projectRes::add);
@@ -197,6 +234,11 @@ public class ProjectController {
                                      @RequestParam String industry,  @RequestParam String telephone,
                                      @RequestParam String site, @RequestParam String address,
                                      Model model){
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
+
         Customer addCustomer = new Customer(customerName, industry, telephone, site, address, director);
         customerRepository.save(addCustomer);
         Iterable<Customer> customers = customerRepository.findAll();
@@ -224,6 +266,11 @@ public class ProjectController {
                                     @RequestParam String telephone, @RequestParam String email,
                                     Model model){
 
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
+
         ProjectManager addPm = new ProjectManager(fio, telephone, email, post);
         projectManagerRepository.save(addPm);
         Iterable<Customer> customers = customerRepository.findAll();
@@ -245,11 +292,15 @@ public class ProjectController {
         return "project-edit";
     }
 
-    //Добавление ответственного по проекту во вкладке редактирования проекта
+    //Добавление задачи во вкладке редактирования проекта
     @PostMapping("/project/{id}/edit/taskAdd")
     public String taskAdd(@PathVariable(value = "id") long id, @RequestParam String name,
                           @RequestParam String description, @RequestParam String index, Model model) {
 
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
 
         Project project = projectRopository.findById(id).get();
         Task task = new Task(name, description);
@@ -281,6 +332,9 @@ public class ProjectController {
                                     @RequestParam String finishDate, @RequestParam Long customerId,
                                     @RequestParam Long pmId, Model model, @RequestParam int status){
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
 
         LocalDate localStartDate = LocalDate.parse(startDate);
         LocalDate localFinishDate = LocalDate.parse(finishDate);
@@ -320,6 +374,7 @@ public class ProjectController {
     //Удаление проекта
     @PostMapping(path = "/project/{id}/remove")
     public String projectRemove(@PathVariable(value = "id") long id, Model model){
+
 
         Project project = projectRopository.findById(id).get();
         projectRopository.delete(project);

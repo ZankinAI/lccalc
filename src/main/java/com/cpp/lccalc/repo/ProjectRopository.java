@@ -10,5 +10,8 @@ public interface ProjectRopository extends CrudRepository<Project, Long> {
 
    List<Project> findByStatus(int status);
 
+   List<Project> findByStatusAndUserId(int status, Long userId);
+
+   List<Project> findByUserId(Long userId);
 
 }

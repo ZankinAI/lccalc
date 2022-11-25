@@ -5,6 +5,8 @@ import com.cpp.lccalc.models.*;
 import com.cpp.lccalc.repo.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,9 +51,17 @@ public class SubTaskController {
     @Autowired
     private MaterialResourcesSubTaskRepository materialResourcesSubTaskRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
     //Страница редактирования подзадачи
     @GetMapping("/subtask/{id}/edit")
     public String subTaskEdit(@PathVariable(value = "id") long id, Model model) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
+
         SubTask subTask = subTaskRepository.findById(id).get();
         Task task = subTask.getTask();
         model.addAttribute("task", task);
@@ -88,6 +98,11 @@ public class SubTaskController {
                                 @RequestParam(defaultValue = "") String previousIndex,
                                 @RequestParam String progress,
                                 Model model) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
+
         SubTask subTask = subTaskRepository.findById(id).get();
         Task task = subTask.getTask();
         String prevIndex = previousIndex;
@@ -194,6 +209,11 @@ public class SubTaskController {
     @GetMapping("/subtask/{id}/remove")
     public String subTaskDelete(@PathVariable(value = "id") long id,
                                 Model model) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
+
         SubTask subTask = subTaskRepository.findById(id).get();
 
         //String nextSubTaskIndex = subTask.getTask().findNextSubTask(subTask.getSubTaskIndex());
@@ -316,6 +336,10 @@ public class SubTaskController {
                                      @RequestParam(defaultValue = "0") Long laboriousness,
                                      @RequestParam(defaultValue = "") String previousIndex,
                                      Model model) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("username", auth.getName());
 
         Task task = taskRepository.findById(id).get();
 
